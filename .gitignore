@@ -9,4 +9,4 @@ models
 traffic-signs-data.zip
 ./traffic-signs-data/*.*
 # python and html, markdown, etc files exported from jupyter notebook
-jpynb_exports_py_html
+#jpynb_exports_py_html
