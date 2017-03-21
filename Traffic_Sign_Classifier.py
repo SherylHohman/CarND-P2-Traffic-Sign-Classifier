@@ -227,7 +227,7 @@ ksize = pool_strides
 
 # ### Model Architecture
 
-# In[109]:
+# In[110]:
 
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
@@ -463,6 +463,106 @@ def LeNet(x):
 ### Once a final model architecture is selected, 
 ### the accuracy on the test set should be calculated and reported as well.
 ### Feel free to use as many code cells as needed.
+
+
+# In[ ]:
+
+"""   http://stackoverflow.com/a/34243720/5411817
+#   use this function instead of separate functions:
+#   1) softmax with 2) cross_entropy and 3)(sparce) includes one-hot
+#   softmax_cross_entropy_with_logits is more numerically stable/
+#       accurate than running two steps of softmax, then cross_entropy
+#   using the sparse_.. saves a step by not having to convert labels
+#       to one-hot first
+"""
+# loss
+cross_entropy  = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, labels)
+loss_operation = tf.reduce_mean(cross_entropy)
+
+
+# In[ ]:
+
+# accuracy
+model_prediction = tf.argmax(logits, 1)
+prediction_is_correct = tf.equal(model_prediction, labels)
+accuracy_calculation   = tf.reduce_mean(tf.cast(prediction_is_correct, tf.float32))
+
+
+# In[ ]:
+
+# evaluation routine
+def evaluate_data(X_data, y_data):
+    total_loss = 0
+    total_accuracy = 0
+    
+    num_samples = len(X_data)
+    for batch_start in range(0, numsamples, BATCH_SIZE):
+        batch_end = batch_start + BATCH_SIZE
+        X_batch = X_data[batch_start:batch_end]
+        y_batch = y_data[batch_start:batch_end]
+        
+        accuracy, loss = sess.run([accuracy_calculation, loss_operation],
+                                  feed_dict = {features:X_batch, labels:y_batch})
+        this_batch_size = len(X_batch)
+        total_accuracy += this_batch_size * accuracy
+        total_loss     += this_batch_size * loss
+        
+    total_accuracy = total_accuracy / num_samples
+    total_loss = total_loss / num_samples
+        
+    return total_accuracy, total_loss     
+
+
+# In[ ]:
+
+import time
+
+# train our model
+with tf.Session() as sess:
+    sess.run(tf.global_variables_initializer())
+    num_examples = len(X_train)
+    
+    print("Training...\n")
+    for i in range(EPOCHS):
+        X_train, y_train = shuffle(X_train, y_train)
+        t0 = time.time()
+        for batch_start in range(0, num_examples, BATCH_SIZE):
+            batch_end = batch_start + BATCH_SIZE
+            features = X_train[batch_start:batch_end]
+            labels   = y_train[batch_start:batch_end]
+            #train
+            sess.run(training_operation, feed_dict = {features:features, labels:labels})
+            
+        # evaluate and print results of model from this EPOCH       
+        validation_accuracy, loss_accuracy = evaluate_data(X_train, y_train)
+
+        print("EPOCH {} ...".format(i+1))
+        print("Time: {:.3f} minutes".format(float( (time.time()-t0) / 60 )))
+        print("Validation Loss = {:.3f}".format(loss_accuracy))
+        print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+        
+        print("underfitting: low accuracy on training and validation sets.")
+        print("overfitting: high accuracy on training but low accuracy on validation.")
+            
+# save trained model
+saver = tf.train.Saver()
+saver.save(sess, './sh_trained_traffic_sign_classifier')
+print("Model Saved")
+
+
+# In[ ]:
+
+
+
+
+# In[ ]:
+
+# test the trained model
+with tf.Session() as sess:
+    saver.restore(sess, tf.train.latest_checkpoint('.'))
+
+    test_accuracy = evaluate(X_test, y_test)
+    print("Test Accuracy = {:.3f}".format(test_accuracy))
 
 
 # ---

@@ -12706,7 +12706,7 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[109]:</div>
+<div class="prompt input_prompt">In&nbsp;[110]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Define your architecture here.</span>
@@ -12755,20 +12755,13 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-109-30ab8dc5a31c&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">      6</span> <span class="ansi-red-intense-fg ansi-bold"># Layer 1: Convolutional, Activation, Pooling: (32,32,3) --&gt; (28,28,6?) --&gt; (14,14,?6)</span>
-<span class="ansi-green-intense-fg ansi-bold">      7</span> <span class="ansi-red-intense-fg ansi-bold"># Convolution (32,32,3) --&gt; (28,28,6?)</span>
-<span class="ansi-green-fg">----&gt; 8</span><span class="ansi-red-fg"> </span>input_height<span class="ansi-yellow-intense-fg ansi-bold">,</span>  input_width<span class="ansi-yellow-intense-fg ansi-bold">,</span>  input_depth  <span class="ansi-yellow-intense-fg ansi-bold">=</span> x<span class="ansi-yellow-intense-fg ansi-bold">.</span>get_shape<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">.</span>as_list<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      9</span> output_height<span class="ansi-yellow-intense-fg ansi-bold">,</span> output_width<span class="ansi-yellow-intense-fg ansi-bold">,</span> output_depth <span class="ansi-yellow-intense-fg ansi-bold">=</span> <span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-cyan-intense-fg ansi-bold">28</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-cyan-intense-fg ansi-bold">28</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-cyan-intense-fg ansi-bold">6</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     10</span> 
+<div class="output_area"><div class="prompt output_prompt">Out[110]:</div>
 
-<span class="ansi-red-fg">AttributeError</span>: &#39;numpy.ndarray&#39; object has no attribute &#39;get_shape&#39;</pre>
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;\n# Layer 1: Convolutional, Activation, Pooling: (32,32,3) --&gt; (28,28,6?) --&gt; (14,14,?6)\n# Convolution (32,32,3) --&gt; (28,28,6?)\ninput_height,  input_width,  input_depth  = x.get_shape()[1:]\noutput_height, output_width, output_depth = (28, 28, 6)\n\nweights_height = filter_size(input_height, output_height, stride)\nweights_width  = filter_size(input_width,  output_width,  stride)\nweights_shape  = [filter_height, filter_width, input_depth, output_depth]\nbias_shape     = [output_depth]\n\n# initialize weights\nfilter_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))\nfilter_bias    = tf.Variable(tf.zeros(bias_shape))\n\nlayer1 = tf.nn.conv2d(x, filter_weights, strides, padding) + filter_bias\n\nprint(&#34;\nlayer1 conv: 28x28x6 =?=&#34;, layer1.get_shape()[3])\nassert( [28, 28, 6] == layer1.get_shape().as_list()[1:])\n\n# Activation\nlayer1 = tf.nn.relu(layer1)\n\n# Pooling (28,28,6?) --&gt; (14,14,?6)\ninput_height,  input_width,  input_depth  = layer1.get_shape()[1:]\noutput_height, output_width, output_depth = (14, 14, input_depth)\n\nksize = [1, 2, 2, 1]\npool_strides = ksize\nlayer1 = tf.maxpool(layer1, ksize, pool_strides, padding)\nprint(&#34;layer1 pool: 14x14x6 =?=&#34;, layer1.get_shape())\nassert( [14, 14, 6] == layer1.get_shape().as_list()[1:])\n&#39;</pre>
 </div>
+
 </div>
 
 </div>
@@ -13052,6 +13045,154 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 <span class="c1">### Once a final model architecture is selected, </span>
 <span class="c1">### the accuracy on the test set should be calculated and reported as well.</span>
 <span class="c1">### Feel free to use as many code cells as needed.</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;   http://stackoverflow.com/a/34243720/5411817</span>
+<span class="sd">#   use this function instead of separate functions:</span>
+<span class="sd">#   1) softmax with 2) cross_entropy and 3)(sparce) includes one-hot</span>
+<span class="sd">#   softmax_cross_entropy_with_logits is more numerically stable/</span>
+<span class="sd">#       accurate than running two steps of softmax, then cross_entropy</span>
+<span class="sd">#   using the sparse_.. saves a step by not having to convert labels</span>
+<span class="sd">#       to one-hot first</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># loss</span>
+<span class="n">cross_entropy</span>  <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sparse_softmax_cross_entropy_with_logits</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+<span class="n">loss_operation</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">cross_entropy</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># accuracy</span>
+<span class="n">model_prediction</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">prediction_is_correct</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">model_prediction</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+<span class="n">accuracy_calculation</span>   <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">prediction_is_correct</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># evaluation routine</span>
+<span class="k">def</span> <span class="nf">evaluate_data</span><span class="p">(</span><span class="n">X_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">):</span>
+    <span class="n">total_loss</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">total_accuracy</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="n">num_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_data</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">batch_start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">numsamples</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">):</span>
+        <span class="n">batch_end</span> <span class="o">=</span> <span class="n">batch_start</span> <span class="o">+</span> <span class="n">BATCH_SIZE</span>
+        <span class="n">X_batch</span> <span class="o">=</span> <span class="n">X_data</span><span class="p">[</span><span class="n">batch_start</span><span class="p">:</span><span class="n">batch_end</span><span class="p">]</span>
+        <span class="n">y_batch</span> <span class="o">=</span> <span class="n">y_data</span><span class="p">[</span><span class="n">batch_start</span><span class="p">:</span><span class="n">batch_end</span><span class="p">]</span>
+        
+        <span class="n">accuracy</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">accuracy_calculation</span><span class="p">,</span> <span class="n">loss_operation</span><span class="p">],</span>
+                                  <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">features</span><span class="p">:</span><span class="n">X_batch</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span><span class="n">y_batch</span><span class="p">})</span>
+        <span class="n">this_batch_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_batch</span><span class="p">)</span>
+        <span class="n">total_accuracy</span> <span class="o">+=</span> <span class="n">this_batch_size</span> <span class="o">*</span> <span class="n">accuracy</span>
+        <span class="n">total_loss</span>     <span class="o">+=</span> <span class="n">this_batch_size</span> <span class="o">*</span> <span class="n">loss</span>
+        
+    <span class="n">total_accuracy</span> <span class="o">=</span> <span class="n">total_accuracy</span> <span class="o">/</span> <span class="n">num_samples</span>
+    <span class="n">total_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">/</span> <span class="n">num_samples</span>
+        
+    <span class="k">return</span> <span class="n">total_accuracy</span><span class="p">,</span> <span class="n">total_loss</span>     
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+
+<span class="c1"># train our model</span>
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+    <span class="n">num_examples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">EPOCHS</span><span class="p">):</span>
+        <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">batch_start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_examples</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">):</span>
+            <span class="n">batch_end</span> <span class="o">=</span> <span class="n">batch_start</span> <span class="o">+</span> <span class="n">BATCH_SIZE</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">batch_start</span><span class="p">:</span><span class="n">batch_end</span><span class="p">]</span>
+            <span class="n">labels</span>   <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">batch_start</span><span class="p">:</span><span class="n">batch_end</span><span class="p">]</span>
+            <span class="c1">#train</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">training_operation</span><span class="p">,</span> <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">features</span><span class="p">:</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span><span class="n">labels</span><span class="p">})</span>
+            
+        <span class="c1"># evaluate and print results of model from this EPOCH       </span>
+        <span class="n">validation_accuracy</span><span class="p">,</span> <span class="n">loss_accuracy</span> <span class="o">=</span> <span class="n">evaluate_data</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;EPOCH </span><span class="si">{}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Time: </span><span class="si">{:.3f}</span><span class="s2"> minutes&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t0</span><span class="p">)</span> <span class="o">/</span> <span class="mi">60</span> <span class="p">)))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Validation Loss = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">loss_accuracy</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Validation Accuracy = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">validation_accuracy</span><span class="p">))</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;underfitting: low accuracy on training and validation sets.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;overfitting: high accuracy on training but low accuracy on validation.&quot;</span><span class="p">)</span>
+            
+<span class="c1"># save trained model</span>
+<span class="n">saver</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Saver</span><span class="p">()</span>
+<span class="n">saver</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="s1">&#39;./sh_trained_traffic_sign_classifier&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model Saved&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># test the trained model</span>
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+    <span class="n">saver</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">latest_checkpoint</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span>
+
+    <span class="n">test_accuracy</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test Accuracy = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_accuracy</span><span class="p">))</span>
 </pre></div>
 
 </div>
