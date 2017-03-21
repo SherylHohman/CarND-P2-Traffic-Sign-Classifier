@@ -44,6 +44,10 @@ X_train, y_train = train['features'], train['labels']
 X_valid, y_valid = valid['features'], valid['labels']
 X_test,  y_test  =  test['features'],  test['labels']
 
+assert(len(X_train) == len(y_train))
+assert(len(X_validation) == len(y_validation))
+assert(len(X_test) == len(y_test))
+
 
 # ---
 # 
@@ -91,13 +95,13 @@ def bufcount(filename):
 
     return lines
 # first line in datafile is classnames: ClassID, SignName 
-n_classes = bufcount('./signnames.csv') - 1
+num_classes = bufcount('./signnames.csv') - 1
 
 
 print("Number of training examples =", n_train)
 print("Number of testing examples =", n_test)
 print("Image data shape =", image_shape)
-print("Number of classes =", n_classes)
+print("Number of classes =", num_classes)
 
 
 # ### Include an exploratory visualization of the dataset
@@ -186,10 +190,39 @@ fig.savefig("sample_image", dpi=25)  # results in 160x120 px image
 
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
 
-# In[4]:
+# In[104]:
 
 ### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.
 ### Feel free to use as many code cells as needed.
+
+from sklearn.utils import shuffle
+import tensorflow as tf
+
+# images are already sized properly for leNet at (32x32)
+assert (image_shape == (32, 32))
+
+# shuffle data
+X_train, y_train = shuffle(X_train, y_train)
+
+# define training variables, constants
+EPOCHS = 10
+BATCH_SIZE = 128
+
+mu = 0
+sigma = 0.1  # or try .01, or ..
+
+def filter_size(in_size, out_size, stride):
+    assert(padding == "VALID")
+    return (in_size+1) - (out_size*stride)
+
+padding = "VALID"
+stride = 1
+strides = [1, stride, stride, 1]
+pool_stride = 2
+pool_strides = [1, pool_stride, pool_stride, 1]
+ksize = pool_strides
+
+
 
 
 # ### Model Architecture
@@ -198,6 +231,152 @@ fig.savefig("sample_image", dpi=25)  # results in 160x120 px image
 
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
+from tensorflow.contrib.layers import flatten
+
+# Layer 1: Convolutional, Activation, Pooling: (32,32,3) --> (28,28,6?) --> (14,14,?6)
+# Convolution (32,32,3) --> (28,28,6?)
+input_height,  input_width,  input_depth  = x.get_shape()[1:]
+output_height, output_width, output_depth = (28, 28, 6)
+
+weights_height = filter_size(input_height, output_height, stride)
+weights_width  = filter_size(input_width,  output_width,  stride)
+weights_shape  = [filter_height, filter_width, input_depth, output_depth]
+bias_shape     = [output_depth]
+
+# initialize weights
+filter_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))
+filter_bias    = tf.Variable(tf.zeros(bias_shape))
+
+layer1 = tf.nn.conv2d(x, filter_weights, strides, padding) + filter_bias
+
+print("\nlayer1 conv: 28x28x6 =?=", layer1.get_shape()[3])
+assert( [28, 28, 6] == layer1.get_shape().as_list()[1:])
+
+# Activation
+layer1 = tf.nn.relu(layer1)
+
+# Pooling (28,28,6?) --> (14,14,?6)
+input_height,  input_width,  input_depth  = layer1.get_shape()[1:]
+output_height, output_width, output_depth = (14, 14, input_depth)
+
+ksize = [1, 2, 2, 1]
+pool_strides = ksize
+layer1 = tf.maxpool(layer1, ksize, pool_strides, padding)
+print("layer1 pool: 14x14x6 =?=", layer1.get_shape())
+assert( [14, 14, 6] == layer1.get_shape().as_list()[1:])
+
+
+
+
+# In[ ]:
+
+# could define those calcs as functions, that simply passes in 
+  # old layer, new layer size. Returns params for weights and bias shape
+    # then only need to init new weights, bias, call conv, activation and pooling
+    # but code is already written, so just as easy to simply copy paste
+    # swapping out those couple variables that I'd have otherwise passed in.
+    # if did 3 Convolutional layers, No Hesitation. Right now, it's a draw.
+    
+# Layer 2: Convolutional, Activation, Pooling: (14,14,) -- > ()
+# Convolution (32,32,3) --> (28,28,6?)
+input_height,  input_width,  input_depth  = layer1.get_shape()[1:]
+output_height, output_width, output_depth = (10, 10, 16)
+
+weights_height = filter_size(input_height, output_height, stride)
+weights_width  = filter_size(input_width,  output_width,  stride)
+weights_shape  = [filter_height, filter_width, input_depth, output_depth]
+bias_shape     = [output_depth]  # == weights_shape[-1]
+
+# initialize weights
+filter_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))
+filter_bias    = tf.Variable(tf.zeros(bias_shape))
+
+layer2 = tf.nn.conv2d(layer1, filter_weights, strides, padding) + filter_bias
+
+print("\nlayer1 conv: 28x28x6 =?=", layer1.get_shape()[3])
+assert( [10, 10, 16] == layer1.get_shape().as_list()[1:])
+
+# Activation
+layer2 = tf.nn.relu(layer1)
+
+# Pooling (10, 10, 16) --> (5, 5, 16)
+input_height,  input_width,  input_depth  = layer1.get_shape()[1:]
+output_height, output_width, output_depth = (5, 5, input_depth)
+
+#ksize = [1, 2, 2, 1]
+#pool_strides = ksize
+layer2 = tf.maxpool(layer2, ksize, pool_strides, padding)
+print("layer2 pool: (5, 5, 16)) =?=", layer2.get_shape())
+assert( [5, 5, 16] == layer2.get_shape().as_list()[1:])
+
+
+
+# In[ ]:
+
+# Flatten: 
+# from tensorflow.contrib.layers import flatten
+flattened_23 = tf.contrib.layers.flatten(layer2)
+
+
+# In[ ]:
+
+# Layer 3: Fully Connected
+input_height = flattened_23.get_shape().as_list()[1]  # ==? len(flattened_23 ?)
+output_height = 120
+weights_shape = [input_height, output_height]
+bias_shape    = [output_height]
+
+fcc_weights = tf.Variable(tf.truncated_normal(weights_shape), mean=mu, stddev=sigma)
+fcc_bias    = tf.Variable(tf.zeros(bias_shape))
+
+layer3 = tf.add(tf.matmul(flattened_23, fcc_weights), fcc_bias)
+layer3 = tf.nn.relu(layer3)
+assert( [int(layer3.get_shape()[1]) ] == [120])
+
+
+# In[ ]:
+
+# Layer 4: Fully Connected
+input_height = layer3.get_shape().as_list()[1]  # ==? len(layer3 ?)
+output_height = 84
+weights_shape = [input_height, output_height]
+bias_shape    = [output_height]
+
+fcc_weights = tf.Variable(tf.truncated_normal(weights_shape), mean=mu, stddev=sigma)
+fcc_bias    = tf.Variable(tf.zeros(bias_shape))
+
+layer4 = tf.add(tf.matmul(layer3, fcc_weights), fcc_bias)
+layer4 = tf.nn.relu(layer4)
+assert( [int(layer3.get_shape()[1]) ] == [84])
+
+
+# In[ ]:
+
+# Layer 5: Fully Connected
+input_height = layer4.get_shape().as_list()[1]  # ==? len(layer3 ?)
+output_height = num_classes
+weights_shape = [input_height, output_height]
+bias_shape    = [output_height]
+
+fcc_weights = tf.Variable(tf.truncated_normal(weights_shape), mean=mu, stddev=sigma)
+fcc_bias    = tf.Variable(tf.zeros(bias_shape))
+
+logits = tf.add(tf.matmul(layer4, fcc_weights), fcc_bias)
+assert( [int(logits.get_shape()[1]) ] == [num_classes])
+
+
+
+# In[ ]:
+
+def LeNet(x):
+    layer1 = get_layer1(x, (28,28,6), (14,14,6))
+    layer2 = get_layer2(layer1, (10,10,16), (5,5,16))
+    
+    flattened = tf.contrib.layers.flatten(layer2)
+    
+    layer3 = get_layer3(flattened, [120])
+    layer4 = get_layer3(layer3, [84])
+    logits = get_layer3(layer4, [num_classes])
 
 
 # ### Train, Validate and Test the Model

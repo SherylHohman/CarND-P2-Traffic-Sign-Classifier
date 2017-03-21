@@ -11797,6 +11797,10 @@ div#notebook {
 <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">],</span> <span class="n">train</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span>
 <span class="n">X_valid</span><span class="p">,</span> <span class="n">y_valid</span> <span class="o">=</span> <span class="n">valid</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">],</span> <span class="n">valid</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span>
 <span class="n">X_test</span><span class="p">,</span>  <span class="n">y_test</span>  <span class="o">=</span>  <span class="n">test</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">],</span>  <span class="n">test</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">]</span>
+
+<span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="p">))</span>
+<span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_validation</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_validation</span><span class="p">))</span>
+<span class="k">assert</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_test</span><span class="p">))</span>
 </pre></div>
 
 </div>
@@ -11865,13 +11869,13 @@ div#notebook {
 
     <span class="k">return</span> <span class="n">lines</span>
 <span class="c1"># first line in datafile is classnames: ClassID, SignName </span>
-<span class="n">n_classes</span> <span class="o">=</span> <span class="n">bufcount</span><span class="p">(</span><span class="s1">&#39;./signnames.csv&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">num_classes</span> <span class="o">=</span> <span class="n">bufcount</span><span class="p">(</span><span class="s1">&#39;./signnames.csv&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
 
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of training examples =&quot;</span><span class="p">,</span> <span class="n">n_train</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of testing examples =&quot;</span><span class="p">,</span> <span class="n">n_test</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Image data shape =&quot;</span><span class="p">,</span> <span class="n">image_shape</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of classes =&quot;</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of classes =&quot;</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12652,11 +12656,38 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[104]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.</span>
 <span class="c1">### Feel free to use as many code cells as needed.</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="k">import</span> <span class="n">shuffle</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="c1"># images are already sized properly for leNet at (32x32)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">image_shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+
+<span class="c1"># shuffle data</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># define training variables, constants</span>
+<span class="n">EPOCHS</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">128</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># or try .01, or ..</span>
+
+<span class="k">def</span> <span class="nf">filter_size</span><span class="p">(</span><span class="n">in_size</span><span class="p">,</span> <span class="n">out_size</span><span class="p">,</span> <span class="n">stride</span><span class="p">):</span>
+    <span class="k">assert</span><span class="p">(</span><span class="n">padding</span> <span class="o">==</span> <span class="s2">&quot;VALID&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">in_size</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">out_size</span><span class="o">*</span><span class="n">stride</span><span class="p">)</span>
+
+<span class="n">padding</span> <span class="o">=</span> <span class="s2">&quot;VALID&quot;</span>
+<span class="n">stride</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">strides</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="n">stride</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">pool_stride</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">pool_strides</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">pool_stride</span><span class="p">,</span> <span class="n">pool_stride</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">ksize</span> <span class="o">=</span> <span class="n">pool_strides</span>
 </pre></div>
 
 </div>
@@ -12680,6 +12711,196 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Define your architecture here.</span>
 <span class="c1">### Feel free to use as many code cells as needed.</span>
+<span class="kn">from</span> <span class="nn">tensorflow.contrib.layers</span> <span class="k">import</span> <span class="n">flatten</span>
+
+<span class="c1"># Layer 1: Convolutional, Activation, Pooling: (32,32,3) --&gt; (28,28,6?) --&gt; (14,14,?6)</span>
+<span class="c1"># Convolution (32,32,3) --&gt; (28,28,6?)</span>
+<span class="n">input_height</span><span class="p">,</span>  <span class="n">input_width</span><span class="p">,</span>  <span class="n">input_depth</span>  <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="n">output_height</span><span class="p">,</span> <span class="n">output_width</span><span class="p">,</span> <span class="n">output_depth</span> <span class="o">=</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+
+<span class="n">weights_height</span> <span class="o">=</span> <span class="n">filter_size</span><span class="p">(</span><span class="n">input_height</span><span class="p">,</span> <span class="n">output_height</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span>
+<span class="n">weights_width</span>  <span class="o">=</span> <span class="n">filter_size</span><span class="p">(</span><span class="n">input_width</span><span class="p">,</span>  <span class="n">output_width</span><span class="p">,</span>  <span class="n">stride</span><span class="p">)</span>
+<span class="n">weights_shape</span>  <span class="o">=</span> <span class="p">[</span><span class="n">filter_height</span><span class="p">,</span> <span class="n">filter_width</span><span class="p">,</span> <span class="n">input_depth</span><span class="p">,</span> <span class="n">output_depth</span><span class="p">]</span>
+<span class="n">bias_shape</span>     <span class="o">=</span> <span class="p">[</span><span class="n">output_depth</span><span class="p">]</span>
+
+<span class="c1"># initialize weights</span>
+<span class="n">filter_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">weights_shape</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sigma</span><span class="p">))</span>
+<span class="n">filter_bias</span>    <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">))</span>
+
+<span class="n">layer1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">filter_weights</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span> <span class="o">+</span> <span class="n">filter_bias</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">layer1 conv: 28x28x6 =?=&quot;</span><span class="p">,</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span>
+<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+
+<span class="c1"># Activation</span>
+<span class="n">layer1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer1</span><span class="p">)</span>
+
+<span class="c1"># Pooling (28,28,6?) --&gt; (14,14,?6)</span>
+<span class="n">input_height</span><span class="p">,</span>  <span class="n">input_width</span><span class="p">,</span>  <span class="n">input_depth</span>  <span class="o">=</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="n">output_height</span><span class="p">,</span> <span class="n">output_width</span><span class="p">,</span> <span class="n">output_depth</span> <span class="o">=</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="n">input_depth</span><span class="p">)</span>
+
+<span class="n">ksize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">pool_strides</span> <span class="o">=</span> <span class="n">ksize</span>
+<span class="n">layer1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">maxpool</span><span class="p">(</span><span class="n">layer1</span><span class="p">,</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">pool_strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;layer1 pool: 14x14x6 =?=&quot;</span><span class="p">,</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">())</span>
+<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># could define those calcs as functions, that simply passes in </span>
+  <span class="c1"># old layer, new layer size. Returns params for weights and bias shape</span>
+    <span class="c1"># then only need to init new weights, bias, call conv, activation and pooling</span>
+    <span class="c1"># but code is already written, so just as easy to simply copy paste</span>
+    <span class="c1"># swapping out those couple variables that I&#39;d have otherwise passed in.</span>
+    <span class="c1"># if did 3 Convolutional layers, No Hesitation. Right now, it&#39;s a draw.</span>
+    
+<span class="c1"># Layer 2: Convolutional, Activation, Pooling: (14,14,) -- &gt; ()</span>
+<span class="c1"># Convolution (32,32,3) --&gt; (28,28,6?)</span>
+<span class="n">input_height</span><span class="p">,</span>  <span class="n">input_width</span><span class="p">,</span>  <span class="n">input_depth</span>  <span class="o">=</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="n">output_height</span><span class="p">,</span> <span class="n">output_width</span><span class="p">,</span> <span class="n">output_depth</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+<span class="n">weights_height</span> <span class="o">=</span> <span class="n">filter_size</span><span class="p">(</span><span class="n">input_height</span><span class="p">,</span> <span class="n">output_height</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span>
+<span class="n">weights_width</span>  <span class="o">=</span> <span class="n">filter_size</span><span class="p">(</span><span class="n">input_width</span><span class="p">,</span>  <span class="n">output_width</span><span class="p">,</span>  <span class="n">stride</span><span class="p">)</span>
+<span class="n">weights_shape</span>  <span class="o">=</span> <span class="p">[</span><span class="n">filter_height</span><span class="p">,</span> <span class="n">filter_width</span><span class="p">,</span> <span class="n">input_depth</span><span class="p">,</span> <span class="n">output_depth</span><span class="p">]</span>
+<span class="n">bias_shape</span>     <span class="o">=</span> <span class="p">[</span><span class="n">output_depth</span><span class="p">]</span>  <span class="c1"># == weights_shape[-1]</span>
+
+<span class="c1"># initialize weights</span>
+<span class="n">filter_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">weights_shape</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sigma</span><span class="p">))</span>
+<span class="n">filter_bias</span>    <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">))</span>
+
+<span class="n">layer2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">layer1</span><span class="p">,</span> <span class="n">filter_weights</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span> <span class="o">+</span> <span class="n">filter_bias</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">layer1 conv: 28x28x6 =?=&quot;</span><span class="p">,</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span>
+<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">16</span><span class="p">]</span> <span class="o">==</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+
+<span class="c1"># Activation</span>
+<span class="n">layer2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer1</span><span class="p">)</span>
+
+<span class="c1"># Pooling (10, 10, 16) --&gt; (5, 5, 16)</span>
+<span class="n">input_height</span><span class="p">,</span>  <span class="n">input_width</span><span class="p">,</span>  <span class="n">input_depth</span>  <span class="o">=</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+<span class="n">output_height</span><span class="p">,</span> <span class="n">output_width</span><span class="p">,</span> <span class="n">output_depth</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">input_depth</span><span class="p">)</span>
+
+<span class="c1">#ksize = [1, 2, 2, 1]</span>
+<span class="c1">#pool_strides = ksize</span>
+<span class="n">layer2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">maxpool</span><span class="p">(</span><span class="n">layer2</span><span class="p">,</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">pool_strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;layer2 pool: (5, 5, 16)) =?=&quot;</span><span class="p">,</span> <span class="n">layer2</span><span class="o">.</span><span class="n">get_shape</span><span class="p">())</span>
+<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">16</span><span class="p">]</span> <span class="o">==</span> <span class="n">layer2</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Flatten: </span>
+<span class="c1"># from tensorflow.contrib.layers import flatten</span>
+<span class="n">flattened_23</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">layer2</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Layer 3: Fully Connected</span>
+<span class="n">input_height</span> <span class="o">=</span> <span class="n">flattened_23</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># ==? len(flattened_23 ?)</span>
+<span class="n">output_height</span> <span class="o">=</span> <span class="mi">120</span>
+<span class="n">weights_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_height</span><span class="p">,</span> <span class="n">output_height</span><span class="p">]</span>
+<span class="n">bias_shape</span>    <span class="o">=</span> <span class="p">[</span><span class="n">output_height</span><span class="p">]</span>
+
+<span class="n">fcc_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">weights_shape</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+<span class="n">fcc_bias</span>    <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">))</span>
+
+<span class="n">layer3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">flattened_23</span><span class="p">,</span> <span class="n">fcc_weights</span><span class="p">),</span> <span class="n">fcc_bias</span><span class="p">)</span>
+<span class="n">layer3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer3</span><span class="p">)</span>
+<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">layer3</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span> <span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">120</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Layer 4: Fully Connected</span>
+<span class="n">input_height</span> <span class="o">=</span> <span class="n">layer3</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># ==? len(layer3 ?)</span>
+<span class="n">output_height</span> <span class="o">=</span> <span class="mi">84</span>
+<span class="n">weights_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_height</span><span class="p">,</span> <span class="n">output_height</span><span class="p">]</span>
+<span class="n">bias_shape</span>    <span class="o">=</span> <span class="p">[</span><span class="n">output_height</span><span class="p">]</span>
+
+<span class="n">fcc_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">weights_shape</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+<span class="n">fcc_bias</span>    <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">))</span>
+
+<span class="n">layer4</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">layer3</span><span class="p">,</span> <span class="n">fcc_weights</span><span class="p">),</span> <span class="n">fcc_bias</span><span class="p">)</span>
+<span class="n">layer4</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer4</span><span class="p">)</span>
+<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">layer3</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span> <span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">84</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Layer 5: Fully Connected</span>
+<span class="n">input_height</span> <span class="o">=</span> <span class="n">layer4</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># ==? len(layer3 ?)</span>
+<span class="n">output_height</span> <span class="o">=</span> <span class="n">num_classes</span>
+<span class="n">weights_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_height</span><span class="p">,</span> <span class="n">output_height</span><span class="p">]</span>
+<span class="n">bias_shape</span>    <span class="o">=</span> <span class="p">[</span><span class="n">output_height</span><span class="p">]</span>
+
+<span class="n">fcc_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">weights_shape</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+<span class="n">fcc_bias</span>    <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">))</span>
+
+<span class="n">logits</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">layer4</span><span class="p">,</span> <span class="n">fcc_weights</span><span class="p">),</span> <span class="n">fcc_bias</span><span class="p">)</span>
+<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span> <span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">num_classes</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">LeNet</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">layer1</span> <span class="o">=</span> <span class="n">get_layer1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+    <span class="n">layer2</span> <span class="o">=</span> <span class="n">get_layer2</span><span class="p">(</span><span class="n">layer1</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">16</span><span class="p">))</span>
+    
+    <span class="n">flattened</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">layer2</span><span class="p">)</span>
+    
+    <span class="n">layer3</span> <span class="o">=</span> <span class="n">get_layer3</span><span class="p">(</span><span class="n">flattened</span><span class="p">,</span> <span class="p">[</span><span class="mi">120</span><span class="p">])</span>
+    <span class="n">layer4</span> <span class="o">=</span> <span class="n">get_layer3</span><span class="p">(</span><span class="n">layer3</span><span class="p">,</span> <span class="p">[</span><span class="mi">84</span><span class="p">])</span>
+    <span class="n">logits</span> <span class="o">=</span> <span class="n">get_layer3</span><span class="p">(</span><span class="n">layer4</span><span class="p">,</span> <span class="p">[</span><span class="n">num_classes</span><span class="p">])</span>
 </pre></div>
 
 </div>
