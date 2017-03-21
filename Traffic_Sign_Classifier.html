@@ -12656,7 +12656,7 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[104]:</div>
+<div class="prompt input_prompt">In&nbsp;[105]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.</span>
@@ -12706,47 +12706,71 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[109]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Define your architecture here.</span>
 <span class="c1">### Feel free to use as many code cells as needed.</span>
-<span class="kn">from</span> <span class="nn">tensorflow.contrib.layers</span> <span class="k">import</span> <span class="n">flatten</span>
 
-<span class="c1"># Layer 1: Convolutional, Activation, Pooling: (32,32,3) --&gt; (28,28,6?) --&gt; (14,14,?6)</span>
-<span class="c1"># Convolution (32,32,3) --&gt; (28,28,6?)</span>
-<span class="n">input_height</span><span class="p">,</span>  <span class="n">input_width</span><span class="p">,</span>  <span class="n">input_depth</span>  <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
-<span class="n">output_height</span><span class="p">,</span> <span class="n">output_width</span><span class="p">,</span> <span class="n">output_depth</span> <span class="o">=</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"># Layer 1: Convolutional, Activation, Pooling: (32,32,3) --&gt; (28,28,6?) --&gt; (14,14,?6)</span>
+<span class="sd"># Convolution (32,32,3) --&gt; (28,28,6?)</span>
+<span class="sd">input_height,  input_width,  input_depth  = x.get_shape()[1:]</span>
+<span class="sd">output_height, output_width, output_depth = (28, 28, 6)</span>
 
-<span class="n">weights_height</span> <span class="o">=</span> <span class="n">filter_size</span><span class="p">(</span><span class="n">input_height</span><span class="p">,</span> <span class="n">output_height</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span>
-<span class="n">weights_width</span>  <span class="o">=</span> <span class="n">filter_size</span><span class="p">(</span><span class="n">input_width</span><span class="p">,</span>  <span class="n">output_width</span><span class="p">,</span>  <span class="n">stride</span><span class="p">)</span>
-<span class="n">weights_shape</span>  <span class="o">=</span> <span class="p">[</span><span class="n">filter_height</span><span class="p">,</span> <span class="n">filter_width</span><span class="p">,</span> <span class="n">input_depth</span><span class="p">,</span> <span class="n">output_depth</span><span class="p">]</span>
-<span class="n">bias_shape</span>     <span class="o">=</span> <span class="p">[</span><span class="n">output_depth</span><span class="p">]</span>
+<span class="sd">weights_height = filter_size(input_height, output_height, stride)</span>
+<span class="sd">weights_width  = filter_size(input_width,  output_width,  stride)</span>
+<span class="sd">weights_shape  = [filter_height, filter_width, input_depth, output_depth]</span>
+<span class="sd">bias_shape     = [output_depth]</span>
 
-<span class="c1"># initialize weights</span>
-<span class="n">filter_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">weights_shape</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sigma</span><span class="p">))</span>
-<span class="n">filter_bias</span>    <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">))</span>
+<span class="sd"># initialize weights</span>
+<span class="sd">filter_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))</span>
+<span class="sd">filter_bias    = tf.Variable(tf.zeros(bias_shape))</span>
 
-<span class="n">layer1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">filter_weights</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span> <span class="o">+</span> <span class="n">filter_bias</span>
+<span class="sd">layer1 = tf.nn.conv2d(x, filter_weights, strides, padding) + filter_bias</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">layer1 conv: 28x28x6 =?=&quot;</span><span class="p">,</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span>
-<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+<span class="sd">print(&quot;\nlayer1 conv: 28x28x6 =?=&quot;, layer1.get_shape()[3])</span>
+<span class="sd">assert( [28, 28, 6] == layer1.get_shape().as_list()[1:])</span>
 
-<span class="c1"># Activation</span>
-<span class="n">layer1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer1</span><span class="p">)</span>
+<span class="sd"># Activation</span>
+<span class="sd">layer1 = tf.nn.relu(layer1)</span>
 
-<span class="c1"># Pooling (28,28,6?) --&gt; (14,14,?6)</span>
-<span class="n">input_height</span><span class="p">,</span>  <span class="n">input_width</span><span class="p">,</span>  <span class="n">input_depth</span>  <span class="o">=</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
-<span class="n">output_height</span><span class="p">,</span> <span class="n">output_width</span><span class="p">,</span> <span class="n">output_depth</span> <span class="o">=</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="n">input_depth</span><span class="p">)</span>
+<span class="sd"># Pooling (28,28,6?) --&gt; (14,14,?6)</span>
+<span class="sd">input_height,  input_width,  input_depth  = layer1.get_shape()[1:]</span>
+<span class="sd">output_height, output_width, output_depth = (14, 14, input_depth)</span>
 
-<span class="n">ksize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-<span class="n">pool_strides</span> <span class="o">=</span> <span class="n">ksize</span>
-<span class="n">layer1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">maxpool</span><span class="p">(</span><span class="n">layer1</span><span class="p">,</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">pool_strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;layer1 pool: 14x14x6 =?=&quot;</span><span class="p">,</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">())</span>
-<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+<span class="sd">ksize = [1, 2, 2, 1]</span>
+<span class="sd">pool_strides = ksize</span>
+<span class="sd">layer1 = tf.maxpool(layer1, ksize, pool_strides, padding)</span>
+<span class="sd">print(&quot;layer1 pool: 14x14x6 =?=&quot;, layer1.get_shape())</span>
+<span class="sd">assert( [14, 14, 6] == layer1.get_shape().as_list()[1:])</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-109-30ab8dc5a31c&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      6</span> <span class="ansi-red-intense-fg ansi-bold"># Layer 1: Convolutional, Activation, Pooling: (32,32,3) --&gt; (28,28,6?) --&gt; (14,14,?6)</span>
+<span class="ansi-green-intense-fg ansi-bold">      7</span> <span class="ansi-red-intense-fg ansi-bold"># Convolution (32,32,3) --&gt; (28,28,6?)</span>
+<span class="ansi-green-fg">----&gt; 8</span><span class="ansi-red-fg"> </span>input_height<span class="ansi-yellow-intense-fg ansi-bold">,</span>  input_width<span class="ansi-yellow-intense-fg ansi-bold">,</span>  input_depth  <span class="ansi-yellow-intense-fg ansi-bold">=</span> x<span class="ansi-yellow-intense-fg ansi-bold">.</span>get_shape<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">.</span>as_list<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      9</span> output_height<span class="ansi-yellow-intense-fg ansi-bold">,</span> output_width<span class="ansi-yellow-intense-fg ansi-bold">,</span> output_depth <span class="ansi-yellow-intense-fg ansi-bold">=</span> <span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-cyan-intense-fg ansi-bold">28</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-cyan-intense-fg ansi-bold">28</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-cyan-intense-fg ansi-bold">6</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     10</span> 
+
+<span class="ansi-red-fg">AttributeError</span>: &#39;numpy.ndarray&#39; object has no attribute &#39;get_shape&#39;</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -12763,37 +12787,39 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
     <span class="c1"># swapping out those couple variables that I&#39;d have otherwise passed in.</span>
     <span class="c1"># if did 3 Convolutional layers, No Hesitation. Right now, it&#39;s a draw.</span>
     
-<span class="c1"># Layer 2: Convolutional, Activation, Pooling: (14,14,) -- &gt; ()</span>
-<span class="c1"># Convolution (32,32,3) --&gt; (28,28,6?)</span>
-<span class="n">input_height</span><span class="p">,</span>  <span class="n">input_width</span><span class="p">,</span>  <span class="n">input_depth</span>  <span class="o">=</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
-<span class="n">output_height</span><span class="p">,</span> <span class="n">output_width</span><span class="p">,</span> <span class="n">output_depth</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"># Layer 2: Convolutional, Activation, Pooling: (14,14,) -- &gt; ()</span>
+<span class="sd"># Convolution (32,32,3) --&gt; (28,28,6?)</span>
+<span class="sd">input_height,  input_width,  input_depth  = layer1.get_shape()[1:]</span>
+<span class="sd">output_height, output_width, output_depth = (10, 10, 16)</span>
 
-<span class="n">weights_height</span> <span class="o">=</span> <span class="n">filter_size</span><span class="p">(</span><span class="n">input_height</span><span class="p">,</span> <span class="n">output_height</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span>
-<span class="n">weights_width</span>  <span class="o">=</span> <span class="n">filter_size</span><span class="p">(</span><span class="n">input_width</span><span class="p">,</span>  <span class="n">output_width</span><span class="p">,</span>  <span class="n">stride</span><span class="p">)</span>
-<span class="n">weights_shape</span>  <span class="o">=</span> <span class="p">[</span><span class="n">filter_height</span><span class="p">,</span> <span class="n">filter_width</span><span class="p">,</span> <span class="n">input_depth</span><span class="p">,</span> <span class="n">output_depth</span><span class="p">]</span>
-<span class="n">bias_shape</span>     <span class="o">=</span> <span class="p">[</span><span class="n">output_depth</span><span class="p">]</span>  <span class="c1"># == weights_shape[-1]</span>
+<span class="sd">weights_height = filter_size(input_height, output_height, stride)</span>
+<span class="sd">weights_width  = filter_size(input_width,  output_width,  stride)</span>
+<span class="sd">weights_shape  = [filter_height, filter_width, input_depth, output_depth]</span>
+<span class="sd">bias_shape     = [output_depth]  # == weights_shape[-1]</span>
 
-<span class="c1"># initialize weights</span>
-<span class="n">filter_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">weights_shape</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sigma</span><span class="p">))</span>
-<span class="n">filter_bias</span>    <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">))</span>
+<span class="sd"># initialize weights</span>
+<span class="sd">filter_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))</span>
+<span class="sd">filter_bias    = tf.Variable(tf.zeros(bias_shape))</span>
 
-<span class="n">layer2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">layer1</span><span class="p">,</span> <span class="n">filter_weights</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span> <span class="o">+</span> <span class="n">filter_bias</span>
+<span class="sd">layer2 = tf.nn.conv2d(layer1, filter_weights, strides, padding) + filter_bias</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">layer1 conv: 28x28x6 =?=&quot;</span><span class="p">,</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span>
-<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">16</span><span class="p">]</span> <span class="o">==</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+<span class="sd">print(&quot;\nlayer1 conv: 28x28x6 =?=&quot;, layer1.get_shape()[3])</span>
+<span class="sd">assert( [10, 10, 16] == layer1.get_shape().as_list()[1:])</span>
 
-<span class="c1"># Activation</span>
-<span class="n">layer2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer1</span><span class="p">)</span>
+<span class="sd"># Activation</span>
+<span class="sd">layer2 = tf.nn.relu(layer1)</span>
 
-<span class="c1"># Pooling (10, 10, 16) --&gt; (5, 5, 16)</span>
-<span class="n">input_height</span><span class="p">,</span>  <span class="n">input_width</span><span class="p">,</span>  <span class="n">input_depth</span>  <span class="o">=</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
-<span class="n">output_height</span><span class="p">,</span> <span class="n">output_width</span><span class="p">,</span> <span class="n">output_depth</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">input_depth</span><span class="p">)</span>
+<span class="sd"># Pooling (10, 10, 16) --&gt; (5, 5, 16)</span>
+<span class="sd">input_height,  input_width,  input_depth  = layer1.get_shape()[1:]</span>
+<span class="sd">output_height, output_width, output_depth = (5, 5, input_depth)</span>
 
-<span class="c1">#ksize = [1, 2, 2, 1]</span>
-<span class="c1">#pool_strides = ksize</span>
-<span class="n">layer2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">maxpool</span><span class="p">(</span><span class="n">layer2</span><span class="p">,</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">pool_strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;layer2 pool: (5, 5, 16)) =?=&quot;</span><span class="p">,</span> <span class="n">layer2</span><span class="o">.</span><span class="n">get_shape</span><span class="p">())</span>
-<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">16</span><span class="p">]</span> <span class="o">==</span> <span class="n">layer2</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+<span class="sd">#ksize = [1, 2, 2, 1]</span>
+<span class="sd">#pool_strides = ksize</span>
+<span class="sd">layer2 = tf.maxpool(layer2, ksize, pool_strides, padding)</span>
+<span class="sd">print(&quot;layer2 pool: (5, 5, 16)) =?=&quot;, layer2.get_shape())</span>
+<span class="sd">assert( [5, 5, 16] == layer2.get_shape().as_list()[1:])</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
 </div>
@@ -12806,9 +12832,11 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Flatten: </span>
-<span class="c1"># from tensorflow.contrib.layers import flatten</span>
-<span class="n">flattened_23</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">layer2</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"># Flatten: </span>
+<span class="sd"># from tensorflow.contrib.layers import flatten</span>
+<span class="sd">flattened_23 = tf.contrib.layers.flatten(layer2)</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
 </div>
@@ -12821,18 +12849,20 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Layer 3: Fully Connected</span>
-<span class="n">input_height</span> <span class="o">=</span> <span class="n">flattened_23</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># ==? len(flattened_23 ?)</span>
-<span class="n">output_height</span> <span class="o">=</span> <span class="mi">120</span>
-<span class="n">weights_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_height</span><span class="p">,</span> <span class="n">output_height</span><span class="p">]</span>
-<span class="n">bias_shape</span>    <span class="o">=</span> <span class="p">[</span><span class="n">output_height</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"># Layer 3: Fully Connected</span>
+<span class="sd">input_height = flattened_23.get_shape().as_list()[1]  # ==? len(flattened_23 ?)</span>
+<span class="sd">output_height = 120</span>
+<span class="sd">weights_shape = [input_height, output_height]</span>
+<span class="sd">bias_shape    = [output_height]</span>
 
-<span class="n">fcc_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">weights_shape</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
-<span class="n">fcc_bias</span>    <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">))</span>
+<span class="sd">fcc_weights = tf.Variable(tf.truncated_normal(weights_shape), mean=mu, stddev=sigma)</span>
+<span class="sd">fcc_bias    = tf.Variable(tf.zeros(bias_shape))</span>
 
-<span class="n">layer3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">flattened_23</span><span class="p">,</span> <span class="n">fcc_weights</span><span class="p">),</span> <span class="n">fcc_bias</span><span class="p">)</span>
-<span class="n">layer3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer3</span><span class="p">)</span>
-<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">layer3</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span> <span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">120</span><span class="p">])</span>
+<span class="sd">layer3 = tf.add(tf.matmul(flattened_23, fcc_weights), fcc_bias)</span>
+<span class="sd">layer3 = tf.nn.relu(layer3)</span>
+<span class="sd">assert( [int(layer3.get_shape()[1]) ] == [120])</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
 </div>
@@ -12845,18 +12875,20 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Layer 4: Fully Connected</span>
-<span class="n">input_height</span> <span class="o">=</span> <span class="n">layer3</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># ==? len(layer3 ?)</span>
-<span class="n">output_height</span> <span class="o">=</span> <span class="mi">84</span>
-<span class="n">weights_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_height</span><span class="p">,</span> <span class="n">output_height</span><span class="p">]</span>
-<span class="n">bias_shape</span>    <span class="o">=</span> <span class="p">[</span><span class="n">output_height</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"># Layer 4: Fully Connected</span>
+<span class="sd">input_height = layer3.get_shape().as_list()[1]  # ==? len(layer3 ?)</span>
+<span class="sd">output_height = 84</span>
+<span class="sd">weights_shape = [input_height, output_height]</span>
+<span class="sd">bias_shape    = [output_height]</span>
 
-<span class="n">fcc_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">weights_shape</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
-<span class="n">fcc_bias</span>    <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">))</span>
+<span class="sd">fcc_weights = tf.Variable(tf.truncated_normal(weights_shape), mean=mu, stddev=sigma)</span>
+<span class="sd">fcc_bias    = tf.Variable(tf.zeros(bias_shape))</span>
 
-<span class="n">layer4</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">layer3</span><span class="p">,</span> <span class="n">fcc_weights</span><span class="p">),</span> <span class="n">fcc_bias</span><span class="p">)</span>
-<span class="n">layer4</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer4</span><span class="p">)</span>
-<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">layer3</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span> <span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">84</span><span class="p">])</span>
+<span class="sd">layer4 = tf.add(tf.matmul(layer3, fcc_weights), fcc_bias)</span>
+<span class="sd">layer4 = tf.nn.relu(layer4)</span>
+<span class="sd">assert( [int(layer3.get_shape()[1]) ] == [84])</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
 </div>
@@ -12869,17 +12901,19 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Layer 5: Fully Connected</span>
-<span class="n">input_height</span> <span class="o">=</span> <span class="n">layer4</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># ==? len(layer3 ?)</span>
-<span class="n">output_height</span> <span class="o">=</span> <span class="n">num_classes</span>
-<span class="n">weights_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_height</span><span class="p">,</span> <span class="n">output_height</span><span class="p">]</span>
-<span class="n">bias_shape</span>    <span class="o">=</span> <span class="p">[</span><span class="n">output_height</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"># Layer 5: Fully Connected</span>
+<span class="sd">input_height = layer4.get_shape().as_list()[1]  # ==? len(layer3 ?)</span>
+<span class="sd">output_height = num_classes</span>
+<span class="sd">weights_shape = [input_height, output_height]</span>
+<span class="sd">bias_shape    = [output_height]</span>
 
-<span class="n">fcc_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">weights_shape</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
-<span class="n">fcc_bias</span>    <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">))</span>
+<span class="sd">fcc_weights = tf.Variable(tf.truncated_normal(weights_shape), mean=mu, stddev=sigma)</span>
+<span class="sd">fcc_bias    = tf.Variable(tf.zeros(bias_shape))</span>
 
-<span class="n">logits</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">layer4</span><span class="p">,</span> <span class="n">fcc_weights</span><span class="p">),</span> <span class="n">fcc_bias</span><span class="p">)</span>
-<span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span> <span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">num_classes</span><span class="p">])</span>
+<span class="sd">logits = tf.add(tf.matmul(layer4, fcc_weights), fcc_bias)</span>
+<span class="sd">assert( [int(logits.get_shape()[1]) ] == [num_classes])</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
 </div>
@@ -12892,15 +12926,95 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">LeNet</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="n">layer1</span> <span class="o">=</span> <span class="n">get_layer1</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
-    <span class="n">layer2</span> <span class="o">=</span> <span class="n">get_layer2</span><span class="p">(</span><span class="n">layer1</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">16</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_conv_layer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">conv_output_shape</span><span class="p">,</span> <span class="n">pool_output_shape</span><span class="p">)</span>
+    <span class="n">input_height</span><span class="p">,</span>  <span class="n">input_width</span><span class="p">,</span>  <span class="n">input_depth</span>  <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">output_height</span><span class="p">,</span> <span class="n">output_width</span><span class="p">,</span> <span class="n">output_depth</span> <span class="o">=</span> <span class="n">conv_output_shape</span>  <span class="c1">#(28, 28, 6)</span>
+
+    <span class="n">weights_height</span> <span class="o">=</span> <span class="n">filter_size</span><span class="p">(</span><span class="n">input_height</span><span class="p">,</span> <span class="n">output_height</span><span class="p">,</span> <span class="n">stride</span><span class="p">)</span>
+    <span class="n">weights_width</span>  <span class="o">=</span> <span class="n">filter_size</span><span class="p">(</span><span class="n">input_width</span><span class="p">,</span>  <span class="n">output_width</span><span class="p">,</span>  <span class="n">stride</span><span class="p">)</span>
+    <span class="n">weights_shape</span>  <span class="o">=</span> <span class="p">[</span><span class="n">filter_height</span><span class="p">,</span> <span class="n">filter_width</span><span class="p">,</span> <span class="n">input_depth</span><span class="p">,</span> <span class="n">output_depth</span><span class="p">]</span>
+    <span class="n">bias_shape</span>     <span class="o">=</span> <span class="p">[</span><span class="n">output_depth</span><span class="p">]</span>
+
+    <span class="c1"># initialize weights</span>
+    <span class="n">filter_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">weights_shape</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sigma</span><span class="p">))</span>
+    <span class="n">filter_bias</span>    <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">))</span>
+
+    <span class="n">layer1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">filter_weights</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span> <span class="o">+</span> <span class="n">filter_bias</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">layer1 conv: 28x28x6 =?=&quot;</span><span class="p">,</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="k">assert</span><span class="p">(</span> <span class="n">conv_output_shape</span> <span class="o">==</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="c1">#assert( [28, 28, 6] == layer1.get_shape().as_list()[1:])</span>
+
+    <span class="c1"># Activation</span>
+    <span class="n">layer1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer1</span><span class="p">)</span>
+
+    <span class="c1"># Pooling (28,28,6?) --&gt; (14,14,?6)</span>
+    <span class="n">input_height</span><span class="p">,</span>  <span class="n">input_width</span><span class="p">,</span>  <span class="n">input_depth</span>  <span class="o">=</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">output_height</span><span class="p">,</span> <span class="n">output_width</span><span class="p">,</span> <span class="n">output_depth</span> <span class="o">=</span> <span class="n">pool_output_shape</span> <span class="c1">#(14, 14, input_depth)</span>
+
+    <span class="n">ksize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">pool_strides</span> <span class="o">=</span> <span class="n">ksize</span>
+    <span class="n">layer1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">maxpool</span><span class="p">(</span><span class="n">layer1</span><span class="p">,</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">pool_strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;layer1 pool: 14x14x6 =?=&quot;</span><span class="p">,</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">())</span>
+    <span class="k">assert</span><span class="p">(</span> <span class="n">pool_output_shape</span> <span class="o">==</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span> <span class="p">)</span>
+    <span class="c1"># assert( [14, 14, 6] == layer1.get_shape().as_list()[1:])</span>
+
+    <span class="k">return</span> <span class="n">layer1</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_fcc_layer</span><span class="p">(</span><span class="n">prev_layer</span><span class="p">,</span> <span class="n">output_size</span><span class="p">):</span>
+    <span class="c1">#output_height = 120</span>
+    <span class="n">input_size</span>  <span class="o">=</span> <span class="n">p_layer</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">weights_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">input_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">]</span>
+    <span class="n">bias_shape</span>    <span class="o">=</span> <span class="p">[</span><span class="n">output_size</span><span class="p">]</span>
+
+    <span class="n">fcc_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">weights_shape</span><span class="p">),</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
+    <span class="n">fcc_bias</span>    <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">))</span>
+
+    <span class="n">fcc_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">prev_layer</span><span class="p">,</span> <span class="n">fcc_weights</span><span class="p">),</span> <span class="n">fcc_bias</span><span class="p">)</span>
+    <span class="c1">#fcc_layer = tf.nn.relu(fcc_layer)</span>
+    <span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">fcc_layer</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span> <span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">120</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">fcc_layer</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">tensorflow.contrib.layers</span> <span class="k">import</span> <span class="n">flatten</span>
+
+<span class="k">def</span> <span class="nf">LeNet</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">layer1</span> <span class="o">=</span> <span class="n">get_conv_layer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+    <span class="n">layer2</span> <span class="o">=</span> <span class="n">get_conv_layer</span><span class="p">(</span><span class="n">layer1</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">16</span><span class="p">))</span>
     
     <span class="n">flattened</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">layer2</span><span class="p">)</span>
     
-    <span class="n">layer3</span> <span class="o">=</span> <span class="n">get_layer3</span><span class="p">(</span><span class="n">flattened</span><span class="p">,</span> <span class="p">[</span><span class="mi">120</span><span class="p">])</span>
-    <span class="n">layer4</span> <span class="o">=</span> <span class="n">get_layer3</span><span class="p">(</span><span class="n">layer3</span><span class="p">,</span> <span class="p">[</span><span class="mi">84</span><span class="p">])</span>
-    <span class="n">logits</span> <span class="o">=</span> <span class="n">get_layer3</span><span class="p">(</span><span class="n">layer4</span><span class="p">,</span> <span class="p">[</span><span class="n">num_classes</span><span class="p">])</span>
+    <span class="n">layer3</span> <span class="o">=</span> <span class="n">get_fcc_layer</span><span class="p">(</span><span class="n">flattened</span><span class="p">,</span> <span class="p">[</span><span class="mi">120</span><span class="p">])</span>
+    <span class="n">layer3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer3</span><span class="p">)</span>
+
+    <span class="n">layer4</span> <span class="o">=</span> <span class="n">get_fcc_layer</span><span class="p">(</span><span class="n">layer3</span><span class="p">,</span> <span class="p">[</span><span class="mi">84</span><span class="p">])</span>
+    <span class="n">layer4</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer4</span><span class="p">)</span>
+    
+    <span class="n">logits</span> <span class="o">=</span> <span class="n">get_fcc_layer</span><span class="p">(</span><span class="n">layer4</span><span class="p">,</span> <span class="p">[</span><span class="n">num_classes</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">logits</span>
 </pre></div>
 
 </div>
