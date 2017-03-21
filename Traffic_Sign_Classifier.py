@@ -108,13 +108,59 @@ print("Number of classes =", n_classes)
 # 
 # **NOTE:** It's recommended you start with something simple first. If you wish to do more, come back to it after you've completed the rest of the sections.
 
-# In[16]:
+# In[97]:
 
 ### Data exploration visualization code goes here.
 ### Feel free to use as many code cells as needed.
 import matplotlib.pyplot as plt
+
 # Visualizations will be shown in the notebook.
 get_ipython().magic('matplotlib inline')
+
+
+# SH look at training set labels. count how many images there are of each label
+import numpy as np
+from collections import Counter, OrderedDict
+def plot_data(data, title, short_label):
+    counts = Counter(data)
+    #print(counts, "\n|")
+    counted = OrderedDict(sorted(counts.items()))
+    #print(counted[0], counted, "\n")
+    final = [counted[i] for i in range(len(counted))]
+    #print(final, "\n")
+    y_data = final
+    x_data = range(len(y_data))
+    
+    
+    fig, ax = plt.subplots()
+    ax.set_title(title)
+    ax.set_xlabel("traffic sign class number (0-42)\n")
+    ax.set_ylabel("number of example images (relative)")
+    ax.bar(x_data, y_data)#, bins=len(y_data))#, normed=True)
+    #ax.hist(y_data)#, bins=len(y_data))#, normed=True)
+    #spacing = np.linspace(0, len(x_data), 1)
+    #ax.plot(x, 1 / np.sqrt(2*np.pi) * np.exp(-(x**2)/2), linewidth=4)
+    #ax.plot(x_data, y_data, linewidth=4)
+    
+    ax.set_xticks([])
+    ax.set_yticks([])
+    fig.savefig("bar_chart_"+short_label+"_data.png", dpi=25)  # results in 160x120 px image
+
+print("Let's see how traffic sign examples are distributed \nacross the Training, Validation, and Test sets\n")
+plot_data(y_train, "Training Data: number of images in each class", "training")
+plot_data(y_valid, "Validation Data: number of images in each class", "validation")
+plot_data(y_test, "Test Data: number of images in each class","test")
+
+
+# In[103]:
+
+# diplay sample image
+
+get_ipython().magic('pylab inline')
+print("Sample image from training data set")
+imgplot = plt.imshow(X_train[500])
+fig.savefig("sample_image", dpi=25)  # results in 160x120 px image
+
 
 
 # ----
