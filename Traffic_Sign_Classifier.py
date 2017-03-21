@@ -22,7 +22,7 @@
 # ---
 # ## Step 0: Load The Data
 
-# In[1]:
+# In[ ]:
 
 # Load pickled data
 import pickle
@@ -45,8 +45,8 @@ X_valid, y_valid = valid['features'], valid['labels']
 X_test,  y_test  =  test['features'],  test['labels']
 
 assert(len(X_train) == len(y_train))
-assert(len(X_validation) == len(y_validation))
-assert(len(X_test) == len(y_test))
+assert(len(X_valid) == len(y_valid))
+assert(len(X_test)  == len(y_test))
 
 
 # ---
@@ -64,7 +64,7 @@ assert(len(X_test) == len(y_test))
 
 # ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
 
-# In[3]:
+# In[ ]:
 
 ### Replace each question mark with the appropriate value. 
 ### Use python, pandas or numpy methods rather than hard coding the results
@@ -112,7 +112,7 @@ print("Number of classes =", num_classes)
 # 
 # **NOTE:** It's recommended you start with something simple first. If you wish to do more, come back to it after you've completed the rest of the sections.
 
-# In[97]:
+# In[ ]:
 
 ### Data exploration visualization code goes here.
 ### Feel free to use as many code cells as needed.
@@ -156,7 +156,7 @@ plot_data(y_valid, "Validation Data: number of images in each class", "validatio
 plot_data(y_test, "Test Data: number of images in each class","test")
 
 
-# In[103]:
+# In[ ]:
 
 # diplay sample image
 
@@ -190,7 +190,7 @@ fig.savefig("sample_image", dpi=25)  # results in 160x120 px image
 
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
 
-# In[105]:
+# In[ ]:
 
 ### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.
 ### Feel free to use as many code cells as needed.
@@ -201,6 +201,8 @@ import tensorflow as tf
 # images are already sized properly for leNet at (32x32)
 assert (image_shape == (32, 32))
 
+# normalization
+
 # shuffle data
 X_train, y_train = shuffle(X_train, y_train)
 
@@ -210,6 +212,7 @@ BATCH_SIZE = 128
 
 mu = 0
 sigma = 0.1  # or try .01, or ..
+training_rate = 0.01
 
 def filter_size(in_size, out_size, stride):
     assert(padding == "VALID")
@@ -226,9 +229,6 @@ ksize = pool_strides
 
 
 # ### Model Architecture
-
-# In[110]:
-
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
 
@@ -261,14 +261,10 @@ output_height, output_width, output_depth = (14, 14, input_depth)
 
 ksize = [1, 2, 2, 1]
 pool_strides = ksize
-layer1 = tf.maxpool(layer1, ksize, pool_strides, padding)
+layer1 = tf.nn.max_pool(layer1, ksize, pool_strides, padding)
 print("layer1 pool: 14x14x6 =?=", layer1.get_shape())
 assert( [14, 14, 6] == layer1.get_shape().as_list()[1:])
 """
-
-
-# In[ ]:
-
 # could define those calcs as functions, that simply passes in 
   # old layer, new layer size. Returns params for weights and bias shape
     # then only need to init new weights, bias, call conv, activation and pooling
@@ -305,24 +301,15 @@ output_height, output_width, output_depth = (5, 5, input_depth)
 
 #ksize = [1, 2, 2, 1]
 #pool_strides = ksize
-layer2 = tf.maxpool(layer2, ksize, pool_strides, padding)
+layer2 = tf.nn.max_pool(layer2, ksize, pool_strides, padding)
 print("layer2 pool: (5, 5, 16)) =?=", layer2.get_shape())
 assert( [5, 5, 16] == layer2.get_shape().as_list()[1:])
 """
-
-
-# In[ ]:
-
 """
 # Flatten: 
 # from tensorflow.contrib.layers import flatten
 flattened_23 = tf.contrib.layers.flatten(layer2)
-"""
-
-
-# In[ ]:
-
-"""
+""""""
 # Layer 3: Fully Connected
 input_height = flattened_23.get_shape().as_list()[1]  # ==? len(flattened_23 ?)
 output_height = 120
@@ -335,12 +322,7 @@ fcc_bias    = tf.Variable(tf.zeros(bias_shape))
 layer3 = tf.add(tf.matmul(flattened_23, fcc_weights), fcc_bias)
 layer3 = tf.nn.relu(layer3)
 assert( [int(layer3.get_shape()[1]) ] == [120])
-"""
-
-
-# In[ ]:
-
-"""
+""""""
 # Layer 4: Fully Connected
 input_height = layer3.get_shape().as_list()[1]  # ==? len(layer3 ?)
 output_height = 84
@@ -353,12 +335,7 @@ fcc_bias    = tf.Variable(tf.zeros(bias_shape))
 layer4 = tf.add(tf.matmul(layer3, fcc_weights), fcc_bias)
 layer4 = tf.nn.relu(layer4)
 assert( [int(layer3.get_shape()[1]) ] == [84])
-"""
-
-
-# In[ ]:
-
-"""
+"""'''
 # Layer 5: Fully Connected
 input_height = layer4.get_shape().as_list()[1]  # ==? len(layer3 ?)
 output_height = num_classes
@@ -370,17 +347,16 @@ fcc_bias    = tf.Variable(tf.zeros(bias_shape))
 
 logits = tf.add(tf.matmul(layer4, fcc_weights), fcc_bias)
 assert( [int(logits.get_shape()[1]) ] == [num_classes])
-"""
-
+'''
 
 # In[ ]:
 
-def get_conv_layer(x, conv_output_shape, pool_output_shape)
+def get_conv_layer(x, conv_output_shape, pool_output_shape):
     input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
     output_height, output_width, output_depth = conv_output_shape  #(28, 28, 6)
 
-    weights_height = filter_size(input_height, output_height, stride)
-    weights_width  = filter_size(input_width,  output_width,  stride)
+    filter_height = filter_size(input_height, output_height, stride)
+    filter_width  = filter_size(input_width,  output_width,  stride)
     weights_shape  = [filter_height, filter_width, input_depth, output_depth]
     bias_shape     = [output_depth]
 
@@ -390,8 +366,9 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape)
 
     layer1 = tf.nn.conv2d(x, filter_weights, strides, padding) + filter_bias
 
-    print("\nlayer1 conv: 28x28x6 =?=", layer1.get_shape()[3])
-    assert( conv_output_shape == layer1.get_shape().as_list()[1:])
+    #print("\nlayer1 conv: 28x28x6 =?=", layer1.get_shape()[3])
+    print(conv_output_shape, "=?=", layer1.get_shape())
+    #assert( conv_output_shape == layer1.get_shape().as_list()[1:])
     #assert( [28, 28, 6] == layer1.get_shape().as_list()[1:])
 
     # Activation
@@ -403,9 +380,10 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape)
 
     ksize = [1, 2, 2, 1]
     pool_strides = ksize
-    layer1 = tf.maxpool(layer1, ksize, pool_strides, padding)
-    print("layer1 pool: 14x14x6 =?=", layer1.get_shape())
-    assert( pool_output_shape == layer1.get_shape().as_list()[1:] )
+    layer1 = tf.nn.max_pool(layer1, ksize, pool_strides, padding)
+    #print("layer1 pool: 14x14x6 =?=", layer1.get_shape())
+    print(pool_output_shape, "=?=", layer1.get_shape())
+    #assert( pool_output_shape == layer1.get_shape().as_list()[1:] )
     # assert( [14, 14, 6] == layer1.get_shape().as_list()[1:])
 
     return layer1
@@ -416,16 +394,17 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape)
 
 def get_fcc_layer(prev_layer, output_size):
     #output_height = 120
-    input_size  = p_layer.get_shape().as_list()[1]
+    input_size  = prev_layer.get_shape().as_list()[1]
     weights_shape = [input_size, output_size]
     bias_shape    = [output_size]
 
-    fcc_weights = tf.Variable(tf.truncated_normal(weights_shape), mean=mu, stddev=sigma)
+    fcc_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))
     fcc_bias    = tf.Variable(tf.zeros(bias_shape))
 
     fcc_layer = tf.add(tf.matmul(prev_layer, fcc_weights), fcc_bias)
     #fcc_layer = tf.nn.relu(fcc_layer)
-    assert( [int(fcc_layer.get_shape()[1]) ] == [120])
+    print(output_size, "=?=", fcc_layer.get_shape()[1])
+    #assert( [int(fcc_layer.get_shape()[1]) ] == [120])
 
     return fcc_layer
 
@@ -445,6 +424,7 @@ def LeNet(x):
 
     layer4 = get_fcc_layer(layer3, [84])
     layer4 = tf.nn.relu(layer4)
+    # maybe try dropout layer
     
     logits = get_fcc_layer(layer4, [num_classes])
     
@@ -456,7 +436,7 @@ def LeNet(x):
 # A validation set can be used to assess how well the model is performing. A low accuracy on the training and validation
 # sets imply underfitting. A high accuracy on the training set but low accuracy on the validation set implies overfitting.
 
-# In[1]:
+# In[ ]:
 
 ### Train your model here.
 ### Calculate and report the accuracy on the training and validation set.
@@ -467,20 +447,29 @@ def LeNet(x):
 
 # In[ ]:
 
-"""   http://stackoverflow.com/a/34243720/5411817
+'''   http://stackoverflow.com/a/34243720/5411817
 #   use this function instead of separate functions:
 #   1) softmax with 2) cross_entropy and 3)(sparce) includes one-hot
 #   softmax_cross_entropy_with_logits is more numerically stable/
 #       accurate than running two steps of softmax, then cross_entropy
 #   using the sparse_.. saves a step by not having to convert labels
 #       to one-hot first
-"""
+'''
+# initialize
+x = tf.placeholder(tf.float32, (None, 32, 32, 1))
+y = tf.placeholder(tf.int32, (None))
+
+# run leNet
+training_rate = .001
+logits = LeNet(x)
+
 # loss
 cross_entropy  = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, labels)
 loss_operation = tf.reduce_mean(cross_entropy)
 
-
-# In[ ]:
+# train
+optimizer = tf.train.AdamOptimizer(learning_rate=rate)
+training_operation = optimizer.minimize(loss_operation)
 
 # accuracy
 model_prediction = tf.argmax(logits, 1)
@@ -490,8 +479,15 @@ accuracy_calculation   = tf.reduce_mean(tf.cast(prediction_is_correct, tf.float3
 
 # In[ ]:
 
+
+
+
+# In[ ]:
+
 # evaluation routine
 def evaluate_data(X_data, y_data):
+    print("evaluating..")
+    sess = tf.get_default_session()
     total_loss = 0
     total_accuracy = 0
     
@@ -504,6 +500,7 @@ def evaluate_data(X_data, y_data):
         accuracy, loss = sess.run([accuracy_calculation, loss_operation],
                                   feed_dict = {features:X_batch, labels:y_batch})
         this_batch_size = len(X_batch)
+        
         total_accuracy += this_batch_size * accuracy
         total_loss     += this_batch_size * loss
         
@@ -511,6 +508,20 @@ def evaluate_data(X_data, y_data):
     total_loss = total_loss / num_samples
         
     return total_accuracy, total_loss     
+
+
+# In[ ]:
+
+# TEMP TRUNCATE DATA FOR INITIAL TESTING
+tr = int(BATCH_SIZE * 1.2)
+va = te = int(tr * 0.2)
+print(tr, va, te, (tr+va+te), tr/(tr+va+te))
+X_train = X_train[0:tr]
+y_train = y_train[0:tr]
+X_valid = X_valid[0:va]
+y_valid = y_valid[0:va]
+X_test  = X_test[0:te]
+y_test  = y_test[0:te]
 
 
 # In[ ]:
@@ -531,19 +542,22 @@ with tf.Session() as sess:
             features = X_train[batch_start:batch_end]
             labels   = y_train[batch_start:batch_end]
             #train
-            sess.run(training_operation, feed_dict = {features:features, labels:labels})
-            
-        # evaluate and print results of model from this EPOCH       
-        validation_accuracy, loss_accuracy = evaluate_data(X_train, y_train)
+            sess.run(training_operation, feed_dict = {features:features, labels:labels})            
+            print("     batch ", 1+offset//BATCH_SIZE, "of ", 1 + num_examples/BATCH_SIZE, "batches,  on EPOCH", i+1, "of", EPOCHS, "EPOCHS")
+                      
+        # evaluate on validation set, and print results of model from this EPOCH       
+        validation_accuracy, loss_accuracy = evaluate_data(X_valid, y_valid)
 
         print("EPOCH {} ...".format(i+1))
         print("Time: {:.3f} minutes".format(float( (time.time()-t0) / 60 )))
         print("Validation Loss = {:.3f}".format(loss_accuracy))
         print("Validation Accuracy = {:.3f}".format(validation_accuracy))
-        
-        print("underfitting: low accuracy on training and validation sets.")
+        print()
+        print("underfitting: low accuracy on training and low accuracy on validation sets.")
         print("overfitting: high accuracy on training but low accuracy on validation.")
-            
+        print()    
+        print()
+        
 # save trained model
 saver = tf.train.Saver()
 saver.save(sess, './sh_trained_traffic_sign_classifier')
@@ -583,7 +597,7 @@ with tf.Session() as sess:
 
 # ### Predict the Sign Type for Each Image
 
-# In[3]:
+# In[ ]:
 
 ### Run the predictions here and use the model to output the prediction for each image.
 ### Make sure to pre-process the images with the same pre-processing pipeline used earlier.
@@ -592,7 +606,7 @@ with tf.Session() as sess:
 
 # ### Analyze Performance
 
-# In[4]:
+# In[ ]:
 
 ### Calculate the accuracy for these 5 new images. 
 ### For example, if the model predicted 1 out of 5 signs correctly, it's 20% accurate on these new images.
@@ -638,7 +652,7 @@ with tf.Session() as sess:
 # 
 # Looking just at the first row we get `[ 0.34763842,  0.24879643,  0.12789202]`, you can confirm these are the 3 largest probabilities in `a`. You'll also notice `[3, 0, 5]` are the corresponding indices.
 
-# In[6]:
+# In[ ]:
 
 ### Print out the top five softmax probabilities for the predictions on the German traffic sign images found on the web. 
 ### Feel free to use as many code cells as needed.
