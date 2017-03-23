@@ -77,7 +77,7 @@ n_train = X_train.shape[0]
 n_test = X_test.shape[0]
 
 # TODO: What's the shape of an traffic sign image? 
-image_shape = (X_train.shape[1],X_train.shape[2])
+image_shape = X_train.shape[1:]
 
 # TODO: How many unique classes/labels there are in the dataset.
 # read number of classes from signnames.csv
@@ -156,15 +156,21 @@ plot_data(y_valid, "Validation Data: number of images in each class", "validatio
 plot_data(y_test, "Test Data: number of images in each class","test")
 
 
-# In[5]:
+# In[4]:
 
 # diplay sample image
+print("Sample images from training data set")
+imgplot = plt.imshow(X_train[50])
 
-get_ipython().magic('pylab inline')
-print("Sample image from training data set")
+
+# In[5]:
+
 imgplot = plt.imshow(X_train[500])
-#fig.savefig("sample_image", dpi=25)  # results in 160x120 px image
 
+
+# In[6]:
+
+imgplot = plt.imshow(X_train[1000])
 
 
 # ----
@@ -190,7 +196,7 @@ imgplot = plt.imshow(X_train[500])
 
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
 
-# In[6]:
+# In[7]:
 
 ### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.
 ### Feel free to use as many code cells as needed.
@@ -199,7 +205,7 @@ from sklearn.utils import shuffle
 import tensorflow as tf
 
 # images are already sized properly for leNet at (32x32)
-assert (image_shape == (32, 32))
+assert (image_shape == (32, 32, 3))  #32px x 32px, 3 color channels:RGB
 
 # normalization
 
@@ -207,7 +213,7 @@ assert (image_shape == (32, 32))
 X_train, y_train = shuffle(X_train, y_train)
 
 # define training variables, constants
-EPOCHS = 10
+EPOCHS = 100
 BATCH_SIZE = 128
 
 mu = 0
@@ -349,7 +355,7 @@ logits = tf.add(tf.matmul(layer4, fcc_weights), fcc_bias)
 assert( [int(logits.get_shape()[1]) ] == [num_classes])
 '''
 
-# In[7]:
+# In[8]:
 
 def get_conv_layer(x, conv_output_shape, pool_output_shape):
     input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
@@ -366,10 +372,8 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
 
     layer1 = tf.nn.conv2d(x, filter_weights, strides, padding) + filter_bias
 
-    #print("\nlayer1 conv: 28x28x6 =?=", layer1.get_shape()[3])
-    print(conv_output_shape, "=?=", layer1.get_shape())
-    #assert( conv_output_shape == layer1.get_shape().as_list()[1:])
-    #assert( [28, 28, 6] == layer1.get_shape().as_list()[1:])
+    #print(conv_output_shape, "=?=", layer1.get_shape().as_list()[1:])
+    assert( conv_output_shape == layer1.get_shape().as_list()[1:])
 
     # Activation
     layer1 = tf.nn.relu(layer1)
@@ -381,53 +385,52 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
     ksize = [1, 2, 2, 1]
     pool_strides = ksize
     layer1 = tf.nn.max_pool(layer1, ksize, pool_strides, padding)
-    #print("layer1 pool: 14x14x6 =?=", layer1.get_shape())
-    print(pool_output_shape, "=?=", layer1.get_shape())
-    #assert( pool_output_shape == layer1.get_shape().as_list()[1:] )
-    # assert( [14, 14, 6] == layer1.get_shape().as_list()[1:])
+    #print( pool_output_shape, "=?=", layer1.get_shape().as_list()[1:] )
+    assert( pool_output_shape == layer1.get_shape().as_list()[1:] )
 
     return layer1
 
 
 
-# In[12]:
+# In[9]:
 
 def get_fcc_layer(prev_layer, output_length):
-    #output_height = 120
-    input_length  = prev_layer.get_shape().as_list()[0]
+    input_length  = prev_layer.get_shape().as_list()[1]
     weights_shape = [input_length, output_length]
     bias_shape    = [output_length]
+    #print(weights_shape, bias_shape, "get_fcc_layer: input_shape, output_shape")
 
     fcc_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))
     fcc_bias    = tf.Variable(tf.zeros(bias_shape))
 
     fcc_layer = tf.add(tf.matmul(prev_layer, fcc_weights), fcc_bias)
     #fcc_layer = tf.nn.relu(fcc_layer)
-    print(output_size, "=?=", fcc_layer.get_shape()[1])
-    #assert( [fcc_layer.get_shape().as_list()[1]] == output_size )
-    #assert( [int(fcc_layer.get_shape()[1]) ] == [120])
+    #print(output_length, "=?=", fcc_layer.get_shape()[1])
+    assert([output_length] == fcc_layer.get_shape().as_list()[1:])
 
     return fcc_layer
 
 
-# In[13]:
+# In[10]:
 
 from tensorflow.contrib.layers import flatten
 
 def LeNet(x):
-    layer1 = get_conv_layer(x, (28,28,6), (14,14,6))
-    layer2 = get_conv_layer(layer1, (10,10,16), (5,5,16))
+    layer1 = get_conv_layer(x, [28,28,6], [14,14,6])
+    layer2 = get_conv_layer(layer1, [10,10,16], [5,5,16])
     
     flattened = tf.contrib.layers.flatten(layer2)
     
-    layer3 = get_fcc_layer(flattened, [120])
+    layer3 = get_fcc_layer(flattened, 120)
     layer3 = tf.nn.relu(layer3)
 
-    layer4 = get_fcc_layer(layer3, [84])
+    layer4 = get_fcc_layer(layer3, 84)
     layer4 = tf.nn.relu(layer4)
     # maybe try dropout layer
     
-    logits = get_fcc_layer(layer4, [num_classes])
+    logits = get_fcc_layer(layer4, num_classes)
+    assert( [logits.get_shape().as_list()[1] ] == [num_classes])
+
     
     return logits
 
@@ -437,7 +440,7 @@ def LeNet(x):
 # A validation set can be used to assess how well the model is performing. A low accuracy on the training and validation
 # sets imply underfitting. A high accuracy on the training set but low accuracy on the validation set implies overfitting.
 
-# In[14]:
+# In[11]:
 
 ### Train your model here.
 ### Calculate and report the accuracy on the training and validation set.
@@ -446,7 +449,7 @@ def LeNet(x):
 ### Feel free to use as many code cells as needed.
 
 
-# In[15]:
+# In[12]:
 
 '''   http://stackoverflow.com/a/34243720/5411817
 #   use this function instead of separate functions:
@@ -457,24 +460,28 @@ def LeNet(x):
 #       to one-hot first
 '''
 # initialize
-x = tf.placeholder(tf.float32, (None, 32, 32, 1))
-y = tf.placeholder(tf.int32, (None))
+pixels_x, pixels_y, color_depth = image_shape 
+assert ((pixels_x, pixels_y, color_depth) == (32, 32, 3)) 
+# features, labels
+x = tf.placeholder(tf.float32, (None, pixels_x, pixels_y, color_depth))
+y = tf.placeholder(tf.int64, (None))
+
 
 # run leNet
-training_rate = .001
+learning_rate = .001
 logits = LeNet(x)
 
 # loss
-cross_entropy  = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, labels)
+cross_entropy  = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, y)#labels)
 loss_operation = tf.reduce_mean(cross_entropy)
 
 # train
-optimizer = tf.train.AdamOptimizer(learning_rate=rate)
+optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
 training_operation = optimizer.minimize(loss_operation)
 
 # accuracy
 model_prediction = tf.argmax(logits, 1)
-prediction_is_correct = tf.equal(model_prediction, labels)
+prediction_is_correct = tf.equal(model_prediction, y)#labels)
 accuracy_calculation   = tf.reduce_mean(tf.cast(prediction_is_correct, tf.float32))
 
 
@@ -483,7 +490,7 @@ accuracy_calculation   = tf.reduce_mean(tf.cast(prediction_is_correct, tf.float3
 
 
 
-# In[ ]:
+# In[13]:
 
 # evaluation routine
 def evaluate_data(X_data, y_data):
@@ -493,13 +500,16 @@ def evaluate_data(X_data, y_data):
     total_accuracy = 0
     
     num_samples = len(X_data)
-    for batch_start in range(0, numsamples, BATCH_SIZE):
+    for batch_start in range(0, num_samples, BATCH_SIZE):
         batch_end = batch_start + BATCH_SIZE
         X_batch = X_data[batch_start:batch_end]
         y_batch = y_data[batch_start:batch_end]
         
+        #accuracy, loss = sess.run([accuracy_calculation, loss_operation],
+        #                          feed_dict = {features:X_batch, labels:y_batch})
         accuracy, loss = sess.run([accuracy_calculation, loss_operation],
-                                  feed_dict = {features:X_batch, labels:y_batch})
+                                  feed_dict = {x:X_batch, y:y_batch})
+        
         this_batch_size = len(X_batch)
         
         total_accuracy += this_batch_size * accuracy
@@ -511,21 +521,28 @@ def evaluate_data(X_data, y_data):
     return total_accuracy, total_loss     
 
 
-# In[ ]:
+# In[14]:
 
 # TEMP TRUNCATE DATA FOR INITIAL TESTING
+'''
 tr = int(BATCH_SIZE * 1.2)
 va = te = int(tr * 0.2)
-print(tr, va, te, (tr+va+te), tr/(tr+va+te))
+print(tr, va, te, "total:", (tr+va+te), "percent training: ", tr/(tr+va+te))
 X_train = X_train[0:tr]
 y_train = y_train[0:tr]
 X_valid = X_valid[0:va]
 y_valid = y_valid[0:va]
 X_test  = X_test[0:te]
 y_test  = y_test[0:te]
+print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
+'''
+'''
+EPOCHS = 20
+print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
+'''
 
 
-# In[ ]:
+# In[15]:
 
 import time
 
@@ -536,6 +553,7 @@ with tf.Session() as sess:
     
     print("Training...\n")
     for i in range(EPOCHS):
+        print("EPOCH: ", i+1, "of", EPOCHS, "EPOCHS")
         X_train, y_train = shuffle(X_train, y_train)
         t0 = time.time()
         for batch_start in range(0, num_examples, BATCH_SIZE):
@@ -543,26 +561,33 @@ with tf.Session() as sess:
             features = X_train[batch_start:batch_end]
             labels   = y_train[batch_start:batch_end]
             #train
-            sess.run(training_operation, feed_dict = {features:features, labels:labels})            
-            print("     batch ", 1+offset//BATCH_SIZE, "of ", 1 + num_examples/BATCH_SIZE, "batches,  on EPOCH", i+1, "of", EPOCHS, "EPOCHS")
+            sess.run(training_operation, feed_dict = {x:features, y:labels})
+            if batch_start % 50 == 0:
+                print("        batch ", 1+batch_start//BATCH_SIZE, "of ", 1 + int(num_examples/BATCH_SIZE))#, "batches,  on EPOCH", i+1, "of", EPOCHS, "EPOCHS")
                       
         # evaluate on validation set, and print results of model from this EPOCH       
         validation_accuracy, loss_accuracy = evaluate_data(X_valid, y_valid)
 
-        print("EPOCH {} ...".format(i+1))
+        #print("EPOCH {} ...".format(i+1))
         print("Time: {:.3f} minutes".format(float( (time.time()-t0) / 60 )))
         print("Validation Loss = {:.3f}".format(loss_accuracy))
         print("Validation Accuracy = {:.3f}".format(validation_accuracy))
-        print()
-        print("underfitting: low accuracy on training and low accuracy on validation sets.")
-        print("overfitting: high accuracy on training but low accuracy on validation.")
         print()    
-        print()
         
-# save trained model
-saver = tf.train.Saver()
-saver.save(sess, './sh_trained_traffic_sign_classifier')
-print("Model Saved")
+    print("underfitting if:  low accuracy on training and low accuracy on validation sets.")
+    print("overfitting  if: high accuracy on training but low accuracy on validation sets.")
+    print()
+    if validation_accuracy >= 0.93:
+        print(" !! Congratulations!! Your model meets the minimum required validation Accuracy of 0.93")
+        print("   You may now run your model on the Test Set :-)")
+    else:
+        print("Keep working on your model to acheive a minimum validation accuracy of 0.93")
+    print()
+
+    # save trained model
+    saver = tf.train.Saver()
+    saver.save(sess, './sh_trained_traffic_sign_classifier')
+    print("Model Saved")
 
 
 # In[ ]:
@@ -570,14 +595,18 @@ print("Model Saved")
 
 
 
-# In[ ]:
+# In[16]:
 
 # test the trained model
 with tf.Session() as sess:
     saver.restore(sess, tf.train.latest_checkpoint('.'))
 
-    test_accuracy = evaluate(X_test, y_test)
+    test_accuracy, test_loss = evaluate_data(X_test, y_test)
+    print(test_accuracy)
+    print("Test Loss     = {:.3f}".format(test_loss))
     print("Test Accuracy = {:.3f}".format(test_accuracy))
+    
+    If
 
 
 # ---

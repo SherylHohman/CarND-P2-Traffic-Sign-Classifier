@@ -12993,7 +12993,7 @@ rQAAAABJRU5ErkJggg==
 <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
 <span class="c1"># define training variables, constants</span>
-<span class="n">EPOCHS</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">EPOCHS</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">128</span>
 
 <span class="n">mu</span> <span class="o">=</span> <span class="mi">0</span>
@@ -13387,18 +13387,22 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TEMP TRUNCATE DATA FOR INITIAL TESTING</span>
-<span class="n">tr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">BATCH_SIZE</span> <span class="o">*</span> <span class="mf">1.2</span><span class="p">)</span>
-<span class="n">va</span> <span class="o">=</span> <span class="n">te</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tr</span> <span class="o">*</span> <span class="mf">0.2</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="n">va</span><span class="p">,</span> <span class="n">te</span><span class="p">,</span> <span class="s2">&quot;total:&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">tr</span><span class="o">+</span><span class="n">va</span><span class="o">+</span><span class="n">te</span><span class="p">),</span> <span class="s2">&quot;percent training: &quot;</span><span class="p">,</span> <span class="n">tr</span><span class="o">/</span><span class="p">(</span><span class="n">tr</span><span class="o">+</span><span class="n">va</span><span class="o">+</span><span class="n">te</span><span class="p">))</span>
-<span class="n">X_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">tr</span><span class="p">]</span>
-<span class="n">y_train</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">tr</span><span class="p">]</span>
-<span class="n">X_valid</span> <span class="o">=</span> <span class="n">X_valid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">va</span><span class="p">]</span>
-<span class="n">y_valid</span> <span class="o">=</span> <span class="n">y_valid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">va</span><span class="p">]</span>
-<span class="n">X_test</span>  <span class="o">=</span> <span class="n">X_test</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">te</span><span class="p">]</span>
-<span class="n">y_test</span>  <span class="o">=</span> <span class="n">y_test</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">te</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DATA TRUNCATED TO:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span> <span class="s2">&quot;SAMPLES for preliminary testing&quot;</span><span class="p">)</span>
-<span class="n">EPOCHS</span> <span class="o">=</span> <span class="mi">3</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;EPOCHS TRUNCATED TO:&#39;</span><span class="p">,</span> <span class="n">EPOCHS</span><span class="p">,</span> <span class="s2">&quot;EPOCHS for preliminary testing&quot;</span><span class="p">)</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">tr = int(BATCH_SIZE * 1.2)</span>
+<span class="sd">va = te = int(tr * 0.2)</span>
+<span class="sd">print(tr, va, te, &quot;total:&quot;, (tr+va+te), &quot;percent training: &quot;, tr/(tr+va+te))</span>
+<span class="sd">X_train = X_train[0:tr]</span>
+<span class="sd">y_train = y_train[0:tr]</span>
+<span class="sd">X_valid = X_valid[0:va]</span>
+<span class="sd">y_valid = y_valid[0:va]</span>
+<span class="sd">X_test  = X_test[0:te]</span>
+<span class="sd">y_test  = y_test[0:te]</span>
+<span class="sd">print(&#39;DATA TRUNCATED TO:&#39;, len(X_train), &quot;SAMPLES for preliminary testing&quot;)</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">EPOCHS = 20</span>
+<span class="sd">print(&#39;EPOCHS TRUNCATED TO:&#39;, EPOCHS, &quot;EPOCHS for preliminary testing&quot;)</span>
+<span class="sd">&#39;&#39;&#39;</span>
 </pre></div>
 
 </div>
@@ -13409,13 +13413,13 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 <div class="output">
 
 
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>153 30 30 total: 213 percent training:  0.7183098591549296
-DATA TRUNCATED TO: 153 SAMPLES for preliminary testing
-EPOCHS TRUNCATED TO: 3 EPOCHS for preliminary testing
-</pre>
+<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;\nEPOCHS = 20\nprint(\&#39;EPOCHS TRUNCATED TO:\&#39;, EPOCHS, &#34;EPOCHS for preliminary testing&#34;)\n&#39;</pre>
 </div>
+
 </div>
 
 </div>
@@ -13424,7 +13428,7 @@ EPOCHS TRUNCATED TO: 3 EPOCHS for preliminary testing
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
@@ -13436,6 +13440,7 @@ EPOCHS TRUNCATED TO: 3 EPOCHS for preliminary testing
     
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">EPOCHS</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;EPOCH: &quot;</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;of&quot;</span><span class="p">,</span> <span class="n">EPOCHS</span><span class="p">,</span> <span class="s2">&quot;EPOCHS&quot;</span><span class="p">)</span>
         <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
         <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">batch_start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_examples</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">):</span>
@@ -13443,21 +13448,21 @@ EPOCHS TRUNCATED TO: 3 EPOCHS for preliminary testing
             <span class="n">features</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">batch_start</span><span class="p">:</span><span class="n">batch_end</span><span class="p">]</span>
             <span class="n">labels</span>   <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">batch_start</span><span class="p">:</span><span class="n">batch_end</span><span class="p">]</span>
             <span class="c1">#train</span>
-            <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">training_operation</span><span class="p">,</span> <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">features</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">labels</span><span class="p">})</span>            
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;     batch &quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="n">batch_start</span><span class="o">//</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="s2">&quot;of &quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">num_examples</span><span class="o">/</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="s2">&quot;batches,  on EPOCH&quot;</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;of&quot;</span><span class="p">,</span> <span class="n">EPOCHS</span><span class="p">,</span> <span class="s2">&quot;EPOCHS&quot;</span><span class="p">)</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">training_operation</span><span class="p">,</span> <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">features</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">labels</span><span class="p">})</span>
+            <span class="k">if</span> <span class="n">batch_start</span> <span class="o">%</span> <span class="mi">50</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;        batch &quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="n">batch_start</span><span class="o">//</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="s2">&quot;of &quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_examples</span><span class="o">/</span><span class="n">BATCH_SIZE</span><span class="p">))</span><span class="c1">#, &quot;batches,  on EPOCH&quot;, i+1, &quot;of&quot;, EPOCHS, &quot;EPOCHS&quot;)</span>
                       
         <span class="c1"># evaluate on validation set, and print results of model from this EPOCH       </span>
         <span class="n">validation_accuracy</span><span class="p">,</span> <span class="n">loss_accuracy</span> <span class="o">=</span> <span class="n">evaluate_data</span><span class="p">(</span><span class="n">X_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;EPOCH </span><span class="si">{}</span><span class="s2"> ...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="c1">#print(&quot;EPOCH {} ...&quot;.format(i+1))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Time: </span><span class="si">{:.3f}</span><span class="s2"> minutes&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t0</span><span class="p">)</span> <span class="o">/</span> <span class="mi">60</span> <span class="p">)))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Validation Loss = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">loss_accuracy</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Validation Accuracy = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">validation_accuracy</span><span class="p">))</span>
-        <span class="c1">#print()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;underfitting if:  low accuracy on training and low accuracy on validation sets.&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;overfitting  if: high accuracy on training but low accuracy on validation sets.&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">()</span>    
         
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;underfitting if:  low accuracy on training and low accuracy on validation sets.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;overfitting  if: high accuracy on training but low accuracy on validation sets.&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">validation_accuracy</span> <span class="o">&gt;=</span> <span class="mf">0.93</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; !! Congratulations!! Your model meets the minimum required validation Accuracy of 0.93&quot;</span><span class="p">)</span>
@@ -13484,36 +13489,1708 @@ EPOCHS TRUNCATED TO: 3 EPOCHS for preliminary testing
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Training...
 
-     batch  1 of  2.1953125 batches,  on EPOCH 1 of 3 EPOCHS
-     batch  2 of  2.1953125 batches,  on EPOCH 1 of 3 EPOCHS
+EPOCH:  1 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
 evaluating..
-EPOCH 1 ...
-Time: 0.008 minutes
-Validation Loss = 11.564
-Validation Accuracy = 0.000
+Time: 0.395 minutes
+Validation Loss = 1.441
+Validation Accuracy = 0.661
+
+EPOCH:  2 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.389 minutes
+Validation Loss = 1.090
+Validation Accuracy = 0.766
+
+EPOCH:  3 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.392 minutes
+Validation Loss = 1.041
+Validation Accuracy = 0.803
+
+EPOCH:  4 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.397 minutes
+Validation Loss = 0.944
+Validation Accuracy = 0.832
+
+EPOCH:  5 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.396 minutes
+Validation Loss = 0.868
+Validation Accuracy = 0.852
+
+EPOCH:  6 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.397 minutes
+Validation Loss = 0.982
+Validation Accuracy = 0.851
+
+EPOCH:  7 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.404 minutes
+Validation Loss = 0.963
+Validation Accuracy = 0.849
+
+EPOCH:  8 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.403 minutes
+Validation Loss = 0.992
+Validation Accuracy = 0.863
+
+EPOCH:  9 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.402 minutes
+Validation Loss = 1.106
+Validation Accuracy = 0.850
+
+EPOCH:  10 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.409 minutes
+Validation Loss = 1.068
+Validation Accuracy = 0.856
+
+EPOCH:  11 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.409 minutes
+Validation Loss = 1.150
+Validation Accuracy = 0.860
+
+EPOCH:  12 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.410 minutes
+Validation Loss = 1.152
+Validation Accuracy = 0.868
+
+EPOCH:  13 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.409 minutes
+Validation Loss = 1.283
+Validation Accuracy = 0.852
+
+EPOCH:  14 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.417 minutes
+Validation Loss = 1.020
+Validation Accuracy = 0.881
+
+EPOCH:  15 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.411 minutes
+Validation Loss = 1.534
+Validation Accuracy = 0.837
+
+EPOCH:  16 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.418 minutes
+Validation Loss = 1.197
+Validation Accuracy = 0.882
+
+EPOCH:  17 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.416 minutes
+Validation Loss = 1.388
+Validation Accuracy = 0.846
+
+EPOCH:  18 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.421 minutes
+Validation Loss = 1.398
+Validation Accuracy = 0.859
+
+EPOCH:  19 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.417 minutes
+Validation Loss = 1.083
+Validation Accuracy = 0.889
+
+EPOCH:  20 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.418 minutes
+Validation Loss = 1.161
+Validation Accuracy = 0.878
+
+EPOCH:  21 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.417 minutes
+Validation Loss = 1.362
+Validation Accuracy = 0.876
+
+EPOCH:  22 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.419 minutes
+Validation Loss = 1.362
+Validation Accuracy = 0.869
+
+EPOCH:  23 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.419 minutes
+Validation Loss = 1.365
+Validation Accuracy = 0.881
+
+EPOCH:  24 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.419 minutes
+Validation Loss = 1.325
+Validation Accuracy = 0.882
+
+EPOCH:  25 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.417 minutes
+Validation Loss = 1.549
+Validation Accuracy = 0.881
+
+EPOCH:  26 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.423 minutes
+Validation Loss = 1.380
+Validation Accuracy = 0.878
+
+EPOCH:  27 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.420 minutes
+Validation Loss = 1.281
+Validation Accuracy = 0.887
+
+EPOCH:  28 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.437 minutes
+Validation Loss = 1.542
+Validation Accuracy = 0.885
+
+EPOCH:  29 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.423 minutes
+Validation Loss = 1.348
+Validation Accuracy = 0.894
+
+EPOCH:  30 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.428 minutes
+Validation Loss = 1.582
+Validation Accuracy = 0.890
+
+EPOCH:  31 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.423 minutes
+Validation Loss = 1.449
+Validation Accuracy = 0.891
+
+EPOCH:  32 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.424 minutes
+Validation Loss = 1.293
+Validation Accuracy = 0.887
+
+EPOCH:  33 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.425 minutes
+Validation Loss = 1.567
+Validation Accuracy = 0.880
+
+EPOCH:  34 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.426 minutes
+Validation Loss = 1.261
+Validation Accuracy = 0.899
+
+EPOCH:  35 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.423 minutes
+Validation Loss = 1.268
+Validation Accuracy = 0.902
+
+EPOCH:  36 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.427 minutes
+Validation Loss = 1.448
+Validation Accuracy = 0.890
+
+EPOCH:  37 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.426 minutes
+Validation Loss = 1.707
+Validation Accuracy = 0.890
+
+EPOCH:  38 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.428 minutes
+Validation Loss = 1.536
+Validation Accuracy = 0.876
+
+EPOCH:  39 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.426 minutes
+Validation Loss = 1.536
+Validation Accuracy = 0.878
+
+EPOCH:  40 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.428 minutes
+Validation Loss = 1.546
+Validation Accuracy = 0.872
+
+EPOCH:  41 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.428 minutes
+Validation Loss = 1.503
+Validation Accuracy = 0.888
+
+EPOCH:  42 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.433 minutes
+Validation Loss = 1.573
+Validation Accuracy = 0.893
+
+EPOCH:  43 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.436 minutes
+Validation Loss = 1.704
+Validation Accuracy = 0.888
+
+EPOCH:  44 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.431 minutes
+Validation Loss = 2.124
+Validation Accuracy = 0.871
+
+EPOCH:  45 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.427 minutes
+Validation Loss = 1.573
+Validation Accuracy = 0.901
+
+EPOCH:  46 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.431 minutes
+Validation Loss = 1.427
+Validation Accuracy = 0.893
+
+EPOCH:  47 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.431 minutes
+Validation Loss = 1.324
+Validation Accuracy = 0.907
+
+EPOCH:  48 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.432 minutes
+Validation Loss = 1.501
+Validation Accuracy = 0.907
+
+EPOCH:  49 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.435 minutes
+Validation Loss = 1.303
+Validation Accuracy = 0.901
+
+EPOCH:  50 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.436 minutes
+Validation Loss = 1.483
+Validation Accuracy = 0.910
+
+EPOCH:  51 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.437 minutes
+Validation Loss = 2.042
+Validation Accuracy = 0.880
+
+EPOCH:  52 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.435 minutes
+Validation Loss = 1.708
+Validation Accuracy = 0.888
+
+EPOCH:  53 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.434 minutes
+Validation Loss = 2.376
+Validation Accuracy = 0.872
+
+EPOCH:  54 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.435 minutes
+Validation Loss = 1.513
+Validation Accuracy = 0.903
+
+EPOCH:  55 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.440 minutes
+Validation Loss = 1.638
+Validation Accuracy = 0.890
+
+EPOCH:  56 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.435 minutes
+Validation Loss = 1.735
+Validation Accuracy = 0.896
+
+EPOCH:  57 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.438 minutes
+Validation Loss = 1.597
+Validation Accuracy = 0.905
+
+EPOCH:  58 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.440 minutes
+Validation Loss = 1.431
+Validation Accuracy = 0.914
+
+EPOCH:  59 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.437 minutes
+Validation Loss = 1.881
+Validation Accuracy = 0.897
+
+EPOCH:  60 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.439 minutes
+Validation Loss = 2.042
+Validation Accuracy = 0.898
+
+EPOCH:  61 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.439 minutes
+Validation Loss = 2.502
+Validation Accuracy = 0.885
+
+EPOCH:  62 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.447 minutes
+Validation Loss = 1.638
+Validation Accuracy = 0.919
+
+EPOCH:  63 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.558 minutes
+Validation Loss = 1.844
+Validation Accuracy = 0.909
+
+EPOCH:  64 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.726 minutes
+Validation Loss = 1.980
+Validation Accuracy = 0.898
+
+EPOCH:  65 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.891 minutes
+Validation Loss = 2.177
+Validation Accuracy = 0.905
+
+EPOCH:  66 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.821 minutes
+Validation Loss = 1.785
+Validation Accuracy = 0.907
+
+EPOCH:  67 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.431 minutes
+Validation Loss = 1.857
+Validation Accuracy = 0.900
+
+EPOCH:  68 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.438 minutes
+Validation Loss = 1.868
+Validation Accuracy = 0.905
+
+EPOCH:  69 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.430 minutes
+Validation Loss = 2.411
+Validation Accuracy = 0.898
+
+EPOCH:  70 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.437 minutes
+Validation Loss = 1.892
+Validation Accuracy = 0.904
+
+EPOCH:  71 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.428 minutes
+Validation Loss = 2.302
+Validation Accuracy = 0.906
+
+EPOCH:  72 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.427 minutes
+Validation Loss = 1.799
+Validation Accuracy = 0.908
+
+EPOCH:  73 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.426 minutes
+Validation Loss = 2.222
+Validation Accuracy = 0.905
+
+EPOCH:  74 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.426 minutes
+Validation Loss = 1.751
+Validation Accuracy = 0.913
+
+EPOCH:  75 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.433 minutes
+Validation Loss = 1.499
+Validation Accuracy = 0.925
+
+EPOCH:  76 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.435 minutes
+Validation Loss = 1.766
+Validation Accuracy = 0.917
+
+EPOCH:  77 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.439 minutes
+Validation Loss = 1.968
+Validation Accuracy = 0.912
+
+EPOCH:  78 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.453 minutes
+Validation Loss = 2.705
+Validation Accuracy = 0.866
+
+EPOCH:  79 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.448 minutes
+Validation Loss = 2.127
+Validation Accuracy = 0.902
+
+EPOCH:  80 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.438 minutes
+Validation Loss = 1.857
+Validation Accuracy = 0.912
+
+EPOCH:  81 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.441 minutes
+Validation Loss = 2.003
+Validation Accuracy = 0.911
+
+EPOCH:  82 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.433 minutes
+Validation Loss = 2.371
+Validation Accuracy = 0.911
+
+EPOCH:  83 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.430 minutes
+Validation Loss = 2.577
+Validation Accuracy = 0.899
+
+EPOCH:  84 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.432 minutes
+Validation Loss = 2.443
+Validation Accuracy = 0.913
+
+EPOCH:  85 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.432 minutes
+Validation Loss = 2.435
+Validation Accuracy = 0.903
+
+EPOCH:  86 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.429 minutes
+Validation Loss = 2.349
+Validation Accuracy = 0.908
+
+EPOCH:  87 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.428 minutes
+Validation Loss = 2.649
+Validation Accuracy = 0.903
+
+EPOCH:  88 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.429 minutes
+Validation Loss = 2.438
+Validation Accuracy = 0.904
+
+EPOCH:  89 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.431 minutes
+Validation Loss = 3.330
+Validation Accuracy = 0.888
+
+EPOCH:  90 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.433 minutes
+Validation Loss = 2.696
+Validation Accuracy = 0.906
+
+EPOCH:  91 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.430 minutes
+Validation Loss = 3.220
+Validation Accuracy = 0.903
+
+EPOCH:  92 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.428 minutes
+Validation Loss = 3.296
+Validation Accuracy = 0.897
+
+EPOCH:  93 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.429 minutes
+Validation Loss = 2.502
+Validation Accuracy = 0.910
+
+EPOCH:  94 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.429 minutes
+Validation Loss = 2.679
+Validation Accuracy = 0.916
+
+EPOCH:  95 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.428 minutes
+Validation Loss = 1.919
+Validation Accuracy = 0.922
+
+EPOCH:  96 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.427 minutes
+Validation Loss = 2.256
+Validation Accuracy = 0.914
+
+EPOCH:  97 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.427 minutes
+Validation Loss = 2.616
+Validation Accuracy = 0.915
+
+EPOCH:  98 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.428 minutes
+Validation Loss = 2.591
+Validation Accuracy = 0.911
+
+EPOCH:  99 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.428 minutes
+Validation Loss = 2.645
+Validation Accuracy = 0.912
+
+EPOCH:  100 of 100 EPOCHS
+        batch  1 of  272
+        batch  26 of  272
+        batch  51 of  272
+        batch  76 of  272
+        batch  101 of  272
+        batch  126 of  272
+        batch  151 of  272
+        batch  176 of  272
+        batch  201 of  272
+        batch  226 of  272
+        batch  251 of  272
+evaluating..
+Time: 0.429 minutes
+Validation Loss = 3.648
+Validation Accuracy = 0.893
+
 underfitting if:  low accuracy on training and low accuracy on validation sets.
 overfitting  if: high accuracy on training but low accuracy on validation sets.
-
-     batch  1 of  2.1953125 batches,  on EPOCH 2 of 3 EPOCHS
-     batch  2 of  2.1953125 batches,  on EPOCH 2 of 3 EPOCHS
-evaluating..
-EPOCH 2 ...
-Time: 0.006 minutes
-Validation Loss = 17.249
-Validation Accuracy = 0.000
-underfitting if:  low accuracy on training and low accuracy on validation sets.
-overfitting  if: high accuracy on training but low accuracy on validation sets.
-
-     batch  1 of  2.1953125 batches,  on EPOCH 3 of 3 EPOCHS
-     batch  2 of  2.1953125 batches,  on EPOCH 3 of 3 EPOCHS
-evaluating..
-EPOCH 3 ...
-Time: 0.005 minutes
-Validation Loss = 16.321
-Validation Accuracy = 0.000
-underfitting if:  low accuracy on training and low accuracy on validation sets.
-overfitting  if: high accuracy on training but low accuracy on validation sets.
-
 
 Keep working on your model to acheive a minimum validation accuracy of 0.93
 
@@ -13541,7 +15218,7 @@ Model Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># test the trained model</span>
@@ -13567,10 +15244,24 @@ Model Saved
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>evaluating..
-0.10000000149
-Test Loss     = 6.697
-Test Accuracy = 0.100
+0.897466350026
+Test Loss     = 3.831
+Test Accuracy = 0.897
 </pre>
+</div>
+</div>
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-16-14f2b843b04d&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      8</span>     print<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#34;Test Accuracy = {:.3f}&#34;</span><span class="ansi-yellow-intense-fg ansi-bold">.</span>format<span class="ansi-yellow-intense-fg ansi-bold">(</span>test_accuracy<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      9</span> 
+<span class="ansi-green-fg">---&gt; 10</span><span class="ansi-red-fg">     </span>If
+
+<span class="ansi-red-fg">NameError</span>: name &#39;If&#39; is not defined</pre>
 </div>
 </div>
 
