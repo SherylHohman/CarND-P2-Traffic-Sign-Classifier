@@ -22,7 +22,7 @@
 # ---
 # ## Step 0: Load The Data
 
-# In[ ]:
+# In[1]:
 
 # Load pickled data
 import pickle
@@ -64,7 +64,7 @@ assert(len(X_test)  == len(y_test))
 
 # ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
 
-# In[ ]:
+# In[2]:
 
 ### Replace each question mark with the appropriate value. 
 ### Use python, pandas or numpy methods rather than hard coding the results
@@ -112,7 +112,7 @@ print("Number of classes =", num_classes)
 # 
 # **NOTE:** It's recommended you start with something simple first. If you wish to do more, come back to it after you've completed the rest of the sections.
 
-# In[ ]:
+# In[3]:
 
 ### Data exploration visualization code goes here.
 ### Feel free to use as many code cells as needed.
@@ -156,14 +156,14 @@ plot_data(y_valid, "Validation Data: number of images in each class", "validatio
 plot_data(y_test, "Test Data: number of images in each class","test")
 
 
-# In[ ]:
+# In[5]:
 
 # diplay sample image
 
 get_ipython().magic('pylab inline')
 print("Sample image from training data set")
 imgplot = plt.imshow(X_train[500])
-fig.savefig("sample_image", dpi=25)  # results in 160x120 px image
+#fig.savefig("sample_image", dpi=25)  # results in 160x120 px image
 
 
 
@@ -190,7 +190,7 @@ fig.savefig("sample_image", dpi=25)  # results in 160x120 px image
 
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
 
-# In[ ]:
+# In[6]:
 
 ### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.
 ### Feel free to use as many code cells as needed.
@@ -316,7 +316,7 @@ output_height = 120
 weights_shape = [input_height, output_height]
 bias_shape    = [output_height]
 
-fcc_weights = tf.Variable(tf.truncated_normal(weights_shape), mean=mu, stddev=sigma)
+fcc_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma)
 fcc_bias    = tf.Variable(tf.zeros(bias_shape))
 
 layer3 = tf.add(tf.matmul(flattened_23, fcc_weights), fcc_bias)
@@ -342,14 +342,14 @@ output_height = num_classes
 weights_shape = [input_height, output_height]
 bias_shape    = [output_height]
 
-fcc_weights = tf.Variable(tf.truncated_normal(weights_shape), mean=mu, stddev=sigma)
+fcc_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma)
 fcc_bias    = tf.Variable(tf.zeros(bias_shape))
 
 logits = tf.add(tf.matmul(layer4, fcc_weights), fcc_bias)
 assert( [int(logits.get_shape()[1]) ] == [num_classes])
 '''
 
-# In[ ]:
+# In[7]:
 
 def get_conv_layer(x, conv_output_shape, pool_output_shape):
     input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
@@ -390,13 +390,13 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
 
 
 
-# In[ ]:
+# In[12]:
 
-def get_fcc_layer(prev_layer, output_size):
+def get_fcc_layer(prev_layer, output_length):
     #output_height = 120
-    input_size  = prev_layer.get_shape().as_list()[1]
-    weights_shape = [input_size, output_size]
-    bias_shape    = [output_size]
+    input_length  = prev_layer.get_shape().as_list()[0]
+    weights_shape = [input_length, output_length]
+    bias_shape    = [output_length]
 
     fcc_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))
     fcc_bias    = tf.Variable(tf.zeros(bias_shape))
@@ -404,12 +404,13 @@ def get_fcc_layer(prev_layer, output_size):
     fcc_layer = tf.add(tf.matmul(prev_layer, fcc_weights), fcc_bias)
     #fcc_layer = tf.nn.relu(fcc_layer)
     print(output_size, "=?=", fcc_layer.get_shape()[1])
+    #assert( [fcc_layer.get_shape().as_list()[1]] == output_size )
     #assert( [int(fcc_layer.get_shape()[1]) ] == [120])
 
     return fcc_layer
 
 
-# In[ ]:
+# In[13]:
 
 from tensorflow.contrib.layers import flatten
 
@@ -436,7 +437,7 @@ def LeNet(x):
 # A validation set can be used to assess how well the model is performing. A low accuracy on the training and validation
 # sets imply underfitting. A high accuracy on the training set but low accuracy on the validation set implies overfitting.
 
-# In[ ]:
+# In[14]:
 
 ### Train your model here.
 ### Calculate and report the accuracy on the training and validation set.
@@ -445,7 +446,7 @@ def LeNet(x):
 ### Feel free to use as many code cells as needed.
 
 
-# In[ ]:
+# In[15]:
 
 '''   http://stackoverflow.com/a/34243720/5411817
 #   use this function instead of separate functions:
