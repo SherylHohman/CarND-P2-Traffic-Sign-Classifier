@@ -11942,9 +11942,9 @@ Number of classes = 43
     <span class="c1">#print(counts, &quot;\n|&quot;)</span>
     <span class="n">counted</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
     <span class="c1">#print(counted[0], counted, &quot;\n&quot;)</span>
-    <span class="n">final</span> <span class="o">=</span> <span class="p">[</span><span class="n">counted</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">counted</span><span class="p">))]</span>
+    <span class="n">final_count</span> <span class="o">=</span> <span class="p">[</span><span class="n">counted</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">counted</span><span class="p">))]</span>
     <span class="c1">#print(final, &quot;\n&quot;)</span>
-    <span class="n">y_data</span> <span class="o">=</span> <span class="n">final</span>
+    <span class="n">y_data</span> <span class="o">=</span> <span class="n">final_count</span>
     <span class="n">x_data</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_data</span><span class="p">))</span>
     
     
@@ -12444,9 +12444,34 @@ AElFTkSuQmCC
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># diplay sample image</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># diplay sample images from training data set</span>
+<span class="k">def</span> <span class="nf">display_images</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+    <span class="n">num_channels</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;shape 1st image&quot;</span><span class="p">,</span> <span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">num_images</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">num_images</span><span class="p">,</span> <span class="s2">&quot;num_images, num_channels:&quot;</span><span class="p">,</span> <span class="n">num_channels</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_images</span><span class="o">/</span><span class="n">rows</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_images</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_channels</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">images</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">num_channels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;grayscale&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">images</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;gray&#39;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span> <span class="s2">&quot;error, number of channels should be 1 or 3&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sample images from training data set&quot;</span><span class="p">)</span>
-<span class="n">imgplot</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="mi">50</span><span class="p">])</span>
+<span class="n">sample_images</span> <span class="o">=</span> <span class="p">[</span><span class="n">X_train</span><span class="p">[</span><span class="mi">50</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[</span><span class="mi">500</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[</span><span class="mi">1000</span><span class="p">]]</span>
+<span class="n">display_images</span><span class="p">(</span><span class="n">sample_images</span><span class="p">)</span>
+
+<span class="c1"># consider showing histogram of individual sample images</span>
+<span class="c1"># consider showing average histogram of all images</span>
+<span class="c1"># consider showing zero mean of sample images</span>
+<span class="c1"># consider showing normalized sample images</span>
 </pre></div>
 
 </div>
@@ -12460,6 +12485,11 @@ AElFTkSuQmCC
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Sample images from training data set
+shape 1st image (32, 32, 3)
+3 num_images, num_channels: 3
+color
+color
+color
 </pre>
 </div>
 </div>
@@ -12468,144 +12498,238 @@ AElFTkSuQmCC
 
 
 <div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
+<img src="data:image/png;base64,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
 "
 >
 </div>
@@ -12621,159 +12745,10 @@ H7tfYV8A8Nzo30eLnpOIH4XOCYC/h92iuC9g90Tzr685Zv8KwKsA/huA+kH2ozv8hEgU3eEnRKIo
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">imgplot</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="mi">500</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#imgplot = plt.imshow(X_train[500])</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-"
->
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -12783,7 +12758,268 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">imgplot</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="mi">1000</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#imgplot = plt.imshow(X_train[1000])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>'''
+#normalized_rgb   = np.zeros(image_shape, np.uint8)
+#normalized_image = np.zeros(image_shape, np.uint8)
+# normalized in color
+def rgb_normalizer(image):
+    normalized_rgb   = np.zeros(image_shape, np.uint8)
+    normalized_channel = np.zeros([image_shape[0], image_shape[1], 1], np.uint8)
+
+    r = image[:,:,0]
+    g = image[:,:,1]
+    b = image[:,:,2]
+    print("rgb\n", r[0][0:15],"\n", g[0][0:15],"\n", b[0][0:15])
+    rgb_sum = r+b+g
+    rgb_mean = rgb_sum.mean() 
+    r_ave = r.mean()
+    g_ave = g.mean()
+    b_ave = b.mean()
+    if rgb_mean == 0: rgb_mean = 0.01  #avoid divide by zero for pure black image
+    print("rgb_ave", rgb_mean)
+    print("r_ave  ", r_ave)
+    #print("rgb_sum[0]\n", rgb_sum[0][0:15])
+
+    rgb_multiplier = np.float32(128/rgb_mean) #3*255 #128 #123*3
+    #rgb_multiplier = np.float32(3*128/rgb_mean) #3*255 #128 #123*3
+    print("rgb_mul ", rgb_multiplier)
+    
+    channels = [r, g, b]
+    print("normalized")
+    for channel in range(len(channels)):
+        channel_multiplier = rgb_multiplier
+        #channel_multiplier = np.float32(128/channels[channel].mean()) #rgb_multiplier
+        #channel_multiplier = (128/rgb_multiplier + channel_multiplier)/2
+        normalized_channel = np.rint(np.float32(channel_multiplier * channels[channel])).astype(int)
+        print(normalized_channel[0][0:15])       
+        normalized_rgb[0:,0:,channel] = normalized_channel
+    print()
+    return normalized_rgb
+
+sample_images = [X_train[1000], X_train[500], X_train[50]]
+#image_1000 = X_train[1000]
+#normalized_rgb = rgb_normalizer(image_1000)
+#imgplot = plt.imshow(normalized_rgb)
+
+plt.figure(1)
+num_images = len(sample_images)
+for i in range(num_images):
+    #sample_image = sample_images[i]
+    #normalized_rgb = rgb_normalizer(sample_image)
+    plt.subplot(num_images, 2, 2*i+1)
+    plt.imshow(sample_images[i])
+    plt.subplot(num_images, 2, 2*i+2)
+    plt.imshow(rgb_normalizer(sample_images[i]))
+'''
+'''
+image = X_train[50]
+normalized_rgb = rgb_normalizer(image)
+plt.subplot(223)
+plt.imshow(image)
+plt.subplot(224)
+plt.imshow(normalized_rgb)
+'''
+'''
+plt.show()
+''''''
+def rgb_grayscale_combo(color_image, bw):
+    combo_image   = np.zeros(image_shape, np.uint8)
+    combo_channel = np.zeros(image_shape, np.uint8)
+
+    r = color_image[:,:,0]
+    g = color_image[:,:,1]
+    b = color_image[:,:,2]
+    #print("rgb\n", r[0][0:15],"\n", g[0][0:15],"\n", b[0][0:15])
+    #rgb_sum = np.float32(r+b+g+.1)
+    rgb_sum = np.float32(r) + np.float32(b) + np.float32(g) +.1
+    ##print("rgb_sum\n", rgb_sum[0][0:15])
+    #if rgb_sum == 0: rgb_sum = 0.01  #avoid divide by zero for pure black pixel
+    ##print("bw\n",bw[0][0:15])
+    rgb_mean = rgb_sum.mean() 
+    r_ave = r.mean()
+    g_ave = g.mean()
+    b_ave = b.mean()
+    channels_ave = [r_ave, g_ave, b_ave]
+    if rgb_mean == 0: rgb_mean = 0.01  #avoid divide by zero for pure black image
+    print("rgb_ave", rgb_mean)
+    print("r_ave  ", r_ave)
+    #print("rgb_sum[0]\n", rgb_sum[0][0:15])
+
+    rgb_multiplier = np.float32(128/rgb_mean) #3*255 #128 #123*3
+    #rgb_multiplier = np.float32(3*128/rgb_mean) #3*255 #128 #123*3
+    #print("rgb_mul ", rgb_multiplier)
+    
+    channels = [r, g, b]
+    print("combo")
+    for channel in range(len(channels)):
+        #channel_multiplier = rgb_sum /(255 * bw)
+        ##channel_multiplier = channels_ave[channel]  / (128 * bw)
+        ##print("channel_multiplier", channel_multiplier[0][0:15])
+        #channel_multiplier = np.float32(128/channels[channel].mean()) #rgb_multiplier
+        #channel_multiplier = (128/rgb_multiplier + channel_multiplier)/2
+        ##combo_channel = np.rint(np.float32(channel_multiplier * channels[channel])).astype(int)
+        
+        #channel_value = (bw) * 255 * ((3*128.0/rgb_mean) - (rgb_sum-channels[channel])/rgb_sum)  ##/ (128 * bw)
+        #channel_value = 255*(bw) * ((128.0)/rgb_mean) * (1-(rgb_sum-channels[channel])/rgb_sum)  ##/ (128 * bw)
+        channel_value = 255*(bw) * ((128.0)/rgb_mean) * (1-(rgb_sum/rgb_mean-channels[channel]/channels_ave[channel])/(rgb_sum/rgb_mean))  ##/ (128 * bw)
+        #channel_value = 255*(bw) * 3*(np.float32(channels[channel])/np.float32(rgb_sum))  ##/ (128 * bw)
+        combo_channel = np.rint(np.float32(channel_value)).astype(int)
+        
+        #print(combo_channel[0][0:15]) 
+        combo_image[0:,0:,channel] = combo_channel
+        #print("diff\n", (color_image[18:18][10:15]-combo_image[18:18][10:15])[:])
+    print()
+    return combo_image
+
+plt.figure(2)
+sample_images = [X_train[1000], X_train[500], X_train[50]]
+num_images = len(sample_images)
+bw_images = []
+for i in range(num_images):
+    bw_images.append(color.rgb2gray(sample_images[i]))
+for i in range(num_images):
+    #sample_image = sample_images[i]
+    #normalized_rgb = rgb_normalizer(sample_image)
+    plt.subplot(num_images, 2, 2*i+1)
+    plt.imshow(sample_images[i])
+    plt.subplot(num_images, 2, 2*i+2)
+    plt.imshow(rgb_grayscale_combo(sample_images[i], bw_images[i]))
+plt.show()
+'''
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#print(&quot;normlizing as rgb&quot;)</span>
+<span class="c1">#for i in ranage(len(X_train)):</span>
+<span class="c1">#    rgb_normalizer(X_train[i])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>'''
+from skimage import color
+gray_img1000 = color.rgb2gray(X_train[1000])
+#imgplot = plt.imshow(gray_img1000)
+print("grayscale image")
+imgplot= plt.imshow(gray_img1000, cmap = plt.get_cmap('gray'))
+print("converting validation data to grayscale")
+gray_valid = color.rgb2gray(X_valid)
+print("converting training data to grayscale")
+gray_train = color.rgb2gray(X_train)
+print("converting training data to grayscale")
+gray_test = color.rgb2gray(X_test)
+print("done converting to grayscale")
+''''''
+from sklearn.preprocessing import normalize
+print("normalized grayscale image")
+fig = plt.figure(1)
+plt.subplot(1, 2, 1)
+normalized_gray_image1000 = normalize(X_train[500,:,:,2])#(gray_img1000)
+plt.imshow(normalized_gray_image1000, cmap = plt.get_cmap('gray'))
+#im2 = fig.add_subplot()
+#im2=plt.imshow(normalized_gray_image1000, cmap = plt.get_cmap('gray'))
+print("normalizing grayscale validation images")
+norm_gray_valid = color.rgb2gray(normalize(X_valid[:,:,:]))
+print("normalizing grayscale training images")
+norm_gray_train = color.rgb2gray(normalize(X_train[:,:,:]))
+print("normalizing grayscale test images")
+norm_gray_test = color.rgb2gray(gray_test)
+
+
+print("creating 3channel version of normalized grayscale image")
+gray_rgb_normalized_train = np.zeros(X_train.shape, np.uint8)
+gray_rgb_normalized_valid = np.zeros(X_valid.shape, np.uint8)
+gray_rgb_normalized_test  = np.zeros(X_test.shape,  np.uint8)
+print( [3 *4])
+
+#gray_rgb_normalized_train[:,:,:,0] = gray_rgb_normalized_train[:,:,:,1] = gray_rgb_normalized_train[:,:,:,2] = norm_gray_train
+gray_rgb_normalized_train[:,:,:,[norm_gray_train,norm_gray_train,norm_gray_train]] 
+print(gray_valid.shape, norm_gray_valid.shape)
+gray_rgb_normalized_valid[:,:,:,0] = gray_rgb_normalized_valid[:,:,:,1] = gray_rgb_normalized_valid[:,:,:,2] = norm_gray_valid
+#gray_rgb_normalized_test[i][:,:,0]  = gray_rgb_normalized_test[i][:,:,1]  = gray_rgb_normalized_test[i][:,:,2]  = norm_gray_test
+
+plt.subplot(1,2,2)
+plt.imshow(gray_rgb_normalized_test[500])
+''''''
+from sklearn.preprocessing import normalize
+# zero center the data
+# subtract the mean of TRAINING DATA from each of the train, valid, test sets
+X_train = X_train.astype(np.float32)
+X_valid = X_valid.astype(np.float32)
+#X_test  = X_test.astype(np.float32)
+training_data_mean = np.mean(X_train, axis=0)
+print(training_data_mean.shape, training_data_mean)
+X_train -= training_data_mean
+X_valid -= training_data_mean
+X_test  -= training_data_mean
+
+# display
+sample_images=[X_train[50], X_train[500], X_train[1000]]
+display_images(sample_images)
+print(sample_images[0][16][16][0:5])
+'''
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">normalize</span>
+<span class="k">def</span> <span class="nf">separate_channels</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+    <span class="c1"># returns 2-D array</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">images</span><span class="p">[:,:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">images</span><span class="p">[:,:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">images</span><span class="p">[:,:,:,</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">R</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">B</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">combine_channels</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">B</span><span class="p">):</span>
+    <span class="c1"># returns 4-D array</span>
+    <span class="n">R</span> <span class="o">=</span>  <span class="n">R</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span>  <span class="n">G</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">B</span> <span class="o">=</span>  <span class="n">B</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">rgb</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">return</span> <span class="n">rgb</span>
+
+<span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="n">separate_channels</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">r_norm</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;normalized R&quot;</span><span class="p">)</span>
+<span class="n">g_norm</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;normalized G&quot;</span><span class="p">)</span>
+<span class="n">b_norm</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;normalized B&quot;</span><span class="p">)</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">r_norm</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">g_norm</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">b_norm</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">[:,:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span><span class="p">[:,:,:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">X_train</span><span class="p">[:,:,:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[:,:,:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">X_train</span><span class="p">[:,:,:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span><span class="p">[:,:,:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1">#display_images([X_train[50]])#, G[500], B[1000]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="mi">500</span><span class="p">][</span><span class="mi">16</span><span class="p">][:][:])</span>
 </pre></div>
 
 </div>
@@ -12795,138 +13031,352 @@ wS9Eoij4hUgUBb8QiaLgFyJR/h8/Dah34kfOkQAAAABJRU5ErkJggg==
 
 
 <div class="output_area"><div class="prompt"></div>
-
-
-<div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
-rQAAAABJRU5ErkJggg==
-"
->
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>C:\Users\i\Anaconda3\envs\carnd-term1\lib\site-packages\sklearn\utils\validation.py:429: DataConversionWarning: Data with input dtype uint8 was converted to float64 by the normalize function.
+  warnings.warn(msg, _DataConversionWarning)
+</pre>
+</div>
 </div>
 
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>normalized R
+normalized G
+normalized B
+[[[[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  ..., 
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]]
+
+
+ [[[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  ..., 
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]]
+
+
+ [[[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  ..., 
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]]
+
+
+ ..., 
+ [[[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  ..., 
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]]
+
+
+ [[[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  ..., 
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]]
+
+
+ [[[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  ..., 
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]
+
+  [[ 0.]
+   [ 0.]
+   [ 0.]
+   ..., 
+   [ 0.]
+   [ 0.]
+   [ 0.]]]]
+(34799, 32, 32, 1)
+[[0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]
+ [0 0 0]]
+</pre>
+</div>
 </div>
 
 </div>
@@ -12975,22 +13425,60 @@ rQAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscae, etc.</span>
 <span class="c1">### Feel free to use as many code cells as needed.</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="k">import</span> <span class="n">shuffle</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">normalize</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="k">import</span> <span class="n">color</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 
 <span class="c1"># images are already sized properly for leNet at (32x32)</span>
-<span class="k">assert</span> <span class="p">(</span><span class="n">image_shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>  <span class="c1">#32px x 32px, 3 color channels:RGB</span>
-
-<span class="c1"># normalization</span>
-
+<span class="nb">print</span><span class="p">(</span><span class="n">image_shape</span><span class="p">,</span> <span class="n">image_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">image_shape</span> <span class="o">==</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>  <span class="c1">#32px x 32px, 3 color channels:RGB</span>
+          
 <span class="c1"># shuffle data</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">X_valid</span><span class="p">,</span> <span class="n">y_valid</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="n">X_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">)</span>
+    <span class="c1"># don&#39;t need to shuffle test data</span>
+
+<span class="sd">&#39;&#39;&#39; </span>
+<span class="sd"># normalization</span>
+<span class="sd">print(&quot;normalizing&quot;)</span>
+<span class="sd">#for i in range(len(X_train))</span>
+<span class="sd">#X_train=[(i, tf.image.per_image_standardization(X_train[i])) for i in range(len(X_train))] </span>
+<span class="sd">#list(map(lambda x: x**2, range(10)))</span>
+<span class="sd">#tf.image.per_image_standardization(X_valid)</span>
+<span class="sd">#tf.image.per_image_standardization(X_test)</span>
+<span class="sd">##X_valid=[(i, tf.image.per_image_standardization(X_valid[i])) for i in range(len(X_valid))] </span>
+<span class="sd">#X_test=[(i, tf.image.per_image_standardization(X_test[i]))  for i in range(len(X_test))]</span>
+<span class="sd">#X_valid = N_valid</span>
+
+<span class="sd">X_train_preprocessed = normalized(X_train)</span>
+<span class="sd">X_valid_preprocessed = normalized(X_valid)</span>
+<span class="sd">X_test_preprocessed  = normalized(X_test)</span>
+
+<span class="sd">print(&quot;normalized image:&quot;)</span>
+<span class="sd">x_1000_normalized = normalize(X_train_preprocessed[1000])</span>
+<span class="sd">imgplot = plt.imshow(x_1000_normalized)</span>
+
+<span class="sd"># to grayscale</span>
+<span class="sd">#Gray Scale you could use cvtcolor from OpenCV:</span>
+<span class="sd">#gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)</span>
+
+<span class="sd">print(&quot;to grayscale&quot;)</span>
+<span class="sd">X_train_preprocessed = color.rgb2gray(X_train_preprocessed)</span>
+<span class="sd">X_valid_preprocessed = color.rgb2gray(X_valid_preprocessed)</span>
+<span class="sd">X_test_preprocessed  = color.rgb2gray(X_test_preprocessed)</span>
+<span class="sd">print(&quot;grayscale done&quot;)</span>
+<span class="sd">#imgplot = plt.imshow(X_train[1000], cmap=&quot;gray&quot;)</span>
+<span class="sd">image_shape = X_train_preprocessed.get_shape().as_list()[1:]</span>
+<span class="sd">print(image_shape)</span>
+<span class="sd">assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale</span>
+<span class="sd">&#39;&#39;&#39;</span>
 
 <span class="c1"># define training variables, constants</span>
 <span class="n">EPOCHS</span> <span class="o">=</span> <span class="mi">100</span>
@@ -13010,6 +13498,7 @@ rQAAAABJRU5ErkJggg==
 <span class="n">pool_stride</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">pool_strides</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="n">pool_stride</span><span class="p">,</span> <span class="n">pool_stride</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 <span class="n">ksize</span> <span class="o">=</span> <span class="n">pool_strides</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;finished cell&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13147,7 +13636,7 @@ assert( [int(logits.get_shape()[1]) ] == [num_classes])
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_conv_layer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">conv_output_shape</span><span class="p">,</span> <span class="n">pool_output_shape</span><span class="p">):</span>
@@ -13191,7 +13680,7 @@ assert( [int(logits.get_shape()[1]) ] == [num_classes])
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_fcc_layer</span><span class="p">(</span><span class="n">prev_layer</span><span class="p">,</span> <span class="n">output_length</span><span class="p">):</span>
@@ -13218,7 +13707,7 @@ assert( [int(logits.get_shape()[1]) ] == [num_classes])
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">tensorflow.contrib.layers</span> <span class="k">import</span> <span class="n">flatten</span>
@@ -13270,7 +13759,7 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Train your model here.</span>
@@ -13287,7 +13776,7 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&#39;&#39;&#39;   http://stackoverflow.com/a/34243720/5411817</span>
@@ -13300,7 +13789,17 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 <span class="sd">&#39;&#39;&#39;</span>
 <span class="c1"># initialize</span>
 <span class="n">pixels_x</span><span class="p">,</span> <span class="n">pixels_y</span><span class="p">,</span> <span class="n">color_depth</span> <span class="o">=</span> <span class="n">image_shape</span> 
-<span class="k">assert</span> <span class="p">((</span><span class="n">pixels_x</span><span class="p">,</span> <span class="n">pixels_y</span><span class="p">,</span> <span class="n">color_depth</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> 
+<span class="k">assert</span> <span class="p">((</span><span class="n">pixels_x</span><span class="p">,</span> <span class="n">pixels_y</span><span class="p">,</span> <span class="n">color_depth</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="c1"># choose which pre-processed set to work with</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">norm_gray_valid</span>
+<span class="n">X_valid</span> <span class="o">=</span> <span class="n">norm_gray_valid</span>
+<span class="n">X_test</span>  <span class="o">=</span> <span class="n">norm_gray_valid</span>
+<span class="c1">#y_train = y_train</span>
+<span class="c1">#y_valid =</span>
+<span class="c1">#y_test  = </span>
+<span class="n">image_shape</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">()</span>
+
 <span class="c1"># features, labels</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">pixels_x</span><span class="p">,</span> <span class="n">pixels_y</span><span class="p">,</span> <span class="n">color_depth</span><span class="p">))</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">))</span>
@@ -13344,7 +13843,7 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># evaluation routine</span>
@@ -13360,8 +13859,6 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
         <span class="n">X_batch</span> <span class="o">=</span> <span class="n">X_data</span><span class="p">[</span><span class="n">batch_start</span><span class="p">:</span><span class="n">batch_end</span><span class="p">]</span>
         <span class="n">y_batch</span> <span class="o">=</span> <span class="n">y_data</span><span class="p">[</span><span class="n">batch_start</span><span class="p">:</span><span class="n">batch_end</span><span class="p">]</span>
         
-        <span class="c1">#accuracy, loss = sess.run([accuracy_calculation, loss_operation],</span>
-        <span class="c1">#                          feed_dict = {features:X_batch, labels:y_batch})</span>
         <span class="n">accuracy</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">accuracy_calculation</span><span class="p">,</span> <span class="n">loss_operation</span><span class="p">],</span>
                                   <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">X_batch</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">y_batch</span><span class="p">})</span>
         
@@ -13383,7 +13880,7 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TEMP TRUNCATE DATA FOR INITIAL TESTING</span>
@@ -13399,36 +13896,19 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 <span class="sd">y_test  = y_test[0:te]</span>
 <span class="sd">print(&#39;DATA TRUNCATED TO:&#39;, len(X_train), &quot;SAMPLES for preliminary testing&quot;)</span>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">EPOCHS = 20</span>
-<span class="sd">print(&#39;EPOCHS TRUNCATED TO:&#39;, EPOCHS, &quot;EPOCHS for preliminary testing&quot;)</span>
-<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="n">EPOCHS</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;EPOCHS TRUNCATED TO:&#39;</span><span class="p">,</span> <span class="n">EPOCHS</span><span class="p">,</span> <span class="s2">&quot;EPOCHS for preliminary testing&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&#39;\nEPOCHS = 20\nprint(\&#39;EPOCHS TRUNCATED TO:\&#39;, EPOCHS, &#34;EPOCHS for preliminary testing&#34;)\n&#39;</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
@@ -13449,7 +13929,7 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
             <span class="n">labels</span>   <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">batch_start</span><span class="p">:</span><span class="n">batch_end</span><span class="p">]</span>
             <span class="c1">#train</span>
             <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">training_operation</span><span class="p">,</span> <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">features</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">labels</span><span class="p">})</span>
-            <span class="k">if</span> <span class="n">batch_start</span> <span class="o">%</span> <span class="mi">50</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">batch_start</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;        batch &quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="n">batch_start</span><span class="o">//</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="s2">&quot;of &quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_examples</span><span class="o">/</span><span class="n">BATCH_SIZE</span><span class="p">))</span><span class="c1">#, &quot;batches,  on EPOCH&quot;, i+1, &quot;of&quot;, EPOCHS, &quot;EPOCHS&quot;)</span>
                       
         <span class="c1"># evaluate on validation set, and print results of model from this EPOCH       </span>
@@ -13481,1727 +13961,6 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Training...
-
-EPOCH:  1 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.395 minutes
-Validation Loss = 1.441
-Validation Accuracy = 0.661
-
-EPOCH:  2 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.389 minutes
-Validation Loss = 1.090
-Validation Accuracy = 0.766
-
-EPOCH:  3 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.392 minutes
-Validation Loss = 1.041
-Validation Accuracy = 0.803
-
-EPOCH:  4 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.397 minutes
-Validation Loss = 0.944
-Validation Accuracy = 0.832
-
-EPOCH:  5 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.396 minutes
-Validation Loss = 0.868
-Validation Accuracy = 0.852
-
-EPOCH:  6 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.397 minutes
-Validation Loss = 0.982
-Validation Accuracy = 0.851
-
-EPOCH:  7 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.404 minutes
-Validation Loss = 0.963
-Validation Accuracy = 0.849
-
-EPOCH:  8 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.403 minutes
-Validation Loss = 0.992
-Validation Accuracy = 0.863
-
-EPOCH:  9 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.402 minutes
-Validation Loss = 1.106
-Validation Accuracy = 0.850
-
-EPOCH:  10 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.409 minutes
-Validation Loss = 1.068
-Validation Accuracy = 0.856
-
-EPOCH:  11 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.409 minutes
-Validation Loss = 1.150
-Validation Accuracy = 0.860
-
-EPOCH:  12 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.410 minutes
-Validation Loss = 1.152
-Validation Accuracy = 0.868
-
-EPOCH:  13 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.409 minutes
-Validation Loss = 1.283
-Validation Accuracy = 0.852
-
-EPOCH:  14 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.417 minutes
-Validation Loss = 1.020
-Validation Accuracy = 0.881
-
-EPOCH:  15 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.411 minutes
-Validation Loss = 1.534
-Validation Accuracy = 0.837
-
-EPOCH:  16 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.418 minutes
-Validation Loss = 1.197
-Validation Accuracy = 0.882
-
-EPOCH:  17 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.416 minutes
-Validation Loss = 1.388
-Validation Accuracy = 0.846
-
-EPOCH:  18 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.421 minutes
-Validation Loss = 1.398
-Validation Accuracy = 0.859
-
-EPOCH:  19 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.417 minutes
-Validation Loss = 1.083
-Validation Accuracy = 0.889
-
-EPOCH:  20 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.418 minutes
-Validation Loss = 1.161
-Validation Accuracy = 0.878
-
-EPOCH:  21 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.417 minutes
-Validation Loss = 1.362
-Validation Accuracy = 0.876
-
-EPOCH:  22 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.419 minutes
-Validation Loss = 1.362
-Validation Accuracy = 0.869
-
-EPOCH:  23 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.419 minutes
-Validation Loss = 1.365
-Validation Accuracy = 0.881
-
-EPOCH:  24 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.419 minutes
-Validation Loss = 1.325
-Validation Accuracy = 0.882
-
-EPOCH:  25 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.417 minutes
-Validation Loss = 1.549
-Validation Accuracy = 0.881
-
-EPOCH:  26 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.423 minutes
-Validation Loss = 1.380
-Validation Accuracy = 0.878
-
-EPOCH:  27 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.420 minutes
-Validation Loss = 1.281
-Validation Accuracy = 0.887
-
-EPOCH:  28 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.437 minutes
-Validation Loss = 1.542
-Validation Accuracy = 0.885
-
-EPOCH:  29 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.423 minutes
-Validation Loss = 1.348
-Validation Accuracy = 0.894
-
-EPOCH:  30 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.428 minutes
-Validation Loss = 1.582
-Validation Accuracy = 0.890
-
-EPOCH:  31 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.423 minutes
-Validation Loss = 1.449
-Validation Accuracy = 0.891
-
-EPOCH:  32 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.424 minutes
-Validation Loss = 1.293
-Validation Accuracy = 0.887
-
-EPOCH:  33 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.425 minutes
-Validation Loss = 1.567
-Validation Accuracy = 0.880
-
-EPOCH:  34 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.426 minutes
-Validation Loss = 1.261
-Validation Accuracy = 0.899
-
-EPOCH:  35 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.423 minutes
-Validation Loss = 1.268
-Validation Accuracy = 0.902
-
-EPOCH:  36 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.427 minutes
-Validation Loss = 1.448
-Validation Accuracy = 0.890
-
-EPOCH:  37 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.426 minutes
-Validation Loss = 1.707
-Validation Accuracy = 0.890
-
-EPOCH:  38 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.428 minutes
-Validation Loss = 1.536
-Validation Accuracy = 0.876
-
-EPOCH:  39 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.426 minutes
-Validation Loss = 1.536
-Validation Accuracy = 0.878
-
-EPOCH:  40 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.428 minutes
-Validation Loss = 1.546
-Validation Accuracy = 0.872
-
-EPOCH:  41 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.428 minutes
-Validation Loss = 1.503
-Validation Accuracy = 0.888
-
-EPOCH:  42 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.433 minutes
-Validation Loss = 1.573
-Validation Accuracy = 0.893
-
-EPOCH:  43 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.436 minutes
-Validation Loss = 1.704
-Validation Accuracy = 0.888
-
-EPOCH:  44 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.431 minutes
-Validation Loss = 2.124
-Validation Accuracy = 0.871
-
-EPOCH:  45 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.427 minutes
-Validation Loss = 1.573
-Validation Accuracy = 0.901
-
-EPOCH:  46 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.431 minutes
-Validation Loss = 1.427
-Validation Accuracy = 0.893
-
-EPOCH:  47 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.431 minutes
-Validation Loss = 1.324
-Validation Accuracy = 0.907
-
-EPOCH:  48 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.432 minutes
-Validation Loss = 1.501
-Validation Accuracy = 0.907
-
-EPOCH:  49 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.435 minutes
-Validation Loss = 1.303
-Validation Accuracy = 0.901
-
-EPOCH:  50 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.436 minutes
-Validation Loss = 1.483
-Validation Accuracy = 0.910
-
-EPOCH:  51 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.437 minutes
-Validation Loss = 2.042
-Validation Accuracy = 0.880
-
-EPOCH:  52 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.435 minutes
-Validation Loss = 1.708
-Validation Accuracy = 0.888
-
-EPOCH:  53 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.434 minutes
-Validation Loss = 2.376
-Validation Accuracy = 0.872
-
-EPOCH:  54 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.435 minutes
-Validation Loss = 1.513
-Validation Accuracy = 0.903
-
-EPOCH:  55 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.440 minutes
-Validation Loss = 1.638
-Validation Accuracy = 0.890
-
-EPOCH:  56 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.435 minutes
-Validation Loss = 1.735
-Validation Accuracy = 0.896
-
-EPOCH:  57 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.438 minutes
-Validation Loss = 1.597
-Validation Accuracy = 0.905
-
-EPOCH:  58 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.440 minutes
-Validation Loss = 1.431
-Validation Accuracy = 0.914
-
-EPOCH:  59 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.437 minutes
-Validation Loss = 1.881
-Validation Accuracy = 0.897
-
-EPOCH:  60 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.439 minutes
-Validation Loss = 2.042
-Validation Accuracy = 0.898
-
-EPOCH:  61 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.439 minutes
-Validation Loss = 2.502
-Validation Accuracy = 0.885
-
-EPOCH:  62 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.447 minutes
-Validation Loss = 1.638
-Validation Accuracy = 0.919
-
-EPOCH:  63 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.558 minutes
-Validation Loss = 1.844
-Validation Accuracy = 0.909
-
-EPOCH:  64 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.726 minutes
-Validation Loss = 1.980
-Validation Accuracy = 0.898
-
-EPOCH:  65 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.891 minutes
-Validation Loss = 2.177
-Validation Accuracy = 0.905
-
-EPOCH:  66 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.821 minutes
-Validation Loss = 1.785
-Validation Accuracy = 0.907
-
-EPOCH:  67 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.431 minutes
-Validation Loss = 1.857
-Validation Accuracy = 0.900
-
-EPOCH:  68 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.438 minutes
-Validation Loss = 1.868
-Validation Accuracy = 0.905
-
-EPOCH:  69 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.430 minutes
-Validation Loss = 2.411
-Validation Accuracy = 0.898
-
-EPOCH:  70 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.437 minutes
-Validation Loss = 1.892
-Validation Accuracy = 0.904
-
-EPOCH:  71 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.428 minutes
-Validation Loss = 2.302
-Validation Accuracy = 0.906
-
-EPOCH:  72 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.427 minutes
-Validation Loss = 1.799
-Validation Accuracy = 0.908
-
-EPOCH:  73 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.426 minutes
-Validation Loss = 2.222
-Validation Accuracy = 0.905
-
-EPOCH:  74 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.426 minutes
-Validation Loss = 1.751
-Validation Accuracy = 0.913
-
-EPOCH:  75 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.433 minutes
-Validation Loss = 1.499
-Validation Accuracy = 0.925
-
-EPOCH:  76 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.435 minutes
-Validation Loss = 1.766
-Validation Accuracy = 0.917
-
-EPOCH:  77 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.439 minutes
-Validation Loss = 1.968
-Validation Accuracy = 0.912
-
-EPOCH:  78 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.453 minutes
-Validation Loss = 2.705
-Validation Accuracy = 0.866
-
-EPOCH:  79 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.448 minutes
-Validation Loss = 2.127
-Validation Accuracy = 0.902
-
-EPOCH:  80 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.438 minutes
-Validation Loss = 1.857
-Validation Accuracy = 0.912
-
-EPOCH:  81 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.441 minutes
-Validation Loss = 2.003
-Validation Accuracy = 0.911
-
-EPOCH:  82 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.433 minutes
-Validation Loss = 2.371
-Validation Accuracy = 0.911
-
-EPOCH:  83 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.430 minutes
-Validation Loss = 2.577
-Validation Accuracy = 0.899
-
-EPOCH:  84 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.432 minutes
-Validation Loss = 2.443
-Validation Accuracy = 0.913
-
-EPOCH:  85 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.432 minutes
-Validation Loss = 2.435
-Validation Accuracy = 0.903
-
-EPOCH:  86 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.429 minutes
-Validation Loss = 2.349
-Validation Accuracy = 0.908
-
-EPOCH:  87 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.428 minutes
-Validation Loss = 2.649
-Validation Accuracy = 0.903
-
-EPOCH:  88 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.429 minutes
-Validation Loss = 2.438
-Validation Accuracy = 0.904
-
-EPOCH:  89 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.431 minutes
-Validation Loss = 3.330
-Validation Accuracy = 0.888
-
-EPOCH:  90 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.433 minutes
-Validation Loss = 2.696
-Validation Accuracy = 0.906
-
-EPOCH:  91 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.430 minutes
-Validation Loss = 3.220
-Validation Accuracy = 0.903
-
-EPOCH:  92 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.428 minutes
-Validation Loss = 3.296
-Validation Accuracy = 0.897
-
-EPOCH:  93 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.429 minutes
-Validation Loss = 2.502
-Validation Accuracy = 0.910
-
-EPOCH:  94 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.429 minutes
-Validation Loss = 2.679
-Validation Accuracy = 0.916
-
-EPOCH:  95 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.428 minutes
-Validation Loss = 1.919
-Validation Accuracy = 0.922
-
-EPOCH:  96 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.427 minutes
-Validation Loss = 2.256
-Validation Accuracy = 0.914
-
-EPOCH:  97 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.427 minutes
-Validation Loss = 2.616
-Validation Accuracy = 0.915
-
-EPOCH:  98 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.428 minutes
-Validation Loss = 2.591
-Validation Accuracy = 0.911
-
-EPOCH:  99 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.428 minutes
-Validation Loss = 2.645
-Validation Accuracy = 0.912
-
-EPOCH:  100 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-evaluating..
-Time: 0.429 minutes
-Validation Loss = 3.648
-Validation Accuracy = 0.893
-
-underfitting if:  low accuracy on training and low accuracy on validation sets.
-overfitting  if: high accuracy on training but low accuracy on validation sets.
-
-Keep working on your model to acheive a minimum validation accuracy of 0.93
-
-Model Saved
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -15218,7 +13977,7 @@ Model Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># test the trained model</span>
@@ -15230,41 +13989,9 @@ Model Saved
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test Loss     = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_loss</span><span class="p">))</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test Accuracy = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_accuracy</span><span class="p">))</span>
     
-    <span class="n">If</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>evaluating..
-0.897466350026
-Test Loss     = 3.831
-Test Accuracy = 0.897
-</pre>
-</div>
-</div>
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-16-14f2b843b04d&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">      8</span>     print<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#34;Test Accuracy = {:.3f}&#34;</span><span class="ansi-yellow-intense-fg ansi-bold">.</span>format<span class="ansi-yellow-intense-fg ansi-bold">(</span>test_accuracy<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      9</span> 
-<span class="ansi-green-fg">---&gt; 10</span><span class="ansi-red-fg">     </span>If
-
-<span class="ansi-red-fg">NameError</span>: name &#39;If&#39; is not defined</pre>
-</div>
-</div>
-
 </div>
 </div>
 

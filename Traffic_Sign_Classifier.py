@@ -130,9 +130,9 @@ def plot_data(data, title, short_label):
     #print(counts, "\n|")
     counted = OrderedDict(sorted(counts.items()))
     #print(counted[0], counted, "\n")
-    final = [counted[i] for i in range(len(counted))]
+    final_count = [counted[i] for i in range(len(counted))]
     #print(final, "\n")
-    y_data = final
+    y_data = final_count
     x_data = range(len(y_data))
     
     
@@ -158,19 +158,281 @@ plot_data(y_test, "Test Data: number of images in each class","test")
 
 # In[4]:
 
-# diplay sample image
+# diplay sample images from training data set
+def display_images(images):
+    num_channels = images[0].shape[-1]
+    print("shape 1st image", images[0].shape)
+    num_images = len(images)
+    print(num_images, "num_images, num_channels:", num_channels)
+    plt.figure(1)
+    rows = 1
+    cols = int(num_images/rows)
+    for i in range(num_images):
+        plt.subplot(rows, cols, i+1)
+        if num_channels == 3:
+            print("color")
+            plt.imshow(images[i])
+        elif num_channels == 1:
+            print("grayscale")
+            plt.imshow(images[i], cmap = plt.get_cmap('gray'))
+        else: "error, number of channels should be 1 or 3"
+    plt.show()
+
 print("Sample images from training data set")
-imgplot = plt.imshow(X_train[50])
+sample_images = [X_train[50], X_train[500], X_train[1000]]
+display_images(sample_images)
+
+# consider showing histogram of individual sample images
+# consider showing average histogram of all images
+# consider showing zero mean of sample images
+# consider showing normalized sample images
 
 
 # In[5]:
 
-imgplot = plt.imshow(X_train[500])
+#imgplot = plt.imshow(X_train[500])
 
 
 # In[6]:
 
-imgplot = plt.imshow(X_train[1000])
+#imgplot = plt.imshow(X_train[1000])
+
+'''
+#normalized_rgb   = np.zeros(image_shape, np.uint8)
+#normalized_image = np.zeros(image_shape, np.uint8)
+# normalized in color
+def rgb_normalizer(image):
+    normalized_rgb   = np.zeros(image_shape, np.uint8)
+    normalized_channel = np.zeros([image_shape[0], image_shape[1], 1], np.uint8)
+
+    r = image[:,:,0]
+    g = image[:,:,1]
+    b = image[:,:,2]
+    print("rgb\n", r[0][0:15],"\n", g[0][0:15],"\n", b[0][0:15])
+    rgb_sum = r+b+g
+    rgb_mean = rgb_sum.mean() 
+    r_ave = r.mean()
+    g_ave = g.mean()
+    b_ave = b.mean()
+    if rgb_mean == 0: rgb_mean = 0.01  #avoid divide by zero for pure black image
+    print("rgb_ave", rgb_mean)
+    print("r_ave  ", r_ave)
+    #print("rgb_sum[0]\n", rgb_sum[0][0:15])
+
+    rgb_multiplier = np.float32(128/rgb_mean) #3*255 #128 #123*3
+    #rgb_multiplier = np.float32(3*128/rgb_mean) #3*255 #128 #123*3
+    print("rgb_mul ", rgb_multiplier)
+    
+    channels = [r, g, b]
+    print("normalized")
+    for channel in range(len(channels)):
+        channel_multiplier = rgb_multiplier
+        #channel_multiplier = np.float32(128/channels[channel].mean()) #rgb_multiplier
+        #channel_multiplier = (128/rgb_multiplier + channel_multiplier)/2
+        normalized_channel = np.rint(np.float32(channel_multiplier * channels[channel])).astype(int)
+        print(normalized_channel[0][0:15])       
+        normalized_rgb[0:,0:,channel] = normalized_channel
+    print()
+    return normalized_rgb
+
+sample_images = [X_train[1000], X_train[500], X_train[50]]
+#image_1000 = X_train[1000]
+#normalized_rgb = rgb_normalizer(image_1000)
+#imgplot = plt.imshow(normalized_rgb)
+
+plt.figure(1)
+num_images = len(sample_images)
+for i in range(num_images):
+    #sample_image = sample_images[i]
+    #normalized_rgb = rgb_normalizer(sample_image)
+    plt.subplot(num_images, 2, 2*i+1)
+    plt.imshow(sample_images[i])
+    plt.subplot(num_images, 2, 2*i+2)
+    plt.imshow(rgb_normalizer(sample_images[i]))
+'''
+'''
+image = X_train[50]
+normalized_rgb = rgb_normalizer(image)
+plt.subplot(223)
+plt.imshow(image)
+plt.subplot(224)
+plt.imshow(normalized_rgb)
+'''
+'''
+plt.show()
+''''''
+def rgb_grayscale_combo(color_image, bw):
+    combo_image   = np.zeros(image_shape, np.uint8)
+    combo_channel = np.zeros(image_shape, np.uint8)
+
+    r = color_image[:,:,0]
+    g = color_image[:,:,1]
+    b = color_image[:,:,2]
+    #print("rgb\n", r[0][0:15],"\n", g[0][0:15],"\n", b[0][0:15])
+    #rgb_sum = np.float32(r+b+g+.1)
+    rgb_sum = np.float32(r) + np.float32(b) + np.float32(g) +.1
+    ##print("rgb_sum\n", rgb_sum[0][0:15])
+    #if rgb_sum == 0: rgb_sum = 0.01  #avoid divide by zero for pure black pixel
+    ##print("bw\n",bw[0][0:15])
+    rgb_mean = rgb_sum.mean() 
+    r_ave = r.mean()
+    g_ave = g.mean()
+    b_ave = b.mean()
+    channels_ave = [r_ave, g_ave, b_ave]
+    if rgb_mean == 0: rgb_mean = 0.01  #avoid divide by zero for pure black image
+    print("rgb_ave", rgb_mean)
+    print("r_ave  ", r_ave)
+    #print("rgb_sum[0]\n", rgb_sum[0][0:15])
+
+    rgb_multiplier = np.float32(128/rgb_mean) #3*255 #128 #123*3
+    #rgb_multiplier = np.float32(3*128/rgb_mean) #3*255 #128 #123*3
+    #print("rgb_mul ", rgb_multiplier)
+    
+    channels = [r, g, b]
+    print("combo")
+    for channel in range(len(channels)):
+        #channel_multiplier = rgb_sum /(255 * bw)
+        ##channel_multiplier = channels_ave[channel]  / (128 * bw)
+        ##print("channel_multiplier", channel_multiplier[0][0:15])
+        #channel_multiplier = np.float32(128/channels[channel].mean()) #rgb_multiplier
+        #channel_multiplier = (128/rgb_multiplier + channel_multiplier)/2
+        ##combo_channel = np.rint(np.float32(channel_multiplier * channels[channel])).astype(int)
+        
+        #channel_value = (bw) * 255 * ((3*128.0/rgb_mean) - (rgb_sum-channels[channel])/rgb_sum)  ##/ (128 * bw)
+        #channel_value = 255*(bw) * ((128.0)/rgb_mean) * (1-(rgb_sum-channels[channel])/rgb_sum)  ##/ (128 * bw)
+        channel_value = 255*(bw) * ((128.0)/rgb_mean) * (1-(rgb_sum/rgb_mean-channels[channel]/channels_ave[channel])/(rgb_sum/rgb_mean))  ##/ (128 * bw)
+        #channel_value = 255*(bw) * 3*(np.float32(channels[channel])/np.float32(rgb_sum))  ##/ (128 * bw)
+        combo_channel = np.rint(np.float32(channel_value)).astype(int)
+        
+        #print(combo_channel[0][0:15]) 
+        combo_image[0:,0:,channel] = combo_channel
+        #print("diff\n", (color_image[18:18][10:15]-combo_image[18:18][10:15])[:])
+    print()
+    return combo_image
+
+plt.figure(2)
+sample_images = [X_train[1000], X_train[500], X_train[50]]
+num_images = len(sample_images)
+bw_images = []
+for i in range(num_images):
+    bw_images.append(color.rgb2gray(sample_images[i]))
+for i in range(num_images):
+    #sample_image = sample_images[i]
+    #normalized_rgb = rgb_normalizer(sample_image)
+    plt.subplot(num_images, 2, 2*i+1)
+    plt.imshow(sample_images[i])
+    plt.subplot(num_images, 2, 2*i+2)
+    plt.imshow(rgb_grayscale_combo(sample_images[i], bw_images[i]))
+plt.show()
+'''
+# In[ ]:
+
+
+
+
+# In[7]:
+
+#print("normlizing as rgb")
+#for i in ranage(len(X_train)):
+#    rgb_normalizer(X_train[i])
+
+'''
+from skimage import color
+gray_img1000 = color.rgb2gray(X_train[1000])
+#imgplot = plt.imshow(gray_img1000)
+print("grayscale image")
+imgplot= plt.imshow(gray_img1000, cmap = plt.get_cmap('gray'))
+print("converting validation data to grayscale")
+gray_valid = color.rgb2gray(X_valid)
+print("converting training data to grayscale")
+gray_train = color.rgb2gray(X_train)
+print("converting training data to grayscale")
+gray_test = color.rgb2gray(X_test)
+print("done converting to grayscale")
+''''''
+from sklearn.preprocessing import normalize
+print("normalized grayscale image")
+fig = plt.figure(1)
+plt.subplot(1, 2, 1)
+normalized_gray_image1000 = normalize(X_train[500,:,:,2])#(gray_img1000)
+plt.imshow(normalized_gray_image1000, cmap = plt.get_cmap('gray'))
+#im2 = fig.add_subplot()
+#im2=plt.imshow(normalized_gray_image1000, cmap = plt.get_cmap('gray'))
+print("normalizing grayscale validation images")
+norm_gray_valid = color.rgb2gray(normalize(X_valid[:,:,:]))
+print("normalizing grayscale training images")
+norm_gray_train = color.rgb2gray(normalize(X_train[:,:,:]))
+print("normalizing grayscale test images")
+norm_gray_test = color.rgb2gray(gray_test)
+
+
+print("creating 3channel version of normalized grayscale image")
+gray_rgb_normalized_train = np.zeros(X_train.shape, np.uint8)
+gray_rgb_normalized_valid = np.zeros(X_valid.shape, np.uint8)
+gray_rgb_normalized_test  = np.zeros(X_test.shape,  np.uint8)
+print( [3 *4])
+
+#gray_rgb_normalized_train[:,:,:,0] = gray_rgb_normalized_train[:,:,:,1] = gray_rgb_normalized_train[:,:,:,2] = norm_gray_train
+gray_rgb_normalized_train[:,:,:,[norm_gray_train,norm_gray_train,norm_gray_train]] 
+print(gray_valid.shape, norm_gray_valid.shape)
+gray_rgb_normalized_valid[:,:,:,0] = gray_rgb_normalized_valid[:,:,:,1] = gray_rgb_normalized_valid[:,:,:,2] = norm_gray_valid
+#gray_rgb_normalized_test[i][:,:,0]  = gray_rgb_normalized_test[i][:,:,1]  = gray_rgb_normalized_test[i][:,:,2]  = norm_gray_test
+
+plt.subplot(1,2,2)
+plt.imshow(gray_rgb_normalized_test[500])
+''''''
+from sklearn.preprocessing import normalize
+# zero center the data
+# subtract the mean of TRAINING DATA from each of the train, valid, test sets
+X_train = X_train.astype(np.float32)
+X_valid = X_valid.astype(np.float32)
+#X_test  = X_test.astype(np.float32)
+training_data_mean = np.mean(X_train, axis=0)
+print(training_data_mean.shape, training_data_mean)
+X_train -= training_data_mean
+X_valid -= training_data_mean
+X_test  -= training_data_mean
+
+# display
+sample_images=[X_train[50], X_train[500], X_train[1000]]
+display_images(sample_images)
+print(sample_images[0][16][16][0:5])
+'''
+# In[11]:
+
+from sklearn.preprocessing import normalize
+def separate_channels(images):
+    # returns 2-D array
+    R = images[:,:,:,0].reshape(len(images),-1)
+    G = images[:,:,:,1].reshape(len(images),-1)
+    B = images[:,:,:,2].reshape(len(images),-1)
+    return [R,G,B]
+
+def combine_channels(R,G,B):
+    # returns 4-D array
+    R =  R.reshape(-1, 32, 32, 1)
+    G =  G.reshape(-1, 32, 32, 1)
+    B =  B.reshape(-1, 32, 32, 1)
+    rgb = []
+    return rgb
+
+R, G, B = separate_channels(X_train)
+r_norm = normalize(R)
+print("normalized R")
+g_norm = normalize(G)
+print("normalized G")
+b_norm = normalize(B)
+print("normalized B")
+R = r_norm.reshape(-1,32,32,1)
+print(R)
+G = g_norm.reshape(-1,32,32,1)
+B = b_norm.reshape(-1,32,32,1)
+print(R.shape)
+X_train[:,:,:,0] = R[:,:,:,0]
+X_train[:,:,:,1] = G[:,:,:,0]
+X_train[:,:,:,2] = B[:,:,:,0]
+#display_images([X_train[50]])#, G[500], B[1000]])
+print(X_train[500][16][:][:])
 
 
 # ----
@@ -196,21 +458,59 @@ imgplot = plt.imshow(X_train[1000])
 
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
 
-# In[7]:
+# In[ ]:
 
-### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.
+### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscae, etc.
 ### Feel free to use as many code cells as needed.
 
 from sklearn.utils import shuffle
+from sklearn.preprocessing import normalize
+from skimage import color
 import tensorflow as tf
 
 # images are already sized properly for leNet at (32x32)
-assert (image_shape == (32, 32, 3))  #32px x 32px, 3 color channels:RGB
-
-# normalization
-
+print(image_shape, image_shape[1:])
+assert (image_shape == [32, 32, 3])  #32px x 32px, 3 color channels:RGB
+          
 # shuffle data
 X_train, y_train = shuffle(X_train, y_train)
+X_valid, y_valid = shuffle(X_valid, y_valid)
+    # don't need to shuffle test data
+
+''' 
+# normalization
+print("normalizing")
+#for i in range(len(X_train))
+#X_train=[(i, tf.image.per_image_standardization(X_train[i])) for i in range(len(X_train))] 
+#list(map(lambda x: x**2, range(10)))
+#tf.image.per_image_standardization(X_valid)
+#tf.image.per_image_standardization(X_test)
+##X_valid=[(i, tf.image.per_image_standardization(X_valid[i])) for i in range(len(X_valid))] 
+#X_test=[(i, tf.image.per_image_standardization(X_test[i]))  for i in range(len(X_test))]
+#X_valid = N_valid
+
+X_train_preprocessed = normalized(X_train)
+X_valid_preprocessed = normalized(X_valid)
+X_test_preprocessed  = normalized(X_test)
+
+print("normalized image:")
+x_1000_normalized = normalize(X_train_preprocessed[1000])
+imgplot = plt.imshow(x_1000_normalized)
+
+# to grayscale
+#Gray Scale you could use cvtcolor from OpenCV:
+#gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+print("to grayscale")
+X_train_preprocessed = color.rgb2gray(X_train_preprocessed)
+X_valid_preprocessed = color.rgb2gray(X_valid_preprocessed)
+X_test_preprocessed  = color.rgb2gray(X_test_preprocessed)
+print("grayscale done")
+#imgplot = plt.imshow(X_train[1000], cmap="gray")
+image_shape = X_train_preprocessed.get_shape().as_list()[1:]
+print(image_shape)
+assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
+'''
 
 # define training variables, constants
 EPOCHS = 100
@@ -230,6 +530,7 @@ strides = [1, stride, stride, 1]
 pool_stride = 2
 pool_strides = [1, pool_stride, pool_stride, 1]
 ksize = pool_strides
+print("finished cell")
 
 
 
@@ -355,7 +656,7 @@ logits = tf.add(tf.matmul(layer4, fcc_weights), fcc_bias)
 assert( [int(logits.get_shape()[1]) ] == [num_classes])
 '''
 
-# In[8]:
+# In[ ]:
 
 def get_conv_layer(x, conv_output_shape, pool_output_shape):
     input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
@@ -392,7 +693,7 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
 
 
 
-# In[9]:
+# In[ ]:
 
 def get_fcc_layer(prev_layer, output_length):
     input_length  = prev_layer.get_shape().as_list()[1]
@@ -411,7 +712,7 @@ def get_fcc_layer(prev_layer, output_length):
     return fcc_layer
 
 
-# In[10]:
+# In[ ]:
 
 from tensorflow.contrib.layers import flatten
 
@@ -440,7 +741,7 @@ def LeNet(x):
 # A validation set can be used to assess how well the model is performing. A low accuracy on the training and validation
 # sets imply underfitting. A high accuracy on the training set but low accuracy on the validation set implies overfitting.
 
-# In[11]:
+# In[ ]:
 
 ### Train your model here.
 ### Calculate and report the accuracy on the training and validation set.
@@ -449,7 +750,7 @@ def LeNet(x):
 ### Feel free to use as many code cells as needed.
 
 
-# In[12]:
+# In[ ]:
 
 '''   http://stackoverflow.com/a/34243720/5411817
 #   use this function instead of separate functions:
@@ -461,7 +762,17 @@ def LeNet(x):
 '''
 # initialize
 pixels_x, pixels_y, color_depth = image_shape 
-assert ((pixels_x, pixels_y, color_depth) == (32, 32, 3)) 
+assert ((pixels_x, pixels_y, color_depth) == (32, 32, 3))
+
+# choose which pre-processed set to work with
+X_train = norm_gray_valid
+X_valid = norm_gray_valid
+X_test  = norm_gray_valid
+#y_train = y_train
+#y_valid =
+#y_test  = 
+image_shape = x_train.shape()
+
 # features, labels
 x = tf.placeholder(tf.float32, (None, pixels_x, pixels_y, color_depth))
 y = tf.placeholder(tf.int64, (None))
@@ -490,7 +801,7 @@ accuracy_calculation   = tf.reduce_mean(tf.cast(prediction_is_correct, tf.float3
 
 
 
-# In[13]:
+# In[ ]:
 
 # evaluation routine
 def evaluate_data(X_data, y_data):
@@ -505,8 +816,6 @@ def evaluate_data(X_data, y_data):
         X_batch = X_data[batch_start:batch_end]
         y_batch = y_data[batch_start:batch_end]
         
-        #accuracy, loss = sess.run([accuracy_calculation, loss_operation],
-        #                          feed_dict = {features:X_batch, labels:y_batch})
         accuracy, loss = sess.run([accuracy_calculation, loss_operation],
                                   feed_dict = {x:X_batch, y:y_batch})
         
@@ -521,7 +830,7 @@ def evaluate_data(X_data, y_data):
     return total_accuracy, total_loss     
 
 
-# In[14]:
+# In[ ]:
 
 # TEMP TRUNCATE DATA FOR INITIAL TESTING
 '''
@@ -536,13 +845,12 @@ X_test  = X_test[0:te]
 y_test  = y_test[0:te]
 print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 '''
-'''
-EPOCHS = 20
+
+EPOCHS = 30
 print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
-'''
 
 
-# In[15]:
+# In[ ]:
 
 import time
 
@@ -562,7 +870,7 @@ with tf.Session() as sess:
             labels   = y_train[batch_start:batch_end]
             #train
             sess.run(training_operation, feed_dict = {x:features, y:labels})
-            if batch_start % 50 == 0:
+            if batch_start % 100 == 0:
                 print("        batch ", 1+batch_start//BATCH_SIZE, "of ", 1 + int(num_examples/BATCH_SIZE))#, "batches,  on EPOCH", i+1, "of", EPOCHS, "EPOCHS")
                       
         # evaluate on validation set, and print results of model from this EPOCH       
@@ -595,7 +903,7 @@ with tf.Session() as sess:
 
 
 
-# In[16]:
+# In[ ]:
 
 # test the trained model
 with tf.Session() as sess:
@@ -606,7 +914,6 @@ with tf.Session() as sess:
     print("Test Loss     = {:.3f}".format(test_loss))
     print("Test Accuracy = {:.3f}".format(test_accuracy))
     
-    If
 
 
 # ---
