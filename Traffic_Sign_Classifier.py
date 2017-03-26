@@ -22,7 +22,7 @@
 # ---
 # ## Step 0: Load The Data
 
-# In[ ]:
+# In[1]:
 
 # Load pickled data
 import pickle
@@ -64,7 +64,7 @@ assert(len(X_test)  == len(y_test))
 
 # ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
 
-# In[ ]:
+# In[2]:
 
 ### Replace each question mark with the appropriate value. 
 ### Use python, pandas or numpy methods rather than hard coding the results
@@ -112,7 +112,7 @@ print("Number of classes =", num_classes)
 # 
 # **NOTE:** It's recommended you start with something simple first. If you wish to do more, come back to it after you've completed the rest of the sections.
 
-# In[ ]:
+# In[3]:
 
 ### Data exploration visualization code goes here.
 ### Feel free to use as many code cells as needed.
@@ -156,7 +156,7 @@ plot_data(y_valid, "Validation Data: number of images in each class", "validatio
 plot_data(y_test, "Test Data: number of images in each class","test")
 
 
-# In[ ]:
+# In[4]:
 
 # diplay sample images from training data set
 def display_images(images):
@@ -315,7 +315,7 @@ for i in range(num_images):
     plt.imshow(rgb_grayscale_combo(sample_images[i], bw_images[i]))
 plt.show()
 '''
-# In[ ]:
+# In[5]:
 
 #print("normlizing as rgb")
 #for i in ranage(len(X_train)):
@@ -417,7 +417,7 @@ X_train[:,:,:,2] = B[:,:,:,0]
 #display_images([X_train[50]])#, G[500], B[1000]])
 print(X_train[500][16][:][:])
 """
-# In[ ]:
+# In[6]:
 
 # grayscale images
 from skimage import color
@@ -431,7 +431,7 @@ assert (gray_image_shape[1:] == (32, 32)) #32px x 32px, 1 color channel: graysca
 display_images([X_train_gray[50], X_train_gray[500], X_train_gray[1000]])
 
 
-# In[ ]:
+# In[7]:
 
 # turn grayscale into 3channel rgb grayscale
 # (not ideal paramater-wise = duplicated data, but for shipping through my LeNet, it should remove shaping problems)
@@ -478,7 +478,7 @@ display_images([X_train_gray3D[50], X_train_gray3D[500], X_train_gray3D[1000]])
 
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
 
-# In[ ]:
+# In[8]:
 
 ### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscae, etc.
 ### Feel free to use as many code cells as needed.
@@ -532,7 +532,7 @@ print(image_shape)
 assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
 '''
 
-# In[ ]:
+# In[9]:
 
 # define training variables, constants
 
@@ -601,7 +601,7 @@ def get_conv_layer_from_filter(x, filter_shape):
     return layer1
 """
 
-# In[ ]:
+# In[10]:
 
 def get_conv_layer(x, conv_output_shape, pool_output_shape):
     input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
@@ -639,7 +639,7 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
 
 
 
-# In[ ]:
+# In[11]:
 
 def get_fcc_layer(prev_layer, output_length):
     input_length  = prev_layer.get_shape().as_list()[1]
@@ -656,7 +656,7 @@ def get_fcc_layer(prev_layer, output_length):
     return fcc_layer
 
 
-# In[ ]:
+# In[12]:
 
 from tensorflow.contrib.layers import flatten
 
@@ -690,7 +690,7 @@ def LeNet(x):
 # A validation set can be used to assess how well the model is performing. A low accuracy on the training and validation
 # sets imply underfitting. A high accuracy on the training set but low accuracy on the validation set implies overfitting.
 
-# In[ ]:
+# In[13]:
 
 ### Train your model here.
 ### Calculate and report the accuracy on the training and validation set.
@@ -699,7 +699,7 @@ def LeNet(x):
 ### Feel free to use as many code cells as needed.
 
 
-# In[ ]:
+# In[14]:
 
 ## initialize
 #X_train_gray.reshape(len(X_train_gray), 32, 32, 1)
@@ -766,7 +766,7 @@ training_stats = []
 
 # 
 
-# In[ ]:
+# In[16]:
 
 # evaluation routine
 def evaluate_data(X_data, y_data):
@@ -811,7 +811,7 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 #EPOCHS = 30
 #print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
 
-# In[ ]:
+# In[18]:
 
 import time
 
@@ -844,8 +844,13 @@ with tf.Session() as sess:
         print(" (Training Loss = {:.3f})".format(training_loss))
         print("Validation Accuracy = {:.3f}".format(validation_accuracy))
         print(" (Training Accuracy = {:.3f})".format(training_accuracy))
-        print()    
-        training_stats.append([validation_loss, training_loss, valiation_accuracy, training_accuracy])
+        print()
+        
+        # a-rounded to nearest even number at 4th decimal place
+        training_stats.append([around(validation_loss,4), around(training_loss,4), around(validation_accuracy,4), around(training_accuracy,4)])
+        np.savetxt('training_stats.txt', training_stats)
+        print("training_stats saved as training_stats.txt")
+        
     print("underfitting if:  low accuracy on training and low accuracy on validation sets.")
     print("overfitting  if: high accuracy on training but low accuracy on validation sets.")
     print()
@@ -853,7 +858,7 @@ with tf.Session() as sess:
         print(" !! Congratulations!! Your model meets the minimum required validation Accuracy of 0.93")
         print("   You may now run your model on the Test Set :-)")
     else:
-        print("Keep working on your model to acheive a minimum validation accuracy of 0.93")
+        print("KEEP WORKING ON YOUR MODEL to acheive a minimum validation accuracy of 0.93")
     print()
 
     # save trained model
@@ -861,24 +866,74 @@ with tf.Session() as sess:
     saver.save(sess, './sh_trained_traffic_sign_classifier')
     print("Model Saved")
     
-    np.savetxt('test.txt', training_stats)
-    print("training_stats saved as training_stats.txt")
 
 
-# In[ ]:
+# In[77]:
+
+# TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets
+
+# to display legend
+import matplotlib.patches as mpatches
+
+#from pylab import rcParams
+# set size of figure in inches (default is )
+#fig_width, fig_height = [7, 7]
+#rcParams['figure.figsize'] = fig_width, fig_height
+
+# Read the array from disk
+#training_stats_read_from_disk = np.loadtxt('training_stats.txt')
+#print training_stats_read_from.shape
+
+num_epochs = len(training_stats)
+vloss, tloss, vaccu, taccu = [[],[],[],[]]
+epoch_x_axis = range(1, num_epochs+1)
+for i in range(len(training_stats)):
+    vloss.append(training_stats[i][0])
+    tloss.append(training_stats[i][1])
+    vaccu.append(training_stats[i][2])
+    taccu.append(training_stats[i][3])
+
+
+# figure size in inches: width, height    
+fig = plt.figure(1, figsize=(7, 7))
+
+# to display legend
+blue_patch  = mpatches.Patch(color='blue',  label='Validation Set')
+red_patch   = mpatches.Patch(color='black', label='Training Set')
+black_patch = mpatches.Patch(color='red',   label='Minimum 93.00% Validation Accuracy Required')
+
+plt.subplot(311, title = "Loss")
+plt.plot(epoch_x_axis, vloss, 'b', epoch_x_axis, tloss, 'k')
+
+plt.subplot(313, title="Accuracy")
+req_accuracy = 0.9300
+plt.plot(epoch_x_axis, vaccu, 'b', epoch_x_axis, taccu, 'k')
+plt.axhline(req_accuracy, color='r')
+
+# overlay legend on "Accuracy" (the most spacious) subplot
+plt.legend(handles=[blue_patch, black_patch, red_patch])
+
+# zoomed in accuracy plot, highlighting variance around req_accuracy
+plt.subplot(312, title="Accuracy, zoomed in")
+plt.plot(epoch_x_axis, vaccu, 'b', epoch_x_axis, taccu, 'k')
+plt.axhline(req_accuracy, color='r')
+plt.ylim((.9000, 1.0100))
+
+# prevent overlapping of labels with subplots
+plt.tight_layout()
+plt.show()
+
+fig.savefig("training_stats_plotted.png", dpi=25)  # results in 160x120 px image
+print("saved figure as 'training_stats_plotted.png'")
+
+
+# In[69]:
 
 ## STOP !! Do NOT Proceed Until Model is FINISHED and has Validation >= 93%
 
     # underfitting if:  low accuracy on training and validation sets.
     # overfitting  if: high accuracy on training but low accuracy on validation sets.
 
-# TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets
-
-# Read the array from disk
-training_stats_read_from+disk = np.loadtxt('training_stats.txt')
-
-# Note that this returned a 2D array!
-print training_stats_read_from.shape
 
 
 # In[ ]:
