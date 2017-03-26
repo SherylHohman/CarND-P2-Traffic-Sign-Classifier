@@ -22,7 +22,7 @@
 # ---
 # ## Step 0: Load The Data
 
-# In[1]:
+# In[ ]:
 
 # Load pickled data
 import pickle
@@ -64,7 +64,7 @@ assert(len(X_test)  == len(y_test))
 
 # ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
 
-# In[2]:
+# In[ ]:
 
 ### Replace each question mark with the appropriate value. 
 ### Use python, pandas or numpy methods rather than hard coding the results
@@ -112,7 +112,7 @@ print("Number of classes =", num_classes)
 # 
 # **NOTE:** It's recommended you start with something simple first. If you wish to do more, come back to it after you've completed the rest of the sections.
 
-# In[3]:
+# In[ ]:
 
 ### Data exploration visualization code goes here.
 ### Feel free to use as many code cells as needed.
@@ -156,26 +156,26 @@ plot_data(y_valid, "Validation Data: number of images in each class", "validatio
 plot_data(y_test, "Test Data: number of images in each class","test")
 
 
-# In[4]:
+# In[ ]:
 
 # diplay sample images from training data set
 def display_images(images):
     num_channels = images[0].shape[-1]
-    print("shape 1st image", images[0].shape)
+    #print("shape 1st image", images[0].shape)
     num_images = len(images)
-    print(num_images, "num_images, num_channels:", num_channels)
+    #print(num_images, "num_images, num_channels:", num_channels)
     plt.figure(1)
     rows = 1
     cols = int(num_images/rows)
     for i in range(num_images):
         plt.subplot(rows, cols, i+1)
         if num_channels == 3:
-            print("color")
             plt.imshow(images[i])
-        elif num_channels == 1:
-            print("grayscale")
+        #elif num_channels == 1:
+        else:
+            #print("grayscale")
             plt.imshow(images[i], cmap = plt.get_cmap('gray'))
-        else: "error, number of channels should be 1 or 3"
+        #else: print("error, number of channels should be 1 or 3")
     plt.show()
 
 print("Sample images from training data set")
@@ -186,16 +186,6 @@ display_images(sample_images)
 # consider showing average histogram of all images
 # consider showing zero mean of sample images
 # consider showing normalized sample images
-
-
-# In[5]:
-
-#imgplot = plt.imshow(X_train[500])
-
-
-# In[6]:
-
-#imgplot = plt.imshow(X_train[1000])
 
 '''
 #normalized_rgb   = np.zeros(image_shape, np.uint8)
@@ -327,11 +317,6 @@ plt.show()
 '''
 # In[ ]:
 
-
-
-
-# In[7]:
-
 #print("normlizing as rgb")
 #for i in ranage(len(X_train)):
 #    rgb_normalizer(X_train[i])
@@ -386,7 +371,7 @@ from sklearn.preprocessing import normalize
 # subtract the mean of TRAINING DATA from each of the train, valid, test sets
 X_train = X_train.astype(np.float32)
 X_valid = X_valid.astype(np.float32)
-#X_test  = X_test.astype(np.float32)
+X_test  = X_test.astype(np.float32)
 training_data_mean = np.mean(X_train, axis=0)
 print(training_data_mean.shape, training_data_mean)
 X_train -= training_data_mean
@@ -397,9 +382,7 @@ X_test  -= training_data_mean
 sample_images=[X_train[50], X_train[500], X_train[1000]]
 display_images(sample_images)
 print(sample_images[0][16][16][0:5])
-'''
-# In[11]:
-
+'''"""
 from sklearn.preprocessing import normalize
 def separate_channels(images):
     # returns 2-D array
@@ -433,8 +416,45 @@ X_train[:,:,:,1] = G[:,:,:,0]
 X_train[:,:,:,2] = B[:,:,:,0]
 #display_images([X_train[50]])#, G[500], B[1000]])
 print(X_train[500][16][:][:])
+"""
+# In[ ]:
+
+# grayscale images
+from skimage import color
+print("converting to grayscale..")
+X_train_gray = color.rgb2gray(X_train)
+X_valid_gray = color.rgb2gray(X_valid)
+X_test_gray  = color.rgb2gray(X_test)
+gray_image_shape = X_train_gray.shape
+print(X_train_gray.shape,X_valid_gray.shape, X_test_gray.shape, "gray single channel conversion")
+assert (gray_image_shape[1:] == (32, 32)) #32px x 32px, 1 color channel: grayscale
+display_images([X_train_gray[50], X_train_gray[500], X_train_gray[1000]])
 
 
+# In[ ]:
+
+# turn grayscale into 3channel rgb grayscale
+# (not ideal paramater-wise = duplicated data, but for shipping through my LeNet, it should remove shaping problems)
+print("converted to 3 channel grayscale")
+X_train_gray3D = np.stack((X_train_gray,)*3, axis=-1)
+X_valid_gray3D = np.stack((X_valid_gray,)*3, axis=-1)
+X_test_gray3D  = np.stack((X_test_gray,)*3,  axis=-1)
+print(X_train_gray3D.shape, X_valid_gray3D.shape, X_test_gray3D.shape, "gray 3D shape")
+display_images([X_train_gray3D[50], X_train_gray3D[500], X_train_gray3D[1000]])
+
+"""
+# turn grayscale into 3channel rgb grayscale
+#  sqrt(0.299 * R^2 + 0.587 * G^2 + 0.114 * B^2)
+# (not ideal paramater-wise = duplicated data, but for shipping through my LeNet, it should remove shaping problems)
+R = X_train_gray * 2* np.sqrt(3) # 2/6  # 1/3
+G = X_train_gray * 2* np.sqrt(3) # 3/6  # 1/3
+B = X_train_gray * 2* np.sqrt(3) # 1/6  # 1/3
+X_train_gray3D = np.stack((R, G, B), axis=-1)
+#X_valid_gray3D = np.stack((X_valid_gray,)*3, axis=-1)
+#X_test_gray3D  = np.stack((X_test_gray,)*3,  axis=-1)
+print(X_valid_gray.shape)
+display_images([X_train_gray3D[50], X_train_gray3D[500], X_train_gray3D[1000]])
+"""
 # ----
 # 
 # ## Step 2: Design and Test a Model Architecture
@@ -468,14 +488,14 @@ from sklearn.preprocessing import normalize
 from skimage import color
 import tensorflow as tf
 
-# images are already sized properly for leNet at (32x32)
-print(image_shape, image_shape[1:])
-assert (image_shape == [32, 32, 3])  #32px x 32px, 3 color channels:RGB
-          
+# images as imported are already sized properly for leNet at (32x32)
+assert ((X_train.shape[1],X_train.shape[2]) == (32, 32))  #32px x 32px, 3 color channels:RGB
+
 # shuffle data
 X_train, y_train = shuffle(X_train, y_train)
 X_valid, y_valid = shuffle(X_valid, y_valid)
     # don't need to shuffle test data
+
 
 ''' 
 # normalization
@@ -512,17 +532,26 @@ print(image_shape)
 assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
 '''
 
+# In[ ]:
+
 # define training variables, constants
+
 EPOCHS = 100
 BATCH_SIZE = 128
 
-mu = 0
-sigma = 0.1  # or try .01, or ..
-training_rate = 0.01
+#mu = 0
+#sigma = 0.1  # or try .01, or .. 1/sqrt(32*32*3) = 1/55 = .018; bw: 1/sqrt(32*32*1) = 1/32 = 0.03125
+#training_rate = 0.01
 
 def filter_size(in_size, out_size, stride):
     assert(padding == "VALID")
     return (in_size+1) - (out_size*stride)
+
+def output_size(in_size, filter_size, stride):
+    #(W−F+2P)/S+1
+    assert(padding == "VALID")
+    pad = 0
+    return 1 + (in_size-filter_size+2*pad)/stride
 
 padding = "VALID"
 stride = 1
@@ -538,123 +567,39 @@ print("finished cell")
 # ### Model Architecture
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
-
 """
-# Layer 1: Convolutional, Activation, Pooling: (32,32,3) --> (28,28,6?) --> (14,14,?6)
-# Convolution (32,32,3) --> (28,28,6?)
-input_height,  input_width,  input_depth  = x.get_shape()[1:]
-output_height, output_width, output_depth = (28, 28, 6)
+def get_conv_layer_from_filter(x, filter_shape):
+    input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
+    filter_height, filter_width = filter_shape
 
-weights_height = filter_size(input_height, output_height, stride)
-weights_width  = filter_size(input_width,  output_width,  stride)
-weights_shape  = [filter_height, filter_width, input_depth, output_depth]
-bias_shape     = [output_depth]
+    output_height = output_size(input_height, filter_height, stride)
+    output_width  = output_size(input_width,  filter_width,  stride)
+    output_depth  = input_depth
+    print("output_size", x , output_height)
 
-# initialize weights
-filter_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))
-filter_bias    = tf.Variable(tf.zeros(bias_shape))
+    weights_shape  = [filter_height, filter_width, input_depth, output_depth]
+    bias_shape     = [output_depth]
 
-layer1 = tf.nn.conv2d(x, filter_weights, strides, padding) + filter_bias
+    # initialize weights
+    filter_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))
+    filter_bias    = tf.Variable(tf.zeros(bias_shape))
 
-print("\nlayer1 conv: 28x28x6 =?=", layer1.get_shape()[3])
-assert( [28, 28, 6] == layer1.get_shape().as_list()[1:])
+    layer1 = tf.nn.conv2d(x, filter_weights, strides, padding) + filter_bias
+    print("conv output shape:", layer1.get_shape().as_list()[1:])
 
-# Activation
-layer1 = tf.nn.relu(layer1)
+    # Activation
+    layer1 = tf.nn.relu(layer1)
 
-# Pooling (28,28,6?) --> (14,14,?6)
-input_height,  input_width,  input_depth  = layer1.get_shape()[1:]
-output_height, output_width, output_depth = (14, 14, input_depth)
+    # Pooling (28,28,6?) --> (14,14,?6)
+    input_height,  input_width,  input_depth  = layer1.get_shape()[1:]
 
-ksize = [1, 2, 2, 1]
-pool_strides = ksize
-layer1 = tf.nn.max_pool(layer1, ksize, pool_strides, padding)
-print("layer1 pool: 14x14x6 =?=", layer1.get_shape())
-assert( [14, 14, 6] == layer1.get_shape().as_list()[1:])
+    ksize = [1, 2, 2, 1]
+    pool_strides = ksize
+    layer1 = tf.nn.max_pool(layer1, ksize, pool_strides, padding)
+    print("pool_output_shape: ", layer1.get_shape().as_list()[1:] )
+
+    return layer1
 """
-# could define those calcs as functions, that simply passes in 
-  # old layer, new layer size. Returns params for weights and bias shape
-    # then only need to init new weights, bias, call conv, activation and pooling
-    # but code is already written, so just as easy to simply copy paste
-    # swapping out those couple variables that I'd have otherwise passed in.
-    # if did 3 Convolutional layers, No Hesitation. Right now, it's a draw.
-    
-"""
-# Layer 2: Convolutional, Activation, Pooling: (14,14,) -- > ()
-# Convolution (32,32,3) --> (28,28,6?)
-input_height,  input_width,  input_depth  = layer1.get_shape()[1:]
-output_height, output_width, output_depth = (10, 10, 16)
-
-weights_height = filter_size(input_height, output_height, stride)
-weights_width  = filter_size(input_width,  output_width,  stride)
-weights_shape  = [filter_height, filter_width, input_depth, output_depth]
-bias_shape     = [output_depth]  # == weights_shape[-1]
-
-# initialize weights
-filter_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))
-filter_bias    = tf.Variable(tf.zeros(bias_shape))
-
-layer2 = tf.nn.conv2d(layer1, filter_weights, strides, padding) + filter_bias
-
-print("\nlayer1 conv: 28x28x6 =?=", layer1.get_shape()[3])
-assert( [10, 10, 16] == layer1.get_shape().as_list()[1:])
-
-# Activation
-layer2 = tf.nn.relu(layer1)
-
-# Pooling (10, 10, 16) --> (5, 5, 16)
-input_height,  input_width,  input_depth  = layer1.get_shape()[1:]
-output_height, output_width, output_depth = (5, 5, input_depth)
-
-#ksize = [1, 2, 2, 1]
-#pool_strides = ksize
-layer2 = tf.nn.max_pool(layer2, ksize, pool_strides, padding)
-print("layer2 pool: (5, 5, 16)) =?=", layer2.get_shape())
-assert( [5, 5, 16] == layer2.get_shape().as_list()[1:])
-"""
-"""
-# Flatten: 
-# from tensorflow.contrib.layers import flatten
-flattened_23 = tf.contrib.layers.flatten(layer2)
-""""""
-# Layer 3: Fully Connected
-input_height = flattened_23.get_shape().as_list()[1]  # ==? len(flattened_23 ?)
-output_height = 120
-weights_shape = [input_height, output_height]
-bias_shape    = [output_height]
-
-fcc_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma)
-fcc_bias    = tf.Variable(tf.zeros(bias_shape))
-
-layer3 = tf.add(tf.matmul(flattened_23, fcc_weights), fcc_bias)
-layer3 = tf.nn.relu(layer3)
-assert( [int(layer3.get_shape()[1]) ] == [120])
-""""""
-# Layer 4: Fully Connected
-input_height = layer3.get_shape().as_list()[1]  # ==? len(layer3 ?)
-output_height = 84
-weights_shape = [input_height, output_height]
-bias_shape    = [output_height]
-
-fcc_weights = tf.Variable(tf.truncated_normal(weights_shape), mean=mu, stddev=sigma)
-fcc_bias    = tf.Variable(tf.zeros(bias_shape))
-
-layer4 = tf.add(tf.matmul(layer3, fcc_weights), fcc_bias)
-layer4 = tf.nn.relu(layer4)
-assert( [int(layer3.get_shape()[1]) ] == [84])
-"""'''
-# Layer 5: Fully Connected
-input_height = layer4.get_shape().as_list()[1]  # ==? len(layer3 ?)
-output_height = num_classes
-weights_shape = [input_height, output_height]
-bias_shape    = [output_height]
-
-fcc_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma)
-fcc_bias    = tf.Variable(tf.zeros(bias_shape))
-
-logits = tf.add(tf.matmul(layer4, fcc_weights), fcc_bias)
-assert( [int(logits.get_shape()[1]) ] == [num_classes])
-'''
 
 # In[ ]:
 
@@ -664,6 +609,7 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
 
     filter_height = filter_size(input_height, output_height, stride)
     filter_width  = filter_size(input_width,  output_width,  stride)
+    print("filter", x , filter_height)
     weights_shape  = [filter_height, filter_width, input_depth, output_depth]
     bias_shape     = [output_depth]
 
@@ -705,8 +651,6 @@ def get_fcc_layer(prev_layer, output_length):
     fcc_bias    = tf.Variable(tf.zeros(bias_shape))
 
     fcc_layer = tf.add(tf.matmul(prev_layer, fcc_weights), fcc_bias)
-    #fcc_layer = tf.nn.relu(fcc_layer)
-    #print(output_length, "=?=", fcc_layer.get_shape()[1])
     assert([output_length] == fcc_layer.get_shape().as_list()[1:])
 
     return fcc_layer
@@ -717,8 +661,13 @@ def get_fcc_layer(prev_layer, output_length):
 from tensorflow.contrib.layers import flatten
 
 def LeNet(x):
-    layer1 = get_conv_layer(x, [28,28,6], [14,14,6])
-    layer2 = get_conv_layer(layer1, [10,10,16], [5,5,16])
+    if x.get_shape()[-1] == 3:
+        layer1 = get_conv_layer(x, [28,28,6], [14,14,6])
+        layer2 = get_conv_layer(layer1, [10,10,16], [5,5,16])
+    #elif x.get_shape()[-1] == 1:
+    #    layer1 = get_conv_layer_from_filter(     x, [3,3])
+    #    layer2 = get_conv_layer_from_filter(layer1, [3,3])
+    else: print("error: images should be 1d or 3d")
     
     flattened = tf.contrib.layers.flatten(layer2)
     
@@ -752,35 +701,53 @@ def LeNet(x):
 
 # In[ ]:
 
-'''   http://stackoverflow.com/a/34243720/5411817
+## initialize
+#X_train_gray.reshape(len(X_train_gray), 32, 32, 1)
+#print("new shape", X_train_gray.shape)
+print(X_valid_gray3D.shape)
+# choose which pre-processed set to work with
+X_train = X_train  #X_train_gray3D  #X_train_gray  #X_train   #norm_gray_train
+X_valid = X_valid  #X_valid_gray3D  #X_valid_gray  #X_valid   #norm_gray_valid
+X_test  = X_test   #X_test_gray3D   #X_test_gray   #X_test    #norm_gray_test
+# y_train, y_valid, y_test remain the same from import
+print(X_train.shape, X_valid.shape, X_test.shape)
+
+image_shape = X_train.shape
+pixels_x, pixels_y, color_depth = image_shape[1:]
+
+# bw vs color images
+#if len(image_shape) == 4:
+#    pixels_x, pixels_y, color_depth = image_shape[1:]
+#elif len(image_shape) == 3:
+#    pixels_x, pixels_y = image_shape[1:]
+#    color_depth = 1
+#else: print("hmmm, something's wrong with the image_shape")
+#print (pixels_x, pixels_y, color_depth)
+
+# features, labels
+x = tf.placeholder(tf.float32, (None, pixels_x, pixels_y, color_depth))
+y = tf.placeholder(tf.int64,   (None))
+
+# store a record of training and validation loss and accuracy - can be used to plot and evaluate the model
+#stats = tf.placeholder(tf.float32, (None, 4))
+
+# run leNet
+mu = 0
+sigma = 0.01  #0.1   #1.0/np.sqrt(pixels_x * pixels_y * color_depth)   #sigma 0.1  # or try .01, or .. 1/sqrt(32*32*3) = 1/55 = .018; bw: 1/sqrt(32*32*1) = 1/32 = 0.03125
+#print(sigma)
+learning_rate = .001    #0.01
+
+logits = LeNet(x)
+
+
+# tf.nn.sparse_softmax_cross_entropy_with_logits
 #   use this function instead of separate functions:
 #   1) softmax with 2) cross_entropy and 3)(sparce) includes one-hot
 #   softmax_cross_entropy_with_logits is more numerically stable/
 #       accurate than running two steps of softmax, then cross_entropy
-#   using the sparse_.. saves a step by not having to convert labels
+#   using the sparse_.. also saves a step by not having to convert labels
 #       to one-hot first
-'''
-# initialize
-pixels_x, pixels_y, color_depth = image_shape 
-assert ((pixels_x, pixels_y, color_depth) == (32, 32, 3))
-
-# choose which pre-processed set to work with
-X_train = norm_gray_valid
-X_valid = norm_gray_valid
-X_test  = norm_gray_valid
-#y_train = y_train
-#y_valid =
-#y_test  = 
-image_shape = x_train.shape()
-
-# features, labels
-x = tf.placeholder(tf.float32, (None, pixels_x, pixels_y, color_depth))
-y = tf.placeholder(tf.int64, (None))
-
-
-# run leNet
-learning_rate = .001
-logits = LeNet(x)
+# http://stackoverflow.com/a/34243720/5411817
 
 # loss
 cross_entropy  = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, y)#labels)
@@ -794,12 +761,10 @@ training_operation = optimizer.minimize(loss_operation)
 model_prediction = tf.argmax(logits, 1)
 prediction_is_correct = tf.equal(model_prediction, y)#labels)
 accuracy_calculation   = tf.reduce_mean(tf.cast(prediction_is_correct, tf.float32))
+training_stats = []
 
 
-# In[ ]:
-
-
-
+# 
 
 # In[ ]:
 
@@ -829,9 +794,6 @@ def evaluate_data(X_data, y_data):
         
     return total_accuracy, total_loss     
 
-
-# In[ ]:
-
 # TEMP TRUNCATE DATA FOR INITIAL TESTING
 '''
 tr = int(BATCH_SIZE * 1.2)
@@ -846,9 +808,8 @@ y_test  = y_test[0:te]
 print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 '''
 
-EPOCHS = 30
-print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
-
+#EPOCHS = 30
+#print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
 
 # In[ ]:
 
@@ -873,15 +834,18 @@ with tf.Session() as sess:
             if batch_start % 100 == 0:
                 print("        batch ", 1+batch_start//BATCH_SIZE, "of ", 1 + int(num_examples/BATCH_SIZE))#, "batches,  on EPOCH", i+1, "of", EPOCHS, "EPOCHS")
                       
-        # evaluate on validation set, and print results of model from this EPOCH       
-        validation_accuracy, loss_accuracy = evaluate_data(X_valid, y_valid)
-
+        # evaluate on validation set, and print results of model from this EPOCH
+        print(X_valid.shape)
+        validation_accuracy, validation_loss = evaluate_data(X_valid, y_valid)
+        training_accuracy,   training_loss = evaluate_data(X_train, y_train)
         #print("EPOCH {} ...".format(i+1))
         print("Time: {:.3f} minutes".format(float( (time.time()-t0) / 60 )))
-        print("Validation Loss = {:.3f}".format(loss_accuracy))
+        print("Validation Loss = {:.3f}".format(validation_loss))
+        print(" (Training Loss = {:.3f})".format(training_loss))
         print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+        print(" (Training Accuracy = {:.3f})".format(training_accuracy))
         print()    
-        
+        training_stats.append([validation_loss, training_loss, valiation_accuracy, training_accuracy])
     print("underfitting if:  low accuracy on training and low accuracy on validation sets.")
     print("overfitting  if: high accuracy on training but low accuracy on validation sets.")
     print()
@@ -896,11 +860,25 @@ with tf.Session() as sess:
     saver = tf.train.Saver()
     saver.save(sess, './sh_trained_traffic_sign_classifier')
     print("Model Saved")
+    
+    np.savetxt('test.txt', training_stats)
+    print("training_stats saved as training_stats.txt")
 
 
 # In[ ]:
 
+## STOP !! Do NOT Proceed Until Model is FINISHED and has Validation >= 93%
 
+    # underfitting if:  low accuracy on training and validation sets.
+    # overfitting  if: high accuracy on training but low accuracy on validation sets.
+
+# TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets
+
+# Read the array from disk
+training_stats_read_from+disk = np.loadtxt('training_stats.txt')
+
+# Note that this returned a 2D array!
+print training_stats_read_from.shape
 
 
 # In[ ]:
