@@ -22,7 +22,7 @@
 # ---
 # ## Step 0: Load The Data
 
-# In[1]:
+# In[78]:
 
 # Load pickled data
 import pickle
@@ -64,7 +64,7 @@ assert(len(X_test)  == len(y_test))
 
 # ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
 
-# In[2]:
+# In[79]:
 
 ### Replace each question mark with the appropriate value. 
 ### Use python, pandas or numpy methods rather than hard coding the results
@@ -72,6 +72,7 @@ assert(len(X_test)  == len(y_test))
 
 # TODO: Number of training examples
 n_train = X_train.shape[0]
+n_valid = X_valid.shape[0]
 
 # TODO: Number of testing examples.
 n_test = X_test.shape[0]
@@ -99,6 +100,7 @@ num_classes = bufcount('./signnames.csv') - 1
 
 
 print("Number of training examples =", n_train)
+print("Number of validation examples =", n_valid)
 print("Number of testing examples =", n_test)
 print("Image data shape =", image_shape)
 print("Number of classes =", num_classes)
@@ -112,13 +114,13 @@ print("Number of classes =", num_classes)
 # 
 # **NOTE:** It's recommended you start with something simple first. If you wish to do more, come back to it after you've completed the rest of the sections.
 
-# In[3]:
+# In[92]:
 
 ### Data exploration visualization code goes here.
 ### Feel free to use as many code cells as needed.
 import matplotlib.pyplot as plt
 
-# Visualizations will be shown in the notebook.
+# Show Visualizations in the notebook.
 get_ipython().magic('matplotlib inline')
 
 
@@ -127,36 +129,35 @@ import numpy as np
 from collections import Counter, OrderedDict
 def plot_data(data, title, short_label):
     counts = Counter(data)
-    #print(counts, "\n|")
-    counted = OrderedDict(sorted(counts.items()))
-    #print(counted[0], counted, "\n")
-    final_count = [counted[i] for i in range(len(counted))]
-    #print(final, "\n")
-    y_data = final_count
-    x_data = range(len(y_data))
-    
+    counts = OrderedDict(sorted(counts.items()))
+    counts = [counts[i] for i in range(len(counts))]
+
+    y_data = counts
+    x_data = range(len(y_data))    
     
     fig, ax = plt.subplots()
     ax.set_title(title)
-    ax.set_xlabel("traffic sign class number (0-42)\n")
-    ax.set_ylabel("number of example images (relative)")
-    ax.bar(x_data, y_data)#, bins=len(y_data))#, normed=True)
-    #ax.hist(y_data)#, bins=len(y_data))#, normed=True)
-    #spacing = np.linspace(0, len(x_data), 1)
-    #ax.plot(x, 1 / np.sqrt(2*np.pi) * np.exp(-(x**2)/2), linewidth=4)
-    #ax.plot(x_data, y_data, linewidth=4)
+    ax.set_xlabel("traffic sign class number\n")
+    ax.set_ylabel("number of images")
+    ax.bar(x_data, y_data)
     
-    ax.set_xticks([])
-    ax.set_yticks([])
+    #ax.set_xticks([5])
+    #ax.set_yticks([100])
     fig.savefig("bar_chart_"+short_label+"_data.png", dpi=25)  # results in 160x120 px image
 
-print("Let's see how traffic sign examples are distributed \nacross the Training, Validation, and Test sets\n")
-plot_data(y_train, "Training Data: number of images in each class", "training")
-plot_data(y_valid, "Validation Data: number of images in each class", "validation")
-plot_data(y_test, "Test Data: number of images in each class","test")
+print("Let's see how traffic sign examples are distributed across \n  the Training, Validation, and Test sets:\n")
+print("The distribution appears similar across the three sets, \n  though not uniform across the classes.")
+plot_data(y_train, "Training Data \ndistribution of images per class", "training")
+plot_data(y_valid, "Validation Data \ndistribution of images per class", "validation")
+plot_data(y_test,  "Test Data \ndistribution of images per class","test")
 
 
-# In[4]:
+# In[ ]:
+
+
+
+
+# In[ ]:
 
 # diplay sample images from training data set
 def display_images(images):
@@ -170,12 +171,13 @@ def display_images(images):
     for i in range(num_images):
         plt.subplot(rows, cols, i+1)
         if num_channels == 3:
+            # color image
             plt.imshow(images[i])
-        #elif num_channels == 1:
         else:
-            #print("grayscale")
+            # assume grayscale:
+            # grayscale is 3D, not 4D: it does NOT have a "num_channels==1" dimension
+            # it has simple shape of (num_examples, 32, 32) as opposed to (num_examples, 32, 32, num_channels==3)
             plt.imshow(images[i], cmap = plt.get_cmap('gray'))
-        #else: print("error, number of channels should be 1 or 3")
     plt.show()
 
 print("Sample images from training data set")
