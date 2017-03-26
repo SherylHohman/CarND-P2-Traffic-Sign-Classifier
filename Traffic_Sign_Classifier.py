@@ -22,7 +22,7 @@
 # ---
 # ## Step 0: Load The Data
 
-# In[78]:
+# In[101]:
 
 # Load pickled data
 import pickle
@@ -64,7 +64,7 @@ assert(len(X_test)  == len(y_test))
 
 # ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
 
-# In[79]:
+# In[103]:
 
 ### Replace each question mark with the appropriate value. 
 ### Use python, pandas or numpy methods rather than hard coding the results
@@ -99,9 +99,9 @@ def bufcount(filename):
 num_classes = bufcount('./signnames.csv') - 1
 
 
-print("Number of training examples =", n_train)
+print("Number of training examples   =", n_train)
 print("Number of validation examples =", n_valid)
-print("Number of testing examples =", n_test)
+print("Number of testing examples    =", n_test)
 print("Image data shape =", image_shape)
 print("Number of classes =", num_classes)
 
@@ -114,7 +114,7 @@ print("Number of classes =", num_classes)
 # 
 # **NOTE:** It's recommended you start with something simple first. If you wish to do more, come back to it after you've completed the rest of the sections.
 
-# In[92]:
+# In[104]:
 
 ### Data exploration visualization code goes here.
 ### Feel free to use as many code cells as needed.
@@ -127,7 +127,8 @@ get_ipython().magic('matplotlib inline')
 # SH look at training set labels. count how many images there are of each label
 import numpy as np
 from collections import Counter, OrderedDict
-def plot_data(data, title, short_label):
+
+def plot_data_in_fig(data, title, fig, plot_loc):
     counts = Counter(data)
     counts = OrderedDict(sorted(counts.items()))
     counts = [counts[i] for i in range(len(counts))]
@@ -135,21 +136,28 @@ def plot_data(data, title, short_label):
     y_data = counts
     x_data = range(len(y_data))    
     
-    fig, ax = plt.subplots()
-    ax.set_title(title)
-    ax.set_xlabel("traffic sign class number\n")
-    ax.set_ylabel("number of images")
-    ax.bar(x_data, y_data)
-    
-    #ax.set_xticks([5])
-    #ax.set_yticks([100])
-    fig.savefig("bar_chart_"+short_label+"_data.png", dpi=25)  # results in 160x120 px image
+    plt.subplot(plot_loc, title=title)
+    plt.xlabel("traffic sign class number\n")
+    plt.ylabel("number of images")
+    plt.bar(x_data, y_data)
 
 print("Let's see how traffic sign examples are distributed across \n  the Training, Validation, and Test sets:\n")
 print("The distribution appears similar across the three sets, \n  though not uniform across the classes.")
-plot_data(y_train, "Training Data \ndistribution of images per class", "training")
-plot_data(y_valid, "Validation Data \ndistribution of images per class", "validation")
-plot_data(y_test,  "Test Data \ndistribution of images per class","test")
+
+# set figure width, height in inches   
+fig1 = plt.figure(1, figsize=(6, 12))
+
+plot_data_in_fig(y_train, "Training Data \ndistribution of images per class", fig1, 311)
+plot_data_in_fig(y_valid, "Validation Data \ndistribution of images per class",fig1, 312)
+plot_data_in_fig(y_test,  "Test Data \ndistribution of images per class",fig1, 313)
+
+# prevent overlapping of labels with subplots
+plt.tight_layout()
+plt.show()
+
+# save figure to file
+fig1.savefig("data_plotted_image_distribution_amongst_classes.png", dpi=25)  # results in 160x120 px image
+print("figure saved as: 'data_plotted_image_distribution_amongst_classes.png'")
 
 
 # In[ ]:
@@ -157,7 +165,7 @@ plot_data(y_test,  "Test Data \ndistribution of images per class","test")
 
 
 
-# In[ ]:
+# In[105]:
 
 # diplay sample images from training data set
 def display_images(images):
@@ -894,7 +902,6 @@ for i in range(len(training_stats)):
     tloss.append(training_stats[i][1])
     vaccu.append(training_stats[i][2])
     taccu.append(training_stats[i][3])
-
 
 # figure size in inches: width, height    
 fig = plt.figure(1, figsize=(7, 7))
