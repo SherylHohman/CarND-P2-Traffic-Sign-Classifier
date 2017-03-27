@@ -927,7 +927,7 @@ def evaluate_data(X_data, y_data):
     return total_accuracy, total_loss     
 
 
-# In[23]:
+# In[17]:
 
 # TEMP TRUNCATE DATA FOR INITIAL TESTING
 """  
@@ -950,7 +950,7 @@ EPOCHS = 40
 print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
 
 
-# In[24]:
+# In[18]:
 
 import time
 
@@ -1014,7 +1014,7 @@ with tf.Session() as sess:
     
 
 
-# In[25]:
+# In[22]:
 
 # TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets
 
@@ -1068,8 +1068,11 @@ plt.ylim((.9000, 1.0100))
 plt.tight_layout()
 plt.show()
 
-fig.savefig("training_stats_plotted.png", dpi=25)  # results in 160x120 px image
-print("saved figure as 'training_stats_plotted.png'")
+        
+filename = 'training_stats_plotted-' + time.strftime("%y%m%d_%H%M") + '.png'
+
+fig.savefig(filename, dpi=25)  # results in 160x120 px image
+print("Figure saved as " + filename + "\n")
 
 
 # In[20]:
