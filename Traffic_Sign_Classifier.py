@@ -22,7 +22,7 @@
 # ---
 # ## Step 0: Load The Data
 
-# In[1]:
+# In[ ]:
 
 # Load pickled data
 import pickle
@@ -40,13 +40,13 @@ with open(validation_file, mode='rb') as f:
 with open(testing_file, mode='rb') as f:
     test = pickle.load(f)
     
-X_train, y_train = train['features'], train['labels']
-X_valid, y_valid = valid['features'], valid['labels']
-X_test,  y_test  =  test['features'],  test['labels']
+X_train_ORIG, y_train_ORIG = train['features'], train['labels']
+X_valid_ORIG, y_valid_ORIG = valid['features'], valid['labels']
+X_test_ORIG,  y_test_ORIG  =  test['features'],  test['labels']
 
-assert(len(X_train) == len(y_train))
-assert(len(X_valid) == len(y_valid))
-assert(len(X_test)  == len(y_test))
+assert(len(X_train_ORIG) == len(y_train_ORIG))
+assert(len(X_valid_ORIG) == len(y_valid_ORIG))
+assert(len(X_test_ORIG)  == len(y_test_ORIG))
 
 
 # ---
@@ -64,21 +64,20 @@ assert(len(X_test)  == len(y_test))
 
 # ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
 
-# In[2]:
+# In[ ]:
 
 ### Replace each question mark with the appropriate value. 
 ### Use python, pandas or numpy methods rather than hard coding the results
-#import 
 
 # TODO: Number of training examples
-n_train = X_train.shape[0]
-n_valid = X_valid.shape[0]
+n_train = X_train_ORIG.shape[0]
+n_valid = X_valid_ORIG.shape[0]
 
 # TODO: Number of testing examples.
-n_test = X_test.shape[0]
+n_test = X_test_ORIG.shape[0]
 
 # TODO: What's the shape of an traffic sign image? 
-image_shape = X_train.shape[1:]
+image_shape = X_train_ORIG.shape[1:]
 
 # TODO: How many unique classes/labels there are in the dataset.
 # read number of classes from signnames.csv
@@ -114,7 +113,7 @@ print("Number of classes =", num_classes)
 # 
 # **NOTE:** It's recommended you start with something simple first. If you wish to do more, come back to it after you've completed the rest of the sections.
 
-# In[3]:
+# In[ ]:
 
 ### Data exploration visualization code goes here.
 ### Feel free to use as many code cells as needed.
@@ -147,9 +146,9 @@ print("The distribution appears similar across the three sets, \n  though not un
 # set figure width, height in inches   
 fig1 = plt.figure(1, figsize=(6, 12))
 
-plot_data_in_fig(y_train, "Training Data \ndistribution of images per class", fig1, 311)
-plot_data_in_fig(y_valid, "Validation Data \ndistribution of images per class",fig1, 312)
-plot_data_in_fig(y_test,  "Test Data \ndistribution of images per class",fig1, 313)
+plot_data_in_fig(y_train_ORIG, "Training Data \ndistribution of images per class",  fig1, 311)
+plot_data_in_fig(y_valid_ORIG, "Validation Data \ndistribution of images per class",fig1, 312)
+plot_data_in_fig(y_test_ORIG,  "Test Data \ndistribution of images per class",      fig1, 313)
 
 # prevent overlapping of labels with subplots
 plt.tight_layout()
@@ -161,11 +160,6 @@ print("figure saved as: 'data_plotted_image_distribution_amongst_classes.png'")
 
 
 # In[ ]:
-
-
-
-
-# In[4]:
 
 # diplay sample images from training data set
 def display_images(images):
@@ -189,162 +183,60 @@ def display_images(images):
     plt.show()
 
 print("Sample images from training data set")
-sample_images = [X_train[50], X_train[500], X_train[1000]]
+sample_images = [X_train_ORIG[50], X_train_ORIG[500], X_train_ORIG[1000]]
 display_images(sample_images)
 
 # consider showing histogram of individual sample images
 # consider showing average histogram of all images
-# consider showing zero mean of sample images
-# consider showing normalized sample images
 
-'''
-#normalized_rgb   = np.zeros(image_shape, np.uint8)
-#normalized_image = np.zeros(image_shape, np.uint8)
-# normalized in color
-def rgb_normalizer(image):
-    normalized_rgb   = np.zeros(image_shape, np.uint8)
-    normalized_channel = np.zeros([image_shape[0], image_shape[1], 1], np.uint8)
 
-    r = image[:,:,0]
-    g = image[:,:,1]
-    b = image[:,:,2]
-    print("rgb\n", r[0][0:15],"\n", g[0][0:15],"\n", b[0][0:15])
-    rgb_sum = r+b+g
-    rgb_mean = rgb_sum.mean() 
-    r_ave = r.mean()
-    g_ave = g.mean()
-    b_ave = b.mean()
-    if rgb_mean == 0: rgb_mean = 0.01  #avoid divide by zero for pure black image
-    print("rgb_ave", rgb_mean)
-    print("r_ave  ", r_ave)
-    #print("rgb_sum[0]\n", rgb_sum[0][0:15])
+# In[ ]:
 
-    rgb_multiplier = np.float32(128/rgb_mean) #3*255 #128 #123*3
-    #rgb_multiplier = np.float32(3*128/rgb_mean) #3*255 #128 #123*3
-    print("rgb_mul ", rgb_multiplier)
-    
-    channels = [r, g, b]
-    print("normalized")
-    for channel in range(len(channels)):
-        channel_multiplier = rgb_multiplier
-        #channel_multiplier = np.float32(128/channels[channel].mean()) #rgb_multiplier
-        #channel_multiplier = (128/rgb_multiplier + channel_multiplier)/2
-        normalized_channel = np.rint(np.float32(channel_multiplier * channels[channel])).astype(int)
-        print(normalized_channel[0][0:15])       
-        normalized_rgb[0:,0:,channel] = normalized_channel
-    print()
-    return normalized_rgb
 
-sample_images = [X_train[1000], X_train[500], X_train[50]]
-#image_1000 = X_train[1000]
-#normalized_rgb = rgb_normalizer(image_1000)
-#imgplot = plt.imshow(normalized_rgb)
 
-plt.figure(1)
-num_images = len(sample_images)
-for i in range(num_images):
-    #sample_image = sample_images[i]
-    #normalized_rgb = rgb_normalizer(sample_image)
-    plt.subplot(num_images, 2, 2*i+1)
-    plt.imshow(sample_images[i])
-    plt.subplot(num_images, 2, 2*i+2)
-    plt.imshow(rgb_normalizer(sample_images[i]))
-'''
-'''
-image = X_train[50]
-normalized_rgb = rgb_normalizer(image)
-plt.subplot(223)
-plt.imshow(image)
-plt.subplot(224)
-plt.imshow(normalized_rgb)
-'''
-'''
-plt.show()
-''''''
-def rgb_grayscale_combo(color_image, bw):
-    combo_image   = np.zeros(image_shape, np.uint8)
-    combo_channel = np.zeros(image_shape, np.uint8)
 
-    r = color_image[:,:,0]
-    g = color_image[:,:,1]
-    b = color_image[:,:,2]
-    #print("rgb\n", r[0][0:15],"\n", g[0][0:15],"\n", b[0][0:15])
-    #rgb_sum = np.float32(r+b+g+.1)
-    rgb_sum = np.float32(r) + np.float32(b) + np.float32(g) +.1
-    ##print("rgb_sum\n", rgb_sum[0][0:15])
-    #if rgb_sum == 0: rgb_sum = 0.01  #avoid divide by zero for pure black pixel
-    ##print("bw\n",bw[0][0:15])
-    rgb_mean = rgb_sum.mean() 
-    r_ave = r.mean()
-    g_ave = g.mean()
-    b_ave = b.mean()
-    channels_ave = [r_ave, g_ave, b_ave]
-    if rgb_mean == 0: rgb_mean = 0.01  #avoid divide by zero for pure black image
-    print("rgb_ave", rgb_mean)
-    print("r_ave  ", r_ave)
-    #print("rgb_sum[0]\n", rgb_sum[0][0:15])
+# In[ ]:
 
-    rgb_multiplier = np.float32(128/rgb_mean) #3*255 #128 #123*3
-    #rgb_multiplier = np.float32(3*128/rgb_mean) #3*255 #128 #123*3
-    #print("rgb_mul ", rgb_multiplier)
-    
-    channels = [r, g, b]
-    print("combo")
-    for channel in range(len(channels)):
-        #channel_multiplier = rgb_sum /(255 * bw)
-        ##channel_multiplier = channels_ave[channel]  / (128 * bw)
-        ##print("channel_multiplier", channel_multiplier[0][0:15])
-        #channel_multiplier = np.float32(128/channels[channel].mean()) #rgb_multiplier
-        #channel_multiplier = (128/rgb_multiplier + channel_multiplier)/2
-        ##combo_channel = np.rint(np.float32(channel_multiplier * channels[channel])).astype(int)
-        
-        #channel_value = (bw) * 255 * ((3*128.0/rgb_mean) - (rgb_sum-channels[channel])/rgb_sum)  ##/ (128 * bw)
-        #channel_value = 255*(bw) * ((128.0)/rgb_mean) * (1-(rgb_sum-channels[channel])/rgb_sum)  ##/ (128 * bw)
-        channel_value = 255*(bw) * ((128.0)/rgb_mean) * (1-(rgb_sum/rgb_mean-channels[channel]/channels_ave[channel])/(rgb_sum/rgb_mean))  ##/ (128 * bw)
-        #channel_value = 255*(bw) * 3*(np.float32(channels[channel])/np.float32(rgb_sum))  ##/ (128 * bw)
-        combo_channel = np.rint(np.float32(channel_value)).astype(int)
-        
-        #print(combo_channel[0][0:15]) 
-        combo_image[0:,0:,channel] = combo_channel
-        #print("diff\n", (color_image[18:18][10:15]-combo_image[18:18][10:15])[:])
-    print()
-    return combo_image
-
-plt.figure(2)
-sample_images = [X_train[1000], X_train[500], X_train[50]]
-num_images = len(sample_images)
-bw_images = []
-for i in range(num_images):
-    bw_images.append(color.rgb2gray(sample_images[i]))
-for i in range(num_images):
-    #sample_image = sample_images[i]
-    #normalized_rgb = rgb_normalizer(sample_image)
-    plt.subplot(num_images, 2, 2*i+1)
-    plt.imshow(sample_images[i])
-    plt.subplot(num_images, 2, 2*i+2)
-    plt.imshow(rgb_grayscale_combo(sample_images[i], bw_images[i]))
-plt.show()
-'''
-# In[5]:
-
-#print("normlizing as rgb")
-#for i in ranage(len(X_train)):
-#    rgb_normalizer(X_train[i])
-
-'''
 from skimage import color
-gray_img1000 = color.rgb2gray(X_train[1000])
-#imgplot = plt.imshow(gray_img1000)
-print("grayscale image")
-imgplot= plt.imshow(gray_img1000, cmap = plt.get_cmap('gray'))
-print("converting validation data to grayscale")
-gray_valid = color.rgb2gray(X_valid)
-print("converting training data to grayscale")
-gray_train = color.rgb2gray(X_train)
-print("converting training data to grayscale")
-gray_test = color.rgb2gray(X_test)
-print("done converting to grayscale")
-''''''
+
+def get_grayscale_datasets_1channel(input_datasets):
+    # eg input_datasets may be: [X_train, X_valid, X_test]
+    dataset_labels  = ["training", "validation", "testing"]
+    output_datasets = [[], [], []]
+    
+    print("\nconverting datasets to 1D grayscale")
+
+    num_datasets = len(input_datasets)
+    for s in range(num_datasets):
+
+        #print("\nconverting " +  dataset_labels[s]  + " data to grayscale")
+        # set output color depth to 1
+        num_images, x_pixels, y_pixels, color_depth = input_datasets[s].shape
+        color_depth = 1
+        output_shape = (num_images, x_pixels, y_pixels, color_depth)
+        
+        output_datasets[s] = color.rgb2gray(input_datasets[s])
+        
+        # returned grayscale image is of shape==(num_images, x-pixels, y_pixels)
+        # we need to reshape to add color_depth = 1
+        #print(output_datasets[s].shape, "before reshape")
+        np.reshape(output_datasets[s], [num_images, 32, 32, 1])
+        #print(output_datasets[s].shape, "after_reshape")
+        
+        ## DRAT!! in earlier tests on dummy arrays, I was able to convert [a,b,c] into [a,b,c,1]
+        ## DUNNO Why it's NOT working here!! Or why it DID work earlier.
+        ## TODO: FIX, or cannot run lenet on grayscale-1D. Actually, probably cannot anyway! cuz of layer reshapes.
+
+    #print("\ndone converting to grayscale\n")
+    print(output_datasets[0].shape, output_datasets[1].shape, output_datasets[2].shape)
+    
+    return output_datasets
+
+# test the above proceedure
+gray_train, gray_valid, gray_test = get_grayscale_datasets_1channel([X_train_ORIG, X_valid_ORIG, X_test_ORIG])
+imgplot= plt.imshow(gray_train[1000], cmap = plt.get_cmap('gray'))
+
+'''
 from sklearn.preprocessing import normalize
 print("normalized grayscale image")
 fig = plt.figure(1)
@@ -392,169 +284,231 @@ X_test  -= training_data_mean
 sample_images=[X_train[50], X_train[500], X_train[1000]]
 display_images(sample_images)
 print(sample_images[0][16][16][0:5])
-'''"""
+'''
+# In[ ]:
+
+# normalize datasets per channel
+## UNFINISHED !!
+
 from sklearn.preprocessing import normalize
-def separate_channels(images):
-    # returns 2-D array
-    R = images[:,:,:,0].reshape(len(images),-1)
-    G = images[:,:,:,1].reshape(len(images),-1)
-    B = images[:,:,:,2].reshape(len(images),-1)
-    return [R,G,B]
 
-def combine_channels(R,G,B):
-    # returns 4-D array
-    R =  R.reshape(-1, 32, 32, 1)
-    G =  G.reshape(-1, 32, 32, 1)
-    B =  B.reshape(-1, 32, 32, 1)
-    rgb = []
-    return rgb
+def get_per_channel_normalized_datasets(input_datasets):
+    X_train, X_valid, X_test = input_datasets
+    
+    def separate_channels(images):
+        # returns 2-D array
+        R = images[:,:,:,0].reshape(len(images),-1)
+        G = images[:,:,:,1].reshape(len(images),-1)
+        B = images[:,:,:,2].reshape(len(images),-1)
+        return [R,G,B]
 
-R, G, B = separate_channels(X_train)
-r_norm = normalize(R)
-print("normalized R")
-g_norm = normalize(G)
-print("normalized G")
-b_norm = normalize(B)
-print("normalized B")
-R = r_norm.reshape(-1,32,32,1)
-print(R)
-G = g_norm.reshape(-1,32,32,1)
-B = b_norm.reshape(-1,32,32,1)
-print(R.shape)
-X_train[:,:,:,0] = R[:,:,:,0]
-X_train[:,:,:,1] = G[:,:,:,0]
-X_train[:,:,:,2] = B[:,:,:,0]
-#display_images([X_train[50]])#, G[500], B[1000]])
-print(X_train[500][16][:][:])
-"""
-# In[6]:
+    def combine_channels(R,G,B):
+        return np.stack([R, G, B], axis=-1).reshape(-1, 32, 32, 3)
 
-# grayscale images
+    R, G, B = separate_channels(X_train)
+    r_norm = normalize(R)
+    print("normalized R")
+    
+    g_norm = normalize(G)
+    print("normalized G")
+    
+    b_norm = normalize(B)
+    print("normalized B")
+    
+    #TODO: save the normalization paramaters. Apply them to valid and test sets.
+    
+    R = r_norm.reshape(-1,32,32,1)
+    G = g_norm.reshape(-1,32,32,1)
+    B = b_norm.reshape(-1,32,32,1)
+    print(R.shape)
+    #print(R)
+    
+    X_train = combine_channels(R,G,B)
+
+    print(X_train[500][16][:][:])
+   
+    #TODO: use SAME normalization paramaters as above on validation and testing sets
+    assert (False == True)    
+
+    return [X_train, X_valid, X_testing]
+
+# cannot test this method until find out how to properly normalize valid and test sets.
+# maybe can just normalize them using same method as for training set
+# but I read that the SAME Train normalization params need to be applied to the valid and test sets.
+
+
+# In[ ]:
+
+# turn color data into grayscale image data
 from skimage import color
-print("converting to grayscale..")
-X_train_gray = color.rgb2gray(X_train)
-X_valid_gray = color.rgb2gray(X_valid)
-X_test_gray  = color.rgb2gray(X_test)
-gray_image_shape = X_train_gray.shape
-print(X_train_gray.shape,X_valid_gray.shape, X_test_gray.shape, "gray single channel conversion")
-assert (gray_image_shape[1:] == (32, 32)) #32px x 32px, 1 color channel: grayscale
+
+def get_grayscale_datasets(input_datasets):
+    X_train, X_valid, X_test = input_datasets
+    
+    print("converting to grayscale..")
+    X_train_gray = color.rgb2gray(X_train)
+    X_valid_gray = color.rgb2gray(X_valid)
+    X_test_gray  = color.rgb2gray(X_test)
+    
+    gray_image_shape = X_train_gray.shape
+    print(X_train_gray.shape,X_valid_gray.shape, X_test_gray.shape, "gray single channel conversion")
+    assert (gray_image_shape[1:] == (32, 32)) #32px x 32px, 1 color channel: grayscale
+    
+    return [X_train_gray, X_valid_gray, X_test_gray]
+
+# test get_grayscale_datasets
+X_train_gray, X_valid_gray, X_test_gray = get_grayscale_datasets([X_train_ORIG, X_valid_ORIG, X_test_ORIG])
+
+# display sample grayscale images from dataset
 display_images([X_train_gray[50], X_train_gray[500], X_train_gray[1000]])
 
 
-# In[7]:
+# In[ ]:
 
 # turn grayscale into 3channel rgb grayscale
 # (not ideal paramater-wise = duplicated data, but for shipping through my LeNet, it should remove shaping problems)
-print("converted to 3 channel grayscale")
-X_train_gray3D = np.stack((X_train_gray,)*3, axis=-1)
-X_valid_gray3D = np.stack((X_valid_gray,)*3, axis=-1)
-X_test_gray3D  = np.stack((X_test_gray,)*3,  axis=-1)
-print(X_train_gray3D.shape, X_valid_gray3D.shape, X_test_gray3D.shape, "gray 3D shape")
-display_images([X_train_gray3D[50], X_train_gray3D[500], X_train_gray3D[1000]])
-print("resulting images are darker and lighter than the single channel grayscale")
 
-"""
-# turn grayscale into 3channel rgb grayscale
-#  sqrt(0.299 * R^2 + 0.587 * G^2 + 0.114 * B^2)
-# (not ideal paramater-wise = duplicated data, but for shipping through my LeNet, it should remove shaping problems)
-R = X_train_gray / np.sqrt(3)  # * 2* np.sqrt(3)  # 2/6  # 1/3
-G = X_train_gray / np.sqrt(3)  # * 2* np.sqrt(3)  # 3/6  # 1/3
-B = X_train_gray / np.sqrt(3)  # * 2* np.sqrt(3)  # 1/6  # 1/3
-X_train_gray3D_2 = np.stack((R, G, B), axis=-1)
-X_valid_gray3D_2 = np.stack((X_valid_gray,)*3, axis=-1)
-X_test_gray3D_2  = np.stack((X_test_gray,)*3,  axis=-1)
-print(X_train_gray3D_2.shape)
+## Running rgb-Grayscales through leNet gave TERRIBLE Results !
+
+def transform_grayscale_into_3D_grayscale(input_dataset, ratioR=1, ratioG=1, ratioB=1):
+    X_train_gray, X_valid_gray, X_test_gray = input_dataset
+    
+    print("converted to 3 channel grayscale")
+    # some ratios I've tried: 1/np.sqrt(3), 2*np.sqrt(3), 2/6 3/6 1/6
+    #  sqrt(0.299 * R^2 + 0.587 * G^2 + 0.114 * B^2)
+
+    # 3-channel gray looks different than 1-channel gray. Try to retain "look" of 1-channel gray. Find a multiplier ?
+    R = X_train_gray * ratioR
+    G = X_train_gray * ratioG
+    B = X_train_gray * ratioB
+
+    X_train_gray3D_2 = np.stack( (R, G, B), axis=-1)
+    X_valid_gray3D_2 = np.stack( (R, G, B), axis=-1)
+    X_test_gray3D_2  = np.stack( (R, G, B), axis=-1)
+    print(X_train_gray3D_2.shape, "gray 3D shape")
+
+    return [X_train_gray3D_2, X_valid_gray3D_2, X_test_gray3D_2]
+    
+## test above method
+
+#input_dataset = get_grayscale_datasets([X_train, X_valid, X_test])
+input_dataset = get_grayscale_datasets_1channel([X_train_ORIG, X_valid_ORIG, X_test_ORIG])
+X_train_gray3D_2, X_valid_gray3D_2, X_test_gray3D_2 = transform_grayscale_into_3D_grayscale(input_dataset)
 display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[1000]])
-"""""""
+
+print("resulting images are darker and lighter than the single channel grayscale, with every ratio I've tried")
+
+
+# In[ ]:
+
 # Try per channel normalization, where the normalization baseline (for each channel) is taken across the entire training dataset
-from sklearn.preprocessing import normalize
-def separate_channels(images):
-    # returns 2-D array
-    R = images[:,:,:,0].reshape(len(images),-1)
-    G = images[:,:,:,1].reshape(len(images),-1)
-    B = images[:,:,:,2].reshape(len(images),-1)
-    return [R,G,B]
 
-def combine_channels(R,G,B):
-    return return np.stack([R, G, B], axis=-1).reshape(-1, 32, 32, 3)
+## !! This Method is Incomplete !! ##
+#TODO: Finish before using
 
-R, G, B = separate_channels(X_train)
-r_norm = normalize(R)
-print("normalized R")
-# TODO save normalization value. Must apply same value to both the validation and test sets.
-g_norm = normalize(G)
-print("normalized G")
-# TODO save normalization value. Must apply same value to both the validation and test sets.
-b_norm = normalize(B)
-print("normalized B")
-# TODO save normalization value. Must apply same value to both the validation and test sets.
+def get_per_channel_normalized_datasets(input_datasets):
+    # ie datasets = [X_train, X_valid, X_test]
+    assert("Unfinished" == "Don't Run This Code")
+    
+    from sklearn.preprocessing import normalize
+    def separate_channels(images):
+        # returns 2-D array
+        R = images[:,:,:,0].reshape(len(images),-1)
+        G = images[:,:,:,1].reshape(len(images),-1)
+        B = images[:,:,:,2].reshape(len(images),-1)
+        return [R,G,B]
 
-R = r_norm.reshape(-1,32,32,1)
-print(R)
-G = g_norm.reshape(-1,32,32,1)
-B = b_norm.reshape(-1,32,32,1)
-print(R.shape)
+    def combine_channels(R,G,B):
+        return np.stack([R, G, B], axis=-1).reshape(-1, 32, 32, 3)
 
-X_train_normalized_per_channel = combine_channels(R, G, B)
+    #    hack, since havent written loop yet 
+    X_data = input_datasets[0]
+    # run on training dataset
+    R, G, B = separate_channels(X_data)
+    r_norm = normalize(R)
+    print("normalized R")
+    # TODO save normalization value. Must apply same value to both the validation and test sets.
+    g_norm = normalize(G)
+    print("normalized G")
+    # TODO save normalization value. Must apply same value to both the validation and test sets.
+    b_norm = normalize(B)
+    print("normalized B")
+    # TODO save normalization value. Must apply same value to both the validation and test sets.
 
-# displaying normalized image is useless, as values are no longer rgb values (0-255)
-#display_images([X_train_normalized_per_channel[50]])#, G[500], B[1000]])
-print(X_train_normalized_per_channel[500][16][:][:])
-"""""" 
+    R = r_norm.reshape(-1,32,32,1)
+    #print(R)
+    print(input_datasets[0].shape, R.shape)
+    G = g_norm.reshape(-1,32,32,1)
+    B = b_norm.reshape(-1,32,32,1)
+    print(R.shape)
+
+    X_train_normalized_per_channel = combine_channels(R, G, B)
+
+    # displaying normalized image is useless, as values are no longer rgb values (0-255)
+    print(X_train_normalized_per_channel[500][16][:][:])
+    
+    return output_datasets
+
+
+# In[ ]:
+
 # Try per channel zero centering. Find mean for each channel, where the mean for that channel is across all training images
 # !! TERRIBLE RESULTS. tried a few learning_rates. NIX This technique !
-
 from sklearn.preprocessing import normalize
-def separate_channels(images):
-    # returns 2-D array: (num_examples, total_num_pixels)
-    R = images[:,:,:,0].reshape(len(images),-1)
-    G = images[:,:,:,1].reshape(len(images),-1)
-    B = images[:,:,:,2].reshape(len(images),-1)
-    return [R,G,B]
 
-def combine_channels(channels, output_shape):
-    # used to re-combine separated RGB channels into 4-D array, where channels are the 4thD
-    return np.stack(channels, axis=-1).reshape(output_shape)
-
+def get_per_channel_mean_zero_centered_datasets(input_datasets):
     
-initial_shape = X_train.shape
-R, G, B = separate_channels(X_train)
+    def separate_channels(images):
+        # returns 2-D array: (num_examples, total_num_pixels)
+        R = images[:,:,:,0].reshape(len(images),-1)
+        G = images[:,:,:,1].reshape(len(images),-1)
+        B = images[:,:,:,2].reshape(len(images),-1)
+        return [R,G,B]
 
-r_pixels_mean = np.mean(R)
-g_pixels_mean = np.mean(G)
-b_pixels_mean = np.mean(B)
+    def combine_channels(channels, output_shape):
+        # used to re-combine separated RGB channels into 4-D array, where channels are the 4thD
+        return np.stack(channels, axis=-1).reshape(output_shape)
 
-# Must Save These Values, and apply to valid and test sets
-TRAINING_PIXELS_MEAN = [r_pixels_mean, g_pixels_mean, b_pixels_mean]
-print("TRAINING_PIXELS_MEAN\n", TRAINING_PIXELS_MEAN)
+    X_train, X_valid, X_test = input_datasets[0]
+    
+    initial_shape = X_train.shape
+    R, G, B = separate_channels(X_train)
 
+    r_pixels_mean = np.mean(R)
+    g_pixels_mean = np.mean(G)
+    b_pixels_mean = np.mean(B)
 
-#TODO:
-#apply the same TRAINING_PIXELS_MEAN to: train, validation and test sets
-sets = [X_train, X_valid, X_test]
-zero_centered = [np.zeros(X_test.shape), np.zeros(X_valid.shape), np.zeros(X_test.shape)]
-
-for set in range(len(sets)):
-    initial_shape = sets[set].shape
-    R, G, B = separate_channels(sets[set])
-    channels = [R, G, B]
-    for c in range(len(channels)):
-        channel = channels[c]
-        channel = channel.astype(np.float64, copy=False)
-        channel -= TRAINING_PIXELS_MEAN[c]
-        channel = channel/TRAINING_PIXELS_MEAN[c]
-    zero_centered[set] = combine_channels(channels, initial_shape)
-# end for loop
-
-X_train_per_channel_mean_zero_centered = zero_centered[0]
-X_valid_per_channel_mean_zero_centered = zero_centered[1]
-X_test_per_channel_mean_zero_centered  = zero_centered[2]
+    # Must Save These Values, and apply to valid and test sets
+    TRAINING_PIXELS_MEAN = [r_pixels_mean, g_pixels_mean, b_pixels_mean]
+    print("TRAINING_PIXELS_MEAN\n", TRAINING_PIXELS_MEAN)
 
 
-print(zero_centered[0].shape, zero_centered[1].shape, zero_centered[2].shape)
+    #apply the same TRAINING_PIXELS_MEAN to: train, validation and test sets
+    sets = [X_train, X_valid, X_test]
+    zero_centered = [np.zeros(X_test.shape), np.zeros(X_valid.shape), np.zeros(X_test.shape)]
 
-"""
-# In[8]:
+    for set in range(len(sets)):
+        initial_shape = sets[set].shape
+        R, G, B = separate_channels(sets[set])
+        channels = [R, G, B]
+        for c in range(len(channels)):
+            channel = channels[c]
+            channel = channel.astype(np.float64, copy=False)
+            channel -= TRAINING_PIXELS_MEAN[c]
+            channel = channel/TRAINING_PIXELS_MEAN[c]
+        zero_centered[set] = combine_channels(channels, initial_shape)
+    # end for loop
+
+    #X_train_per_channel_mean_zero_centered = zero_centered[0]
+    #X_valid_per_channel_mean_zero_centered = zero_centered[1]
+    #X_test_per_channel_mean_zero_centered  = zero_centered[2]
+
+    print(zero_centered[0].shape, zero_centered[1].shape, zero_centered[2].shape)
+    return zero_centered
+
+
+
+# In[ ]:
 
 # Try per image zero centering. Find mean for each image, apply that mean for each channel in said image
 
@@ -567,19 +521,20 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
         initial_shape = setX.shape
         num_images = initial_shape[0]
 
-        # returns new copy
+        # returns new copy with shape [num_images, num_pixels]
         X_output_datasets[s] = setX.reshape(num_images,-1)
         num_pixels = X_output_datasets[s].shape[-1]
         
         # for accurate calculation of mean
         X_output_datasets[s].astype(np.float64, copy=False)
 
-        # axis=1 averages all pixels in a single image; dtype=np.float64 for accuracy 
-        image_mean = np.mean(X_output_datasets[s], axis=1, dtype=np.float64)
+        # axis=1 averages all pixels in a single image; dtype=np.float64 for accuracy
+        divide_by_zero_prevention = 0 #.00000000001
+        image_mean = np.mean(X_output_datasets[s], axis=1, dtype=np.float64) + divide_by_zero_prevention
 
-        # copy mean into matrix of all pixels for that image
+        # copy/create matrix such that each image has num_pixels all set equal to the image's mean
         image_mean_xl = np.empty([num_images, num_pixels], dtype=np.float64)
-        print(image_mean.shape, image_mean_xl.shape)
+            #print("image_shape", image_mean.shape, image_mean_xl.shape, "image_mean_xl shape")
         for i in range(num_images):
             imean = image_mean[i].astype(np.float64)
             image_mean_xl[i].fill(imean)
@@ -587,7 +542,6 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
         X_output_datasets[s] = (X_output_datasets[s] - image_mean_xl) / image_mean_xl
         X_output_datasets[s] = X_output_datasets[s].reshape(initial_shape)
 
-    a,b,c = X_output_datasets
     return X_output_datasets
 
 
@@ -614,7 +568,7 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
 
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
 
-# In[9]:
+# In[ ]:
 
 ### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscae, etc.
 ### Feel free to use as many code cells as needed.
@@ -625,11 +579,11 @@ from skimage import color
 import tensorflow as tf
 
 # images as imported are already sized properly for leNet at (32x32)
-assert ((X_train.shape[1],X_train.shape[2]) == (32, 32))  #32px x 32px, 3 color channels:RGB
+assert ((X_train_ORIG.shape[1],X_train_ORIG.shape[2]) == (32, 32))  #32px x 32px, 3 color channels:RGB
 
 # shuffle data
-X_train, y_train = shuffle(X_train, y_train)
-X_valid, y_valid = shuffle(X_valid, y_valid)
+X_train_SHUFFLED, y_train_SHUFFLED = shuffle(X_train_ORIG, y_train_ORIG)
+X_valid_SHUFFLED, y_valid_SHUFFLED = shuffle(X_valid_ORIG, y_valid_ORIG)
     # don't need to shuffle test data
 
 
@@ -668,16 +622,12 @@ print(image_shape)
 assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
 '''
 
-# In[10]:
+# In[ ]:
 
 # define training variables, constants
 
 EPOCHS = 100
 BATCH_SIZE = 128
-
-#mu = 0
-#sigma = 0.1  # or try .01, or .. 1/sqrt(32*32*3) = 1/55 = .018; bw: 1/sqrt(32*32*1) = 1/32 = 0.03125
-#training_rate = 0.01
 
 def filter_size(in_size, out_size, stride):
     assert(padding == "VALID")
@@ -701,6 +651,7 @@ ksize = pool_strides
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
 """
+# This was for an attempt at running LeNet on 1-channel grayscale images. Try various filter shapes, calculate output shape
 def get_conv_layer_from_filter(x, filter_shape):
     input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
     filter_height, filter_width = filter_shape
@@ -734,7 +685,7 @@ def get_conv_layer_from_filter(x, filter_shape):
     return layer1
 """
 
-# In[11]:
+# In[ ]:
 
 def get_conv_layer(x, conv_output_shape, pool_output_shape):
     input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
@@ -771,8 +722,7 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
     return layer1
 
 
-
-# In[12]:
+# In[ ]:
 
 def get_fcc_layer(prev_layer, output_length):
     input_length  = prev_layer.get_shape().as_list()[1]
@@ -789,7 +739,7 @@ def get_fcc_layer(prev_layer, output_length):
     return fcc_layer
 
 
-# In[13]:
+# In[ ]:
 
 from tensorflow.contrib.layers import flatten
 
@@ -823,7 +773,7 @@ def LeNet(x):
 # A validation set can be used to assess how well the model is performing. A low accuracy on the training and validation
 # sets imply underfitting. A high accuracy on the training set but low accuracy on the validation set implies overfitting.
 
-# In[14]:
+# In[ ]:
 
 ### Train your model here.
 ### Calculate and report the accuracy on the training and validation set.
@@ -832,57 +782,53 @@ def LeNet(x):
 ### Feel free to use as many code cells as needed.
 
 
-# In[15]:
+# In[ ]:
 
 ## initialize
-#X_train_gray.reshape(len(X_train_gray), 32, 32, 1)
-#print("new shape", X_train_gray.shape)
-#print(X_valid_gray3D.shape)
 
-# choose which pre-processed dataset to work with
-#X_train = X_train_per_channel_mean_zero_centered  #X_train_gray3D  #X_train_gray  #X_train   #norm_gray_train
-#X_valid = X_valid_per_channel_mean_zero_centered  #X_valid_gray3D  #X_valid_gray  #X_valid   #norm_gray_valid
-#X_test  = X_test_per_channel_mean_zero_centered   #X_test_gray3D   #X_test_gray   #X_test    #norm_gray_test
+# choose which pre-processor to work with:
+input_dataset = [X_train_SHUFFLED, X_valid_SHUFFLED, X_test_ORIG]
 
-X_train, X_valid, X_test = get_per_image_mean_centered_datasets([X_train, X_valid, X_test])
+# X_train, X_valid, X_test = get_grayscale_datasets_1channel(input_dataset)              # must convert to 3D to use LeNet
+# X_train, X_valid, X_test = get_per_channel_normalized_datasets(input_dataset)          # - UNFINISHED
+# X_train, X_valid, X_test = get_grayscale_datasets(input_dataset)                       # must convert to 3D to use LeNet
+# X_train, X_valid, X_test = transform_grayscale_into_3D_grayscale(get_grayscale_datasets(input_dataset)) # Got TERRIBLE RESULTS
+# X_train, X_valid, X_test = get_per_channel_mean_zero_centered_datasets(input_dataset)   # Got TERRIBLE RESULTS
+# X_train, X_valid, X_test = get_per_channel_normalized_datasets(input_dataset)           # - UNFINISHED
+X_train, X_valid, X_test = get_per_image_mean_centered_datasets(input_dataset)
 
-# y_train, y_valid, y_test remain the same from import
+# labels do not get pre-processed
+y_train, y_valid, y_test = [y_train_SHUFFLED, y_valid_SHUFFLED, y_test_ORIG]
 
-# choose/set training paramaters
+
+# decide on a set training paramaters:
 mu = 0
-sigma = 0.01  #0.1   #1.0/np.sqrt(pixels_x * pixels_y * color_depth)   #sigma 0.1  # or try .01, or .. 1/sqrt(32*32*3) = 1/55 = .018; bw: 1/sqrt(32*32*1) = 1/32 = 0.03125
-#print(sigma)
-learning_rate = .001    #0.01
+sigma = 0.01  #0.1   #.018  #.018 = 1.0/np.sqrt(pixels_x * pixels_y * color_depth) = 1/sqrt(32*32*3) = 1/55 = .018;  bw: 1/sqrt(32*32*1) = 1/32 = 0.03125
+learning_rate = .001 #0.01
 
 
-# determine placeholder paramater values based on chosen dataset
+# determine placeholder paramater values based on chosen (preprocessor) # (dataset in grayscale, or rgb format)
 image_shape = X_train.shape
-#pixels_x, pixels_y, color_depth = image_shape[1:]
+if len(image_shape) == 3:
+    # bw image needs re-shaped to add a color depth of 1
+    print("oops, bw datasets need to be reshaped to add a color depth of 1")
+assert( len(image_shape) == 4 )
+pixels_x, pixels_y, color_depth = image_shape[1:]
 
-def get_placeholder_shape_for_X_data(image_shape):
-    #bw vs color images
-    if len(image_shape) == 4:
-        pixels_x, pixels_y, color_depth = image_shape[1:]
-    elif len(image_shape) == 3:
-        pixels_x, pixels_y = image_shape[1:]
-        color_depth = 1
-    else: print("hmmm, something's wrong with the image_shape")
-    #print (pixels_x, pixels_y, color_depth)
-    return (None, pixels_x, pixels_y, color_depth)
 
 # initialize tf training variables !!
 # features, labels
-#x = tf.placeholder(tf.float32, (None, pixels_x, pixels_y, color_depth))
-x = tf.placeholder(tf.float32, get_placeholder_shape_for_X_data(X_train.shape))
-y = tf.placeholder(tf.int64,   (None))
+x = tf.placeholder(tf.float32, (None, pixels_x, pixels_y, color_depth))
+y = tf.placeholder(tf.int64, (None))
 
 # run leNet
 logits = LeNet(x)
 
+
 # loss
-# tf.nn.sparse_softmax_cross_entropy_with_logits combines:
-#   1) softmax with 2) cross_entropy and 3)(sparce) includes one-hot
-cross_entropy  = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, y)#labels)
+#   tf.nn.sparse_softmax_cross_entropy_with_logits combines:
+#   1) softmax with 2) cross_entropy and 3)(sparce version) performs one-hot encoding to the labels, y
+cross_entropy  = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, y)  #labels
 loss_operation = tf.reduce_mean(cross_entropy)
 
 # train
@@ -893,12 +839,41 @@ training_operation = optimizer.minimize(loss_operation)
 model_prediction = tf.argmax(logits, 1)
 prediction_is_correct = tf.equal(model_prediction, y)#labels)
 accuracy_calculation   = tf.reduce_mean(tf.cast(prediction_is_correct, tf.float32))
+
+# save these for plotting how the model performed
 training_stats = []
 
+def test_reshaping_3D_into_4D():
+    # grayscale images have no depth dimension
+    # we need them to have a depth dimension of 1
+    gr = np.zeros([3,2,2])
+    print(gr)
+    gr = gr.reshape(3,2,2,1)
+    print(gr)
+
+    gr = np.zeros((3,2,2))
+    print(gr)
+    gr = np.reshape(gr, (3,2,2,1))
+    print(gr)
+
+    gr = np.zeros([3,2,2])
+    gr = [[["x11","x12"],["y11","y12"]],[["x21","x22"],["y21","y22"]],[["x31","x32"],["y31","y32"]]]
+    print(gr)
+    gr = np.reshape(gr,(3,2,2,1))
+    print(gr)
+    
+    print("old shape", X_train_gray.shape)
+    #X_train_gray.reshape(len(X_train_gray), 32, 32, 1)
+    np.reshape(X_train_gray, (len(X_train_gray), 32, 32, 1) )
+    print("new shape", X_train_gray.shape)
+    print("WHY DOES THIS VERSION _NOT_ WORK ?, WHEN THE OTHERS DO ?")
+    assert(False == True)
+
+#test_reshaping_3D_into_4D()
 
 # 
 
-# In[16]:
+# In[ ]:
 
 # evaluation routine
 def evaluate_data(X_data, y_data):
@@ -926,9 +901,6 @@ def evaluate_data(X_data, y_data):
         
     return total_accuracy, total_loss     
 
-
-# In[17]:
-
 # TEMP TRUNCATE DATA FOR INITIAL TESTING
 """  
 # truncate the training set to be just a bit larger than the BATCH_SIZE (so run at least 2 batches per epoch)
@@ -946,11 +918,10 @@ y_test  = y_test[0:te]
 print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 """  
 
-EPOCHS = 40
-print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
+# EPOCHS = 4
+# print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
 
-
-# In[18]:
+# In[ ]:
 
 import time
 
@@ -1014,7 +985,7 @@ with tf.Session() as sess:
     
 
 
-# In[22]:
+# In[ ]:
 
 # TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets
 
@@ -1075,7 +1046,7 @@ fig.savefig(filename, dpi=25)  # results in 160x120 px image
 print("Figure saved as " + filename + "\n")
 
 
-# In[20]:
+# In[ ]:
 
 ## STOP !! Do NOT Proceed Until Model is FINISHED and has Validation >= 93%
 
@@ -1097,6 +1068,7 @@ with tf.Session() as sess:
     print("Test Loss     = {:.3f}".format(test_loss))
     print("Test Accuracy = {:.3f}".format(test_accuracy))
     
+#assert ('yes' == 'no')
 
 
 # ---
