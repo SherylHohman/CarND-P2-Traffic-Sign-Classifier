@@ -465,10 +465,7 @@ X_valid_gray3D_2 = np.stack((X_valid_gray,)*3, axis=-1)
 X_test_gray3D_2  = np.stack((X_test_gray,)*3,  axis=-1)
 print(X_train_gray3D_2.shape)
 display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[1000]])
-"""
-# In[8]:
-
-""""
+"""""""
 # Try per channel normalization, where the normalization baseline (for each channel) is taken across the entire training dataset
 from sklearn.preprocessing import normalize
 def separate_channels(images):
@@ -479,12 +476,7 @@ def separate_channels(images):
     return [R,G,B]
 
 def combine_channels(R,G,B):
-    # returns 4-D array
-    R =  R.reshape(-1, 32, 32, 1)
-    G =  G.reshape(-1, 32, 32, 1)
-    B =  B.reshape(-1, 32, 32, 1)
-    rgb = []
-    return rgb
+    return return np.stack([R, G, B], axis=-1).reshape(-1, 32, 32, 3)
 
 R, G, B = separate_channels(X_train)
 r_norm = normalize(R)
@@ -508,13 +500,10 @@ X_train_normalized_per_channel = combine_channels(R, G, B)
 # displaying normalized image is useless, as values are no longer rgb values (0-255)
 #display_images([X_train_normalized_per_channel[50]])#, G[500], B[1000]])
 print(X_train_normalized_per_channel[500][16][:][:])
-"""
-
-
-# In[9]:
-
-
+"""""" 
 # Try per channel zero centering. Find mean for each channel, where the mean for that channel is across all training images
+# !! TERRIBLE RESULTS. tried a few learning_rates. NIX This technique !
+
 from sklearn.preprocessing import normalize
 def separate_channels(images):
     # returns 2-D array: (num_examples, total_num_pixels)
@@ -564,6 +553,42 @@ X_test_per_channel_mean_zero_centered  = zero_centered[2]
 
 print(zero_centered[0].shape, zero_centered[1].shape, zero_centered[2].shape)
 
+"""
+# In[8]:
+
+# Try per image zero centering. Find mean for each image, apply that mean for each channel in said image
+
+def get_per_image_mean_centered_datasets(X_input_datasets):
+    # ie datasets = [X_train, X_valid, X_test]
+    X_output_datasets = [[], [], []] #np.empty(len(datasets))
+
+    for s in range(len(X_input_datasets)):
+        setX = X_input_datasets[s]
+        initial_shape = setX.shape
+        num_images = initial_shape[0]
+
+        # returns new copy
+        X_output_datasets[s] = setX.reshape(num_images,-1)
+        num_pixels = X_output_datasets[s].shape[-1]
+        
+        # for accurate calculation of mean
+        X_output_datasets[s].astype(np.float64, copy=False)
+
+        # axis=1 averages all pixels in a single image; dtype=np.float64 for accuracy 
+        image_mean = np.mean(X_output_datasets[s], axis=1, dtype=np.float64)
+
+        # copy mean into matrix of all pixels for that image
+        image_mean_xl = np.empty([num_images, num_pixels], dtype=np.float64)
+        print(image_mean.shape, image_mean_xl.shape)
+        for i in range(num_images):
+            imean = image_mean[i].astype(np.float64)
+            image_mean_xl[i].fill(imean)
+
+        X_output_datasets[s] = (X_output_datasets[s] - image_mean_xl) / image_mean_xl
+        X_output_datasets[s] = X_output_datasets[s].reshape(initial_shape)
+
+    a,b,c = X_output_datasets
+    return X_output_datasets
 
 
 # ----
@@ -589,7 +614,7 @@ print(zero_centered[0].shape, zero_centered[1].shape, zero_centered[2].shape)
 
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
 
-# In[10]:
+# In[9]:
 
 ### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscae, etc.
 ### Feel free to use as many code cells as needed.
@@ -643,7 +668,7 @@ print(image_shape)
 assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
 '''
 
-# In[11]:
+# In[10]:
 
 # define training variables, constants
 
@@ -709,7 +734,7 @@ def get_conv_layer_from_filter(x, filter_shape):
     return layer1
 """
 
-# In[12]:
+# In[11]:
 
 def get_conv_layer(x, conv_output_shape, pool_output_shape):
     input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
@@ -747,7 +772,7 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
 
 
 
-# In[13]:
+# In[12]:
 
 def get_fcc_layer(prev_layer, output_length):
     input_length  = prev_layer.get_shape().as_list()[1]
@@ -764,7 +789,7 @@ def get_fcc_layer(prev_layer, output_length):
     return fcc_layer
 
 
-# In[14]:
+# In[13]:
 
 from tensorflow.contrib.layers import flatten
 
@@ -798,7 +823,7 @@ def LeNet(x):
 # A validation set can be used to assess how well the model is performing. A low accuracy on the training and validation
 # sets imply underfitting. A high accuracy on the training set but low accuracy on the validation set implies overfitting.
 
-# In[15]:
+# In[14]:
 
 ### Train your model here.
 ### Calculate and report the accuracy on the training and validation set.
@@ -807,17 +832,19 @@ def LeNet(x):
 ### Feel free to use as many code cells as needed.
 
 
-# In[16]:
+# In[15]:
 
 ## initialize
 #X_train_gray.reshape(len(X_train_gray), 32, 32, 1)
 #print("new shape", X_train_gray.shape)
-print(X_valid_gray3D.shape)
+#print(X_valid_gray3D.shape)
 
 # choose which pre-processed dataset to work with
-X_train = X_train_per_channel_mean_zero_centered  #X_train_gray3D  #X_train_gray  #X_train   #norm_gray_train
-X_valid = X_valid_per_channel_mean_zero_centered  #X_valid_gray3D  #X_valid_gray  #X_valid   #norm_gray_valid
-X_test  = X_test_per_channel_mean_zero_centered   #X_test_gray3D   #X_test_gray   #X_test    #norm_gray_test
+#X_train = X_train_per_channel_mean_zero_centered  #X_train_gray3D  #X_train_gray  #X_train   #norm_gray_train
+#X_valid = X_valid_per_channel_mean_zero_centered  #X_valid_gray3D  #X_valid_gray  #X_valid   #norm_gray_valid
+#X_test  = X_test_per_channel_mean_zero_centered   #X_test_gray3D   #X_test_gray   #X_test    #norm_gray_test
+
+X_train, X_valid, X_test = get_per_image_mean_centered_datasets([X_train, X_valid, X_test])
 
 # y_train, y_valid, y_test remain the same from import
 
@@ -825,36 +852,36 @@ X_test  = X_test_per_channel_mean_zero_centered   #X_test_gray3D   #X_test_gray 
 mu = 0
 sigma = 0.01  #0.1   #1.0/np.sqrt(pixels_x * pixels_y * color_depth)   #sigma 0.1  # or try .01, or .. 1/sqrt(32*32*3) = 1/55 = .018; bw: 1/sqrt(32*32*1) = 1/32 = 0.03125
 #print(sigma)
-learning_rate = 0.01  #.001    #0.01
+learning_rate = .001    #0.01
 
 
 # determine placeholder paramater values based on chosen dataset
-print(X_train.shape, X_valid.shape, X_test.shape)
 image_shape = X_train.shape
-pixels_x, pixels_y, color_depth = image_shape[1:]
+#pixels_x, pixels_y, color_depth = image_shape[1:]
 
-# bw vs color images
-#if len(image_shape) == 4:
-#    pixels_x, pixels_y, color_depth = image_shape[1:]
-#elif len(image_shape) == 3:
-#    pixels_x, pixels_y = image_shape[1:]
-#    color_depth = 1
-#else: print("hmmm, something's wrong with the image_shape")
-#print (pixels_x, pixels_y, color_depth)
+def get_placeholder_shape_for_X_data(image_shape):
+    #bw vs color images
+    if len(image_shape) == 4:
+        pixels_x, pixels_y, color_depth = image_shape[1:]
+    elif len(image_shape) == 3:
+        pixels_x, pixels_y = image_shape[1:]
+        color_depth = 1
+    else: print("hmmm, something's wrong with the image_shape")
+    #print (pixels_x, pixels_y, color_depth)
+    return (None, pixels_x, pixels_y, color_depth)
 
 # initialize tf training variables !!
 # features, labels
-x = tf.placeholder(tf.float32, (None, pixels_x, pixels_y, color_depth))
+#x = tf.placeholder(tf.float32, (None, pixels_x, pixels_y, color_depth))
+x = tf.placeholder(tf.float32, get_placeholder_shape_for_X_data(X_train.shape))
 y = tf.placeholder(tf.int64,   (None))
 
 # run leNet
 logits = LeNet(x)
 
-
+# loss
 # tf.nn.sparse_softmax_cross_entropy_with_logits combines:
 #   1) softmax with 2) cross_entropy and 3)(sparce) includes one-hot
-
-# loss
 cross_entropy  = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, y)#labels)
 loss_operation = tf.reduce_mean(cross_entropy)
 
@@ -871,7 +898,7 @@ training_stats = []
 
 # 
 
-# In[17]:
+# In[16]:
 
 # evaluation routine
 def evaluate_data(X_data, y_data):
@@ -900,10 +927,10 @@ def evaluate_data(X_data, y_data):
     return total_accuracy, total_loss     
 
 
-# In[21]:
+# In[23]:
 
 # TEMP TRUNCATE DATA FOR INITIAL TESTING
-
+"""  
 # truncate the training set to be just a bit larger than the BATCH_SIZE (so run at least 2 batches per epoch)
 tr = int(BATCH_SIZE * 1.2)
 # truncate validation (and training??) set to each be about 15% of the training set size
@@ -917,21 +944,21 @@ y_valid = y_valid[0:va]
 X_test  = X_test[0:te]
 y_test  = y_test[0:te]
 print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
+"""  
 
-
-EPOCHS = 2
+EPOCHS = 40
 print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
 
 
-# In[22]:
+# In[24]:
 
 import time
-import decimal
 
 # train our model
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     num_examples = len(X_train)
+    training_stats = []
     
     print("Training...\n")
     for i in range(EPOCHS):
@@ -959,29 +986,35 @@ with tf.Session() as sess:
         print(" (Training Accuracy = {:.3f})".format(training_accuracy))
         print()
         
-        # a-rounded to nearest even number at 4th decimal place
+        # round to nearest even number at 4th decimal place
         training_stats.append([np.around(validation_loss,4), np.around(training_loss,4), np.around(validation_accuracy,4), np.around(training_accuracy,4)])
-        np.savetxt('training_stats.txt', training_stats)
-        print("training_stats saved as training_stats.txt")
+        np.savetxt('training_stats.tmp.txt', training_stats)
         
-    print("underfitting if:  low accuracy on training and low accuracy on validation sets.")
-    print("overfitting  if: high accuracy on training but low accuracy on validation sets.")
-    print()
-    if validation_accuracy >= 0.93:
-        print(" !! Congratulations!! Your model meets the minimum required validation Accuracy of 0.93")
-        print("   You may now run your model on the Test Set :-)")
-    else:
-        print("KEEP WORKING ON YOUR MODEL to acheive a minimum validation accuracy of 0.93")
-    print()
+    filename = 'training_stats-' + time.strftime("%y%m%d_%H%M") + '.txt'
+    np.savetxt(filename, training_stats)
+    print("\ntraining_stats Saved As: ", filename, "\n")    
 
     # save trained model
+    print("Saving model..")
     saver = tf.train.Saver()
     saver.save(sess, './sh_trained_traffic_sign_classifier')
     print("Model Saved")
+    print()
+
+    if validation_accuracy >= 0.93:
+        print(" !! Congratulations!! Your model meets the minimum required Validation Accuracy of 0.93")
+        print("   You may now run your model on the Test Set :-)")
+    else:
+        print("KEEP WORKING ON YOUR MODEL to acheive a minimum Validation Accuracy of 0.93")
+        print("underfitting if:  low accuracy on training and low accuracy on validation sets.")
+        print("overfitting  if: high accuracy on training but low accuracy on validation sets.")
+
+    print()
+
     
 
 
-# In[20]:
+# In[25]:
 
 # TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets
 
@@ -1039,7 +1072,7 @@ fig.savefig("training_stats_plotted.png", dpi=25)  # results in 160x120 px image
 print("saved figure as 'training_stats_plotted.png'")
 
 
-# In[ ]:
+# In[20]:
 
 ## STOP !! Do NOT Proceed Until Model is FINISHED and has Validation >= 93%
 
