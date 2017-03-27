@@ -22,7 +22,7 @@
 # ---
 # ## Step 0: Load The Data
 
-# In[101]:
+# In[1]:
 
 # Load pickled data
 import pickle
@@ -64,7 +64,7 @@ assert(len(X_test)  == len(y_test))
 
 # ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
 
-# In[103]:
+# In[2]:
 
 ### Replace each question mark with the appropriate value. 
 ### Use python, pandas or numpy methods rather than hard coding the results
@@ -114,7 +114,7 @@ print("Number of classes =", num_classes)
 # 
 # **NOTE:** It's recommended you start with something simple first. If you wish to do more, come back to it after you've completed the rest of the sections.
 
-# In[104]:
+# In[3]:
 
 ### Data exploration visualization code goes here.
 ### Feel free to use as many code cells as needed.
@@ -165,7 +165,7 @@ print("figure saved as: 'data_plotted_image_distribution_amongst_classes.png'")
 
 
 
-# In[105]:
+# In[4]:
 
 # diplay sample images from training data set
 def display_images(images):
@@ -441,7 +441,7 @@ assert (gray_image_shape[1:] == (32, 32)) #32px x 32px, 1 color channel: graysca
 display_images([X_train_gray[50], X_train_gray[500], X_train_gray[1000]])
 
 
-# In[108]:
+# In[7]:
 
 # turn grayscale into 3channel rgb grayscale
 # (not ideal paramater-wise = duplicated data, but for shipping through my LeNet, it should remove shaping problems)
@@ -466,7 +466,7 @@ X_test_gray3D_2  = np.stack((X_test_gray,)*3,  axis=-1)
 print(X_train_gray3D_2.shape)
 display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[1000]])
 """
-# In[ ]:
+# In[8]:
 
 """"
 # Try per channel normalization, where the normalization baseline (for each channel) is taken across the entire training dataset
@@ -511,7 +511,7 @@ print(X_train_normalized_per_channel[500][16][:][:])
 """
 
 
-# In[146]:
+# In[9]:
 
 
 # Try per channel zero centering. Find mean for each channel, where the mean for that channel is across all training images
@@ -589,7 +589,7 @@ print(zero_centered[0].shape, zero_centered[1].shape, zero_centered[2].shape)
 
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
 
-# In[8]:
+# In[10]:
 
 ### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscae, etc.
 ### Feel free to use as many code cells as needed.
@@ -643,7 +643,7 @@ print(image_shape)
 assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
 '''
 
-# In[9]:
+# In[11]:
 
 # define training variables, constants
 
@@ -670,9 +670,6 @@ strides = [1, stride, stride, 1]
 pool_stride = 2
 pool_strides = [1, pool_stride, pool_stride, 1]
 ksize = pool_strides
-print("finished cell")
-
-
 
 
 # ### Model Architecture
@@ -712,7 +709,7 @@ def get_conv_layer_from_filter(x, filter_shape):
     return layer1
 """
 
-# In[10]:
+# In[12]:
 
 def get_conv_layer(x, conv_output_shape, pool_output_shape):
     input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
@@ -750,7 +747,7 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
 
 
 
-# In[11]:
+# In[13]:
 
 def get_fcc_layer(prev_layer, output_length):
     input_length  = prev_layer.get_shape().as_list()[1]
@@ -767,7 +764,7 @@ def get_fcc_layer(prev_layer, output_length):
     return fcc_layer
 
 
-# In[12]:
+# In[14]:
 
 from tensorflow.contrib.layers import flatten
 
@@ -801,7 +798,7 @@ def LeNet(x):
 # A validation set can be used to assess how well the model is performing. A low accuracy on the training and validation
 # sets imply underfitting. A high accuracy on the training set but low accuracy on the validation set implies overfitting.
 
-# In[13]:
+# In[15]:
 
 ### Train your model here.
 ### Calculate and report the accuracy on the training and validation set.
@@ -810,19 +807,29 @@ def LeNet(x):
 ### Feel free to use as many code cells as needed.
 
 
-# In[14]:
+# In[16]:
 
 ## initialize
 #X_train_gray.reshape(len(X_train_gray), 32, 32, 1)
 #print("new shape", X_train_gray.shape)
 print(X_valid_gray3D.shape)
-# choose which pre-processed set to work with
-X_train = X_train  #X_train_gray3D  #X_train_gray  #X_train   #norm_gray_train
-X_valid = X_valid  #X_valid_gray3D  #X_valid_gray  #X_valid   #norm_gray_valid
-X_test  = X_test   #X_test_gray3D   #X_test_gray   #X_test    #norm_gray_test
-# y_train, y_valid, y_test remain the same from import
-print(X_train.shape, X_valid.shape, X_test.shape)
 
+# choose which pre-processed dataset to work with
+X_train = X_train_per_channel_mean_zero_centered  #X_train_gray3D  #X_train_gray  #X_train   #norm_gray_train
+X_valid = X_valid_per_channel_mean_zero_centered  #X_valid_gray3D  #X_valid_gray  #X_valid   #norm_gray_valid
+X_test  = X_test_per_channel_mean_zero_centered   #X_test_gray3D   #X_test_gray   #X_test    #norm_gray_test
+
+# y_train, y_valid, y_test remain the same from import
+
+# choose/set training paramaters
+mu = 0
+sigma = 0.01  #0.1   #1.0/np.sqrt(pixels_x * pixels_y * color_depth)   #sigma 0.1  # or try .01, or .. 1/sqrt(32*32*3) = 1/55 = .018; bw: 1/sqrt(32*32*1) = 1/32 = 0.03125
+#print(sigma)
+learning_rate = 0.01  #.001    #0.01
+
+
+# determine placeholder paramater values based on chosen dataset
+print(X_train.shape, X_valid.shape, X_test.shape)
 image_shape = X_train.shape
 pixels_x, pixels_y, color_depth = image_shape[1:]
 
@@ -835,30 +842,17 @@ pixels_x, pixels_y, color_depth = image_shape[1:]
 #else: print("hmmm, something's wrong with the image_shape")
 #print (pixels_x, pixels_y, color_depth)
 
+# initialize tf training variables !!
 # features, labels
 x = tf.placeholder(tf.float32, (None, pixels_x, pixels_y, color_depth))
 y = tf.placeholder(tf.int64,   (None))
 
-# store a record of training and validation loss and accuracy - can be used to plot and evaluate the model
-#stats = tf.placeholder(tf.float32, (None, 4))
-
 # run leNet
-mu = 0
-sigma = 0.01  #0.1   #1.0/np.sqrt(pixels_x * pixels_y * color_depth)   #sigma 0.1  # or try .01, or .. 1/sqrt(32*32*3) = 1/55 = .018; bw: 1/sqrt(32*32*1) = 1/32 = 0.03125
-#print(sigma)
-learning_rate = .001    #0.01
-
 logits = LeNet(x)
 
 
-# tf.nn.sparse_softmax_cross_entropy_with_logits
-#   use this function instead of separate functions:
+# tf.nn.sparse_softmax_cross_entropy_with_logits combines:
 #   1) softmax with 2) cross_entropy and 3)(sparce) includes one-hot
-#   softmax_cross_entropy_with_logits is more numerically stable/
-#       accurate than running two steps of softmax, then cross_entropy
-#   using the sparse_.. also saves a step by not having to convert labels
-#       to one-hot first
-# http://stackoverflow.com/a/34243720/5411817
 
 # loss
 cross_entropy  = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, y)#labels)
@@ -877,7 +871,7 @@ training_stats = []
 
 # 
 
-# In[16]:
+# In[17]:
 
 # evaluation routine
 def evaluate_data(X_data, y_data):
@@ -905,10 +899,16 @@ def evaluate_data(X_data, y_data):
         
     return total_accuracy, total_loss     
 
+
+# In[21]:
+
 # TEMP TRUNCATE DATA FOR INITIAL TESTING
-'''
+
+# truncate the training set to be just a bit larger than the BATCH_SIZE (so run at least 2 batches per epoch)
 tr = int(BATCH_SIZE * 1.2)
+# truncate validation (and training??) set to each be about 15% of the training set size
 va = te = int(tr * 0.2)
+
 print(tr, va, te, "total:", (tr+va+te), "percent training: ", tr/(tr+va+te))
 X_train = X_train[0:tr]
 y_train = y_train[0:tr]
@@ -917,14 +917,16 @@ y_valid = y_valid[0:va]
 X_test  = X_test[0:te]
 y_test  = y_test[0:te]
 print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
-'''
 
-#EPOCHS = 30
-#print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
 
-# In[18]:
+EPOCHS = 2
+print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
+
+
+# In[22]:
 
 import time
+import decimal
 
 # train our model
 with tf.Session() as sess:
@@ -958,7 +960,7 @@ with tf.Session() as sess:
         print()
         
         # a-rounded to nearest even number at 4th decimal place
-        training_stats.append([around(validation_loss,4), around(training_loss,4), around(validation_accuracy,4), around(training_accuracy,4)])
+        training_stats.append([np.around(validation_loss,4), np.around(training_loss,4), np.around(validation_accuracy,4), np.around(training_accuracy,4)])
         np.savetxt('training_stats.txt', training_stats)
         print("training_stats saved as training_stats.txt")
         
@@ -979,7 +981,7 @@ with tf.Session() as sess:
     
 
 
-# In[77]:
+# In[20]:
 
 # TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets
 
@@ -1037,13 +1039,15 @@ fig.savefig("training_stats_plotted.png", dpi=25)  # results in 160x120 px image
 print("saved figure as 'training_stats_plotted.png'")
 
 
-# In[69]:
+# In[ ]:
 
 ## STOP !! Do NOT Proceed Until Model is FINISHED and has Validation >= 93%
 
     # underfitting if:  low accuracy on training and validation sets.
     # overfitting  if: high accuracy on training but low accuracy on validation sets.
 
+assert (validation_accuracy >= 0.9300)
+assert ('yes' == 'no')
 
 
 # In[ ]:
