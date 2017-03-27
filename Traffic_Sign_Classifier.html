@@ -13273,7 +13273,7 @@ BwKBQEcQC3ogEAh0BLGgBwKBQEcQC3ogEAh0BP8Pyfo+JrnQMy4AAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[108]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># turn grayscale into 3channel rgb grayscale</span>
@@ -13284,6 +13284,7 @@ BwKBQEcQC3ogEAh0BLGgBwKBQEcQC3ogEAh0BP8Pyfo+JrnQMy4AAAAASUVORK5CYII=
 <span class="n">X_test_gray3D</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">X_test_gray</span><span class="p">,)</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span>  <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">X_train_gray3D</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">X_valid_gray3D</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">X_test_gray3D</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;gray 3D shape&quot;</span><span class="p">)</span>
 <span class="n">display_images</span><span class="p">([</span><span class="n">X_train_gray3D</span><span class="p">[</span><span class="mi">50</span><span class="p">],</span> <span class="n">X_train_gray3D</span><span class="p">[</span><span class="mi">500</span><span class="p">],</span> <span class="n">X_train_gray3D</span><span class="p">[</span><span class="mi">1000</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;resulting images are darker and lighter than the single channel grayscale&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13461,6 +13462,13 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
 
 </div>
 
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>resulting images are darker than the single channel grayscale
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -13468,15 +13476,158 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
 # turn grayscale into 3channel rgb grayscale
 #  sqrt(0.299 * R^2 + 0.587 * G^2 + 0.114 * B^2)
 # (not ideal paramater-wise = duplicated data, but for shipping through my LeNet, it should remove shaping problems)
-R = X_train_gray * 2* np.sqrt(3) # 2/6  # 1/3
-G = X_train_gray * 2* np.sqrt(3) # 3/6  # 1/3
-B = X_train_gray * 2* np.sqrt(3) # 1/6  # 1/3
-X_train_gray3D = np.stack((R, G, B), axis=-1)
-#X_valid_gray3D = np.stack((X_valid_gray,)*3, axis=-1)
-#X_test_gray3D  = np.stack((X_test_gray,)*3,  axis=-1)
-print(X_valid_gray.shape)
-display_images([X_train_gray3D[50], X_train_gray3D[500], X_train_gray3D[1000]])
+R = X_train_gray / np.sqrt(3)  # * 2* np.sqrt(3)  # 2/6  # 1/3
+G = X_train_gray / np.sqrt(3)  # * 2* np.sqrt(3)  # 3/6  # 1/3
+B = X_train_gray / np.sqrt(3)  # * 2* np.sqrt(3)  # 1/6  # 1/3
+X_train_gray3D_2 = np.stack((R, G, B), axis=-1)
+X_valid_gray3D_2 = np.stack((X_valid_gray,)*3, axis=-1)
+X_test_gray3D_2  = np.stack((X_test_gray,)*3,  axis=-1)
+print(X_train_gray3D_2.shape)
+display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[1000]])
 """
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;&quot;</span>
+<span class="sd"># Try per channel normalization, where the normalization baseline (for each channel) is taken across the entire training dataset</span>
+<span class="sd">from sklearn.preprocessing import normalize</span>
+<span class="sd">def separate_channels(images):</span>
+<span class="sd">    # returns 2-D array</span>
+<span class="sd">    R = images[:,:,:,0].reshape(len(images),-1)</span>
+<span class="sd">    G = images[:,:,:,1].reshape(len(images),-1)</span>
+<span class="sd">    B = images[:,:,:,2].reshape(len(images),-1)</span>
+<span class="sd">    return [R,G,B]</span>
+
+<span class="sd">def combine_channels(R,G,B):</span>
+<span class="sd">    # returns 4-D array</span>
+<span class="sd">    R =  R.reshape(-1, 32, 32, 1)</span>
+<span class="sd">    G =  G.reshape(-1, 32, 32, 1)</span>
+<span class="sd">    B =  B.reshape(-1, 32, 32, 1)</span>
+<span class="sd">    rgb = []</span>
+<span class="sd">    return rgb</span>
+
+<span class="sd">R, G, B = separate_channels(X_train)</span>
+<span class="sd">r_norm = normalize(R)</span>
+<span class="sd">print(&quot;normalized R&quot;)</span>
+<span class="sd"># TODO save normalization value. Must apply same value to both the validation and test sets.</span>
+<span class="sd">g_norm = normalize(G)</span>
+<span class="sd">print(&quot;normalized G&quot;)</span>
+<span class="sd"># TODO save normalization value. Must apply same value to both the validation and test sets.</span>
+<span class="sd">b_norm = normalize(B)</span>
+<span class="sd">print(&quot;normalized B&quot;)</span>
+<span class="sd"># TODO save normalization value. Must apply same value to both the validation and test sets.</span>
+
+<span class="sd">R = r_norm.reshape(-1,32,32,1)</span>
+<span class="sd">print(R)</span>
+<span class="sd">G = g_norm.reshape(-1,32,32,1)</span>
+<span class="sd">B = b_norm.reshape(-1,32,32,1)</span>
+<span class="sd">print(R.shape)</span>
+
+<span class="sd">X_train_normalized_per_channel = combine_channels(R, G, B)</span>
+
+<span class="sd"># displaying normalized image is useless, as values are no longer rgb values (0-255)</span>
+<span class="sd">#display_images([X_train_normalized_per_channel[50]])#, G[500], B[1000]])</span>
+<span class="sd">print(X_train_normalized_per_channel[500][16][:][:])</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[138]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Try per channel zero centering. Find mean for each channel, where the mean for that channel is across all training images</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">normalize</span>
+<span class="k">def</span> <span class="nf">separate_channels</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+    <span class="c1"># returns 2-D array: (num_examples, total_num_pixels)</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">images</span><span class="p">[:,:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">images</span><span class="p">[:,:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">images</span><span class="p">[:,:,:,</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">R</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">B</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">combine_channels</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">output_shape</span><span class="p">):</span>
+    <span class="c1"># used to re-combine separated RGB channels into 4-D array, where channels are the 4thD</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)</span>
+
+    
+<span class="n">initial_shape</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="n">separate_channels</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+
+<span class="n">r_pixels_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">R</span> <span class="o">-=</span> <span class="n">r_pixels_mean</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">R</span><span class="o">/</span><span class="n">r_pixels_mean</span>
+<span class="c1"># TODO save normalization value. Must apply same value to both the validation and test sets.</span>
+
+<span class="n">g_pixels_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">-=</span> <span class="n">g_pixels_mean</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">G</span><span class="o">/</span><span class="n">g_pixels_mean</span>
+<span class="c1"># TODO save normalization value. Must apply same value to both the validation and test sets.</span>
+
+<span class="n">b_pixels_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">-=</span> <span class="n">b_pixels_mean</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">B</span><span class="o">/</span><span class="n">b_pixels_mean</span>
+<span class="c1"># TODO save normalization value. Must apply same value to both the validation and test sets.</span>
+
+<span class="n">X_train_per_channel_mean_zero_centered</span> <span class="o">=</span> <span class="n">combine_channels</span><span class="p">([</span><span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span><span class="p">],</span> <span class="n">initial_shape</span><span class="p">)</span>
+<span class="c1"># displaying zero centered image is useless, as values are no longer in the rgb range (0-255)</span>
+
+
+<span class="c1"># Must Save These Values, and apply to valid and test sets</span>
+<span class="n">TRAINING_PIXELS_MEAN</span> <span class="o">=</span> <span class="p">[</span><span class="n">r_pixels_mean</span><span class="p">,</span> <span class="n">g_pixels_mean</span><span class="p">,</span> <span class="n">b_pixels_mean</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TRAINING_PIXELS_MEAN</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">TRAINING_PIXELS_MEAN</span><span class="p">)</span>
+
+
+<span class="c1">#TODO:</span>
+<span class="c1">#apply the same transformation to validation and test sets</span>
+<span class="c1"># NOTE: Must use the SAME Exact transformation values that were obtained on the training set</span>
+<span class="n">sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">X_valid</span><span class="p">,</span> <span class="n">X_test</span><span class="p">]</span>
+<span class="n">zero_centered</span> <span class="o">=</span> <span class="p">[[],[]]</span>
+<span class="k">for</span> <span class="nb">set</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sets</span><span class="p">)):</span>
+    <span class="n">initial_shape</span> <span class="o">=</span> <span class="n">sets</span><span class="p">[</span><span class="nb">set</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="n">separate_channels</span><span class="p">(</span><span class="n">sets</span><span class="p">[</span><span class="nb">set</span><span class="p">])</span>
+    <span class="n">channels</span> <span class="o">=</span> <span class="p">[</span><span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">channels</span><span class="p">)):</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="n">channels</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">channel</span> <span class="o">-=</span> <span class="n">TRAINING_PIXELS_MEAN</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+        <span class="n">channel</span> <span class="o">=</span> <span class="n">channel</span><span class="o">/</span><span class="n">TRAINING_PIXELS_MEAN</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+    <span class="n">zero_centered</span><span class="p">[</span><span class="nb">set</span><span class="p">]</span> <span class="o">=</span> <span class="n">combine_channels</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">initial_shape</span><span class="p">)</span>
+<span class="c1"># end for loop</span>
+
+<span class="n">X_valid_per_channel_mean_zero_centered</span> <span class="o">=</span> <span class="n">zero_centered</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">X_test_per_channel_mean_zero_centered</span>  <span class="o">=</span> <span class="n">zero_centered</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>TRAINING_PIXELS_MEAN
+ [86.698122050022988, 79.495940610497072, 81.838704450469123]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>

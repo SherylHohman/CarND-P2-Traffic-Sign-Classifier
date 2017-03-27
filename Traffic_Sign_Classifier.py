@@ -441,7 +441,7 @@ assert (gray_image_shape[1:] == (32, 32)) #32px x 32px, 1 color channel: graysca
 display_images([X_train_gray[50], X_train_gray[500], X_train_gray[1000]])
 
 
-# In[7]:
+# In[108]:
 
 # turn grayscale into 3channel rgb grayscale
 # (not ideal paramater-wise = duplicated data, but for shipping through my LeNet, it should remove shaping problems)
@@ -451,20 +451,135 @@ X_valid_gray3D = np.stack((X_valid_gray,)*3, axis=-1)
 X_test_gray3D  = np.stack((X_test_gray,)*3,  axis=-1)
 print(X_train_gray3D.shape, X_valid_gray3D.shape, X_test_gray3D.shape, "gray 3D shape")
 display_images([X_train_gray3D[50], X_train_gray3D[500], X_train_gray3D[1000]])
+print("resulting images are darker and lighter than the single channel grayscale")
 
 """
 # turn grayscale into 3channel rgb grayscale
 #  sqrt(0.299 * R^2 + 0.587 * G^2 + 0.114 * B^2)
 # (not ideal paramater-wise = duplicated data, but for shipping through my LeNet, it should remove shaping problems)
-R = X_train_gray * 2* np.sqrt(3) # 2/6  # 1/3
-G = X_train_gray * 2* np.sqrt(3) # 3/6  # 1/3
-B = X_train_gray * 2* np.sqrt(3) # 1/6  # 1/3
-X_train_gray3D = np.stack((R, G, B), axis=-1)
-#X_valid_gray3D = np.stack((X_valid_gray,)*3, axis=-1)
-#X_test_gray3D  = np.stack((X_test_gray,)*3,  axis=-1)
-print(X_valid_gray.shape)
-display_images([X_train_gray3D[50], X_train_gray3D[500], X_train_gray3D[1000]])
+R = X_train_gray / np.sqrt(3)  # * 2* np.sqrt(3)  # 2/6  # 1/3
+G = X_train_gray / np.sqrt(3)  # * 2* np.sqrt(3)  # 3/6  # 1/3
+B = X_train_gray / np.sqrt(3)  # * 2* np.sqrt(3)  # 1/6  # 1/3
+X_train_gray3D_2 = np.stack((R, G, B), axis=-1)
+X_valid_gray3D_2 = np.stack((X_valid_gray,)*3, axis=-1)
+X_test_gray3D_2  = np.stack((X_test_gray,)*3,  axis=-1)
+print(X_train_gray3D_2.shape)
+display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[1000]])
 """
+# In[ ]:
+
+""""
+# Try per channel normalization, where the normalization baseline (for each channel) is taken across the entire training dataset
+from sklearn.preprocessing import normalize
+def separate_channels(images):
+    # returns 2-D array
+    R = images[:,:,:,0].reshape(len(images),-1)
+    G = images[:,:,:,1].reshape(len(images),-1)
+    B = images[:,:,:,2].reshape(len(images),-1)
+    return [R,G,B]
+
+def combine_channels(R,G,B):
+    # returns 4-D array
+    R =  R.reshape(-1, 32, 32, 1)
+    G =  G.reshape(-1, 32, 32, 1)
+    B =  B.reshape(-1, 32, 32, 1)
+    rgb = []
+    return rgb
+
+R, G, B = separate_channels(X_train)
+r_norm = normalize(R)
+print("normalized R")
+# TODO save normalization value. Must apply same value to both the validation and test sets.
+g_norm = normalize(G)
+print("normalized G")
+# TODO save normalization value. Must apply same value to both the validation and test sets.
+b_norm = normalize(B)
+print("normalized B")
+# TODO save normalization value. Must apply same value to both the validation and test sets.
+
+R = r_norm.reshape(-1,32,32,1)
+print(R)
+G = g_norm.reshape(-1,32,32,1)
+B = b_norm.reshape(-1,32,32,1)
+print(R.shape)
+
+X_train_normalized_per_channel = combine_channels(R, G, B)
+
+# displaying normalized image is useless, as values are no longer rgb values (0-255)
+#display_images([X_train_normalized_per_channel[50]])#, G[500], B[1000]])
+print(X_train_normalized_per_channel[500][16][:][:])
+"""
+
+
+# In[138]:
+
+
+# Try per channel zero centering. Find mean for each channel, where the mean for that channel is across all training images
+from sklearn.preprocessing import normalize
+def separate_channels(images):
+    # returns 2-D array: (num_examples, total_num_pixels)
+    R = images[:,:,:,0].reshape(len(images),-1)
+    G = images[:,:,:,1].reshape(len(images),-1)
+    B = images[:,:,:,2].reshape(len(images),-1)
+    return [R,G,B]
+
+def combine_channels(channels, output_shape):
+    # used to re-combine separated RGB channels into 4-D array, where channels are the 4thD
+    return np.stack(channels, axis=-1).reshape(output_shape)
+
+    
+initial_shape = X_train.shape
+R, G, B = separate_channels(X_train)
+
+r_pixels_mean = np.mean(R)
+R = R.astype(np.float64, copy=False)
+R -= r_pixels_mean
+R = R/r_pixels_mean
+# TODO save normalization value. Must apply same value to both the validation and test sets.
+
+g_pixels_mean = np.mean(G)
+G = G.astype(np.float64, copy=False)
+G -= g_pixels_mean
+G = G/g_pixels_mean
+# TODO save normalization value. Must apply same value to both the validation and test sets.
+
+b_pixels_mean = np.mean(B)
+B = B.astype(np.float64, copy=False)
+B -= b_pixels_mean
+B = B/b_pixels_mean
+# TODO save normalization value. Must apply same value to both the validation and test sets.
+
+X_train_per_channel_mean_zero_centered = combine_channels([R, G, B], initial_shape)
+# displaying zero centered image is useless, as values are no longer in the rgb range (0-255)
+
+
+# Must Save These Values, and apply to valid and test sets
+TRAINING_PIXELS_MEAN = [r_pixels_mean, g_pixels_mean, b_pixels_mean]
+print("TRAINING_PIXELS_MEAN\n", TRAINING_PIXELS_MEAN)
+
+
+#TODO:
+#apply the same transformation to validation and test sets
+# NOTE: Must use the SAME Exact transformation values that were obtained on the training set
+sets = [X_valid, X_test]
+zero_centered = [[],[]]
+for set in range(len(sets)):
+    initial_shape = sets[set].shape
+    R, G, B = separate_channels(sets[set])
+    channels = [R, G, B]
+    for c in range(len(channels)):
+        channel = channels[c]
+        channel = channel.astype(np.float64, copy=False)
+        channel -= TRAINING_PIXELS_MEAN[c]
+        channel = channel/TRAINING_PIXELS_MEAN[c]
+    zero_centered[set] = combine_channels(channels, initial_shape)
+# end for loop
+
+X_valid_per_channel_mean_zero_centered = zero_centered[0]
+X_test_per_channel_mean_zero_centered  = zero_centered[1]
+
+
+
 # ----
 # 
 # ## Step 2: Design and Test a Model Architecture
