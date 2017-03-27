@@ -511,7 +511,7 @@ print(X_train_normalized_per_channel[500][16][:][:])
 """
 
 
-# In[138]:
+# In[146]:
 
 
 # Try per channel zero centering. Find mean for each channel, where the mean for that channel is across all training images
@@ -532,26 +532,8 @@ initial_shape = X_train.shape
 R, G, B = separate_channels(X_train)
 
 r_pixels_mean = np.mean(R)
-R = R.astype(np.float64, copy=False)
-R -= r_pixels_mean
-R = R/r_pixels_mean
-# TODO save normalization value. Must apply same value to both the validation and test sets.
-
 g_pixels_mean = np.mean(G)
-G = G.astype(np.float64, copy=False)
-G -= g_pixels_mean
-G = G/g_pixels_mean
-# TODO save normalization value. Must apply same value to both the validation and test sets.
-
 b_pixels_mean = np.mean(B)
-B = B.astype(np.float64, copy=False)
-B -= b_pixels_mean
-B = B/b_pixels_mean
-# TODO save normalization value. Must apply same value to both the validation and test sets.
-
-X_train_per_channel_mean_zero_centered = combine_channels([R, G, B], initial_shape)
-# displaying zero centered image is useless, as values are no longer in the rgb range (0-255)
-
 
 # Must Save These Values, and apply to valid and test sets
 TRAINING_PIXELS_MEAN = [r_pixels_mean, g_pixels_mean, b_pixels_mean]
@@ -559,10 +541,10 @@ print("TRAINING_PIXELS_MEAN\n", TRAINING_PIXELS_MEAN)
 
 
 #TODO:
-#apply the same transformation to validation and test sets
-# NOTE: Must use the SAME Exact transformation values that were obtained on the training set
-sets = [X_valid, X_test]
-zero_centered = [[],[]]
+#apply the same TRAINING_PIXELS_MEAN to: train, validation and test sets
+sets = [X_train, X_valid, X_test]
+zero_centered = [np.zeros(X_test.shape), np.zeros(X_valid.shape), np.zeros(X_test.shape)]
+
 for set in range(len(sets)):
     initial_shape = sets[set].shape
     R, G, B = separate_channels(sets[set])
@@ -575,8 +557,12 @@ for set in range(len(sets)):
     zero_centered[set] = combine_channels(channels, initial_shape)
 # end for loop
 
-X_valid_per_channel_mean_zero_centered = zero_centered[0]
-X_test_per_channel_mean_zero_centered  = zero_centered[1]
+X_train_per_channel_mean_zero_centered = zero_centered[0]
+X_valid_per_channel_mean_zero_centered = zero_centered[1]
+X_test_per_channel_mean_zero_centered  = zero_centered[2]
+
+
+print(zero_centered[0].shape, zero_centered[1].shape, zero_centered[2].shape)
 
 
 

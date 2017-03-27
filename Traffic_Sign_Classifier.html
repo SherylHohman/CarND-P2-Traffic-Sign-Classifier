@@ -13540,7 +13540,7 @@ display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[10
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[138]:</div>
+<div class="prompt input_prompt">In&nbsp;[146]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Try per channel zero centering. Find mean for each channel, where the mean for that channel is across all training images</span>
@@ -13561,26 +13561,8 @@ display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[10
 <span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="n">separate_channels</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
 
 <span class="n">r_pixels_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
-<span class="n">R</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">R</span> <span class="o">-=</span> <span class="n">r_pixels_mean</span>
-<span class="n">R</span> <span class="o">=</span> <span class="n">R</span><span class="o">/</span><span class="n">r_pixels_mean</span>
-<span class="c1"># TODO save normalization value. Must apply same value to both the validation and test sets.</span>
-
 <span class="n">g_pixels_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">G</span> <span class="o">-=</span> <span class="n">g_pixels_mean</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">G</span><span class="o">/</span><span class="n">g_pixels_mean</span>
-<span class="c1"># TODO save normalization value. Must apply same value to both the validation and test sets.</span>
-
 <span class="n">b_pixels_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
-<span class="n">B</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">B</span> <span class="o">-=</span> <span class="n">b_pixels_mean</span>
-<span class="n">B</span> <span class="o">=</span> <span class="n">B</span><span class="o">/</span><span class="n">b_pixels_mean</span>
-<span class="c1"># TODO save normalization value. Must apply same value to both the validation and test sets.</span>
-
-<span class="n">X_train_per_channel_mean_zero_centered</span> <span class="o">=</span> <span class="n">combine_channels</span><span class="p">([</span><span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span><span class="p">],</span> <span class="n">initial_shape</span><span class="p">)</span>
-<span class="c1"># displaying zero centered image is useless, as values are no longer in the rgb range (0-255)</span>
-
 
 <span class="c1"># Must Save These Values, and apply to valid and test sets</span>
 <span class="n">TRAINING_PIXELS_MEAN</span> <span class="o">=</span> <span class="p">[</span><span class="n">r_pixels_mean</span><span class="p">,</span> <span class="n">g_pixels_mean</span><span class="p">,</span> <span class="n">b_pixels_mean</span><span class="p">]</span>
@@ -13588,10 +13570,10 @@ display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[10
 
 
 <span class="c1">#TODO:</span>
-<span class="c1">#apply the same transformation to validation and test sets</span>
-<span class="c1"># NOTE: Must use the SAME Exact transformation values that were obtained on the training set</span>
-<span class="n">sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">X_valid</span><span class="p">,</span> <span class="n">X_test</span><span class="p">]</span>
-<span class="n">zero_centered</span> <span class="o">=</span> <span class="p">[[],[]]</span>
+<span class="c1">#apply the same TRAINING_PIXELS_MEAN to: train, validation and test sets</span>
+<span class="n">sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">X_test</span><span class="p">]</span>
+<span class="n">zero_centered</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X_valid</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)]</span>
+
 <span class="k">for</span> <span class="nb">set</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sets</span><span class="p">)):</span>
     <span class="n">initial_shape</span> <span class="o">=</span> <span class="n">sets</span><span class="p">[</span><span class="nb">set</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="n">separate_channels</span><span class="p">(</span><span class="n">sets</span><span class="p">[</span><span class="nb">set</span><span class="p">])</span>
@@ -13604,8 +13586,12 @@ display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[10
     <span class="n">zero_centered</span><span class="p">[</span><span class="nb">set</span><span class="p">]</span> <span class="o">=</span> <span class="n">combine_channels</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="n">initial_shape</span><span class="p">)</span>
 <span class="c1"># end for loop</span>
 
-<span class="n">X_valid_per_channel_mean_zero_centered</span> <span class="o">=</span> <span class="n">zero_centered</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">X_test_per_channel_mean_zero_centered</span>  <span class="o">=</span> <span class="n">zero_centered</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">X_train_per_channel_mean_zero_centered</span> <span class="o">=</span> <span class="n">zero_centered</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">X_valid_per_channel_mean_zero_centered</span> <span class="o">=</span> <span class="n">zero_centered</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">X_test_per_channel_mean_zero_centered</span>  <span class="o">=</span> <span class="n">zero_centered</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="n">zero_centered</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">zero_centered</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">zero_centered</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13620,6 +13606,7 @@ display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[10
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>TRAINING_PIXELS_MEAN
  [86.698122050022988, 79.495940610497072, 81.838704450469123]
+(34799, 32, 32, 3) (4410, 32, 32, 3) (12630, 32, 32, 3)
 </pre>
 </div>
 </div>
