@@ -1046,7 +1046,7 @@ fig.savefig(filename, dpi=25)  # results in 160x120 px image
 print("Figure saved as " + filename + "\n")
 
 
-# In[22]:
+# In[23]:
 
 ## STOP !! Do NOT Proceed Until Model is FINISHED and has Validation >= 93%
 
@@ -1054,10 +1054,10 @@ print("Figure saved as " + filename + "\n")
     # overfitting  if: high accuracy on training but low accuracy on validation sets.
 
 assert (validation_accuracy >= 0.9300)
-assert ('yes' == 'no')
+#assert ('yes' == 'no')
 
 
-# In[ ]:
+# In[24]:
 
 # test the trained model
 with tf.Session() as sess:
