@@ -22,7 +22,7 @@
 # ---
 # ## Step 0: Load The Data
 
-# In[ ]:
+# In[1]:
 
 # Load pickled data
 import pickle
@@ -64,7 +64,7 @@ assert(len(X_test_ORIG)  == len(y_test_ORIG))
 
 # ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
 
-# In[ ]:
+# In[2]:
 
 ### Replace each question mark with the appropriate value. 
 ### Use python, pandas or numpy methods rather than hard coding the results
@@ -113,7 +113,7 @@ print("Number of classes =", num_classes)
 # 
 # **NOTE:** It's recommended you start with something simple first. If you wish to do more, come back to it after you've completed the rest of the sections.
 
-# In[ ]:
+# In[3]:
 
 ### Data exploration visualization code goes here.
 ### Feel free to use as many code cells as needed.
@@ -159,7 +159,7 @@ fig1.savefig("data_plotted_image_distribution_amongst_classes.png", dpi=25)  # r
 print("figure saved as: 'data_plotted_image_distribution_amongst_classes.png'")
 
 
-# In[ ]:
+# In[4]:
 
 # diplay sample images from training data set
 def display_images(images):
@@ -195,7 +195,7 @@ display_images(sample_images)
 
 
 
-# In[ ]:
+# In[5]:
 
 from skimage import color
 
@@ -285,7 +285,7 @@ sample_images=[X_train[50], X_train[500], X_train[1000]]
 display_images(sample_images)
 print(sample_images[0][16][16][0:5])
 '''
-# In[ ]:
+# In[6]:
 
 # normalize datasets per channel
 ## UNFINISHED !!
@@ -337,7 +337,7 @@ def get_per_channel_normalized_datasets(input_datasets):
 # but I read that the SAME Train normalization params need to be applied to the valid and test sets.
 
 
-# In[ ]:
+# In[7]:
 
 # turn color data into grayscale image data
 from skimage import color
@@ -363,7 +363,7 @@ X_train_gray, X_valid_gray, X_test_gray = get_grayscale_datasets([X_train_ORIG, 
 display_images([X_train_gray[50], X_train_gray[500], X_train_gray[1000]])
 
 
-# In[ ]:
+# In[8]:
 
 # turn grayscale into 3channel rgb grayscale
 # (not ideal paramater-wise = duplicated data, but for shipping through my LeNet, it should remove shaping problems)
@@ -399,7 +399,7 @@ display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[10
 print("resulting images are darker and lighter than the single channel grayscale, with every ratio I've tried")
 
 
-# In[ ]:
+# In[9]:
 
 # Try per channel normalization, where the normalization baseline (for each channel) is taken across the entire training dataset
 
@@ -450,7 +450,7 @@ def get_per_channel_normalized_datasets(input_datasets):
     return output_datasets
 
 
-# In[ ]:
+# In[10]:
 
 # Try per channel zero centering. Find mean for each channel, where the mean for that channel is across all training images
 # !! TERRIBLE RESULTS. tried a few learning_rates. NIX This technique !
@@ -508,7 +508,7 @@ def get_per_channel_mean_zero_centered_datasets(input_datasets):
 
 
 
-# In[ ]:
+# In[11]:
 
 # Try per image zero centering. Find mean for each image, apply that mean for each channel in said image
 
@@ -568,7 +568,7 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
 
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
 
-# In[ ]:
+# In[12]:
 
 ### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscae, etc.
 ### Feel free to use as many code cells as needed.
@@ -622,7 +622,7 @@ print(image_shape)
 assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
 '''
 
-# In[ ]:
+# In[13]:
 
 # define training variables, constants
 
@@ -685,7 +685,7 @@ def get_conv_layer_from_filter(x, filter_shape):
     return layer1
 """
 
-# In[ ]:
+# In[14]:
 
 def get_conv_layer(x, conv_output_shape, pool_output_shape):
     input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
@@ -693,7 +693,7 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
 
     filter_height = filter_size(input_height, output_height, stride)
     filter_width  = filter_size(input_width,  output_width,  stride)
-    print("filter", x , filter_height)
+
     weights_shape  = [filter_height, filter_width, input_depth, output_depth]
     bias_shape     = [output_depth]
 
@@ -722,7 +722,7 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
     return layer1
 
 
-# In[ ]:
+# In[15]:
 
 def get_fcc_layer(prev_layer, output_length):
     input_length  = prev_layer.get_shape().as_list()[1]
@@ -739,7 +739,7 @@ def get_fcc_layer(prev_layer, output_length):
     return fcc_layer
 
 
-# In[ ]:
+# In[16]:
 
 from tensorflow.contrib.layers import flatten
 
@@ -773,7 +773,7 @@ def LeNet(x):
 # A validation set can be used to assess how well the model is performing. A low accuracy on the training and validation
 # sets imply underfitting. A high accuracy on the training set but low accuracy on the validation set implies overfitting.
 
-# In[ ]:
+# In[17]:
 
 ### Train your model here.
 ### Calculate and report the accuracy on the training and validation set.
@@ -782,7 +782,7 @@ def LeNet(x):
 ### Feel free to use as many code cells as needed.
 
 
-# In[ ]:
+# In[18]:
 
 ## initialize
 
@@ -873,7 +873,7 @@ def test_reshaping_3D_into_4D():
 
 # 
 
-# In[ ]:
+# In[19]:
 
 # evaluation routine
 def evaluate_data(X_data, y_data):
@@ -921,7 +921,7 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 # EPOCHS = 4
 # print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
 
-# In[ ]:
+# In[20]:
 
 import time
 
@@ -985,7 +985,7 @@ with tf.Session() as sess:
     
 
 
-# In[ ]:
+# In[21]:
 
 # TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets
 
@@ -1046,7 +1046,7 @@ fig.savefig(filename, dpi=25)  # results in 160x120 px image
 print("Figure saved as " + filename + "\n")
 
 
-# In[ ]:
+# In[22]:
 
 ## STOP !! Do NOT Proceed Until Model is FINISHED and has Validation >= 93%
 
