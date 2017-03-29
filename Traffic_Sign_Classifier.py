@@ -161,7 +161,7 @@ print("figure saved as: 'data_plotted_image_distribution_amongst_classes.png'")
 
 # In[62]:
 
-# diplay sample images from training data set
+# diplay list of sample images from training data set
 def display_images(images):
     num_channels = images[0].shape[-1]
     #print("shape 1st image", images[0].shape)
@@ -1081,7 +1081,7 @@ with tf.Session() as sess:
 
 # ### Load and Output the Images
 
-# In[40]:
+# In[64]:
 
 ### Load the images and plot them here.
 ### Feel free to use as many code cells as needed.
@@ -1101,22 +1101,40 @@ with tf.Session() as sess:
 
 
 
-# In[63]:
+# In[106]:
 
 import numpy as np
 import glob
 from scipy import misc
-    
-png = []
-for image_path in glob.glob(paths[0]):
-    image = misc.imread(image_path)
-    png.append(misc.imread(image_path))    
 
-im = np.asarray(png)
+# img = Image.open('visualize_cnn.png')
+# arr8 = np.array(img.getdata(),
+#                     np.uint8).reshape(img.size[1], img.size[0], 3)
 
-print('Importing done...', im.shape)
-display_images(im)
+paths = ['traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/*.jpg',
+         'traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/*.jpg',
+         'traffic_signs_from_web/32x32x3/3_difficult_NOT_in_signnames/*.jpg'
+        ]
 
+num_datasets = len(paths)
+datasets = []
+for s in range(num_datasets):
+    dataset = []
+    for image_path in glob.glob(paths[s]):
+        dataset.append(misc.imread(image_path))    
+
+    dataset = np.asarray(dataset)
+    print(dataset.shape)
+    #display_images(datasets[0])
+    display_images(dataset)
+    datasets.append(dataset)
+
+print('Importing done...', len(datasets))
+
+
+# In[ ]:
+
+# pre-process images
 
 
 # ### Predict the Sign Type for Each Image
