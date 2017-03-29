@@ -22,7 +22,7 @@
 # ---
 # ## Step 0: Load The Data
 
-# In[1]:
+# In[59]:
 
 # Load pickled data
 import pickle
@@ -64,7 +64,7 @@ assert(len(X_test_ORIG)  == len(y_test_ORIG))
 
 # ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
 
-# In[2]:
+# In[60]:
 
 ### Replace each question mark with the appropriate value. 
 ### Use python, pandas or numpy methods rather than hard coding the results
@@ -113,7 +113,7 @@ print("Number of classes =", num_classes)
 # 
 # **NOTE:** It's recommended you start with something simple first. If you wish to do more, come back to it after you've completed the rest of the sections.
 
-# In[3]:
+# In[61]:
 
 ### Data exploration visualization code goes here.
 ### Feel free to use as many code cells as needed.
@@ -159,7 +159,7 @@ fig1.savefig("data_plotted_image_distribution_amongst_classes.png", dpi=25)  # r
 print("figure saved as: 'data_plotted_image_distribution_amongst_classes.png'")
 
 
-# In[4]:
+# In[62]:
 
 # diplay sample images from training data set
 def display_images(images):
@@ -1081,10 +1081,42 @@ with tf.Session() as sess:
 
 # ### Load and Output the Images
 
-# In[ ]:
+# In[40]:
 
 ### Load the images and plot them here.
 ### Feel free to use as many code cells as needed.
+
+# SH TODO: Load Saved Model
+# # save trained model
+# print("Saving model..")
+# saver = tf.train.Saver()
+# saver.save(sess, './sh_trained_traffic_sign_classifier')
+# print("Model Saved")
+# print()
+
+#saver.restore(sess, './sh_trained_traffic_sign_classifier-170327_1518')
+
+# with tf.Session() as sess:
+#     saver.restore(sess, tf.train.latest_checkpoint('.')) 
+
+
+
+# In[63]:
+
+import numpy as np
+import glob
+from scipy import misc
+    
+png = []
+for image_path in glob.glob(paths[0]):
+    image = misc.imread(image_path)
+    png.append(misc.imread(image_path))    
+
+im = np.asarray(png)
+
+print('Importing done...', im.shape)
+display_images(im)
+
 
 
 # ### Predict the Sign Type for Each Image
