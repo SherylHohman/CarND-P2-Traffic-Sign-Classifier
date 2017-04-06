@@ -13375,7 +13375,7 @@ BwKBQEcQC3ogEAh0BLGgBwKBQEcQC3ogEAh0BP8Pyfo+JrnQMy4AAAAASUVORK5CYII=
 <span class="n">X_train_gray3D_2</span><span class="p">,</span> <span class="n">X_valid_gray3D_2</span><span class="p">,</span> <span class="n">X_test_gray3D_2</span> <span class="o">=</span> <span class="n">transform_grayscale_into_3D_grayscale</span><span class="p">(</span><span class="n">input_dataset</span><span class="p">)</span>
 <span class="n">display_images</span><span class="p">([</span><span class="n">X_train_gray3D_2</span><span class="p">[</span><span class="mi">50</span><span class="p">],</span> <span class="n">X_train_gray3D_2</span><span class="p">[</span><span class="mi">500</span><span class="p">],</span> <span class="n">X_train_gray3D_2</span><span class="p">[</span><span class="mi">1000</span><span class="p">]])</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;resulting images are darker and lighter than the single channel grayscale, with every ratio I&#39;ve tried&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;resulting images are darker and lighter than the single channel grayscale, with every ratio I&#39;ve tried </span><span class="se">\n</span><span class="s2"> some ratios I&#39;ve tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) </span><span class="se">\n</span><span class="s2"> Not sure how to create a 3-channel grayscale that looks visually identical to the 1-channel grayscale&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13592,8 +13592,9 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
     <span class="k">def</span> <span class="nf">combine_channels</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">B</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 
-    <span class="c1">#    hack, since havent written loop yet </span>
+    <span class="c1">#    hack, since havent written loop to cycle through the 3 datasets yet </span>
     <span class="n">X_data</span> <span class="o">=</span> <span class="n">input_datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
     <span class="c1"># run on training dataset</span>
     <span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="n">separate_channels</span><span class="p">(</span><span class="n">X_data</span><span class="p">)</span>
     <span class="n">r_norm</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
@@ -13616,6 +13617,7 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
     <span class="n">X_train_normalized_per_channel</span> <span class="o">=</span> <span class="n">combine_channels</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
 
     <span class="c1"># displaying normalized image is useless, as values are no longer rgb values (0-255)</span>
+    <span class="c1"># print normalized values from sample image #500, pixel row #16: rgb values for all columns</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">X_train_normalized_per_channel</span><span class="p">[</span><span class="mi">500</span><span class="p">][</span><span class="mi">16</span><span class="p">][:][:])</span>
     
     <span class="k">return</span> <span class="n">output_datasets</span>
@@ -13696,7 +13698,7 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Try per image zero centering. Find mean for each image, apply that mean for each channel in said image</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Try per image zero centering. Find mean for each image, apply that mean to each channel in said image</span>
 
 <span class="k">def</span> <span class="nf">get_per_image_mean_centered_datasets</span><span class="p">(</span><span class="n">X_input_datasets</span><span class="p">):</span>
     <span class="c1"># ie datasets = [X_train, X_valid, X_test]</span>
@@ -13715,7 +13717,7 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
         <span class="n">X_output_datasets</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># axis=1 averages all pixels in a single image; dtype=np.float64 for accuracy</span>
-        <span class="n">divide_by_zero_prevention</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#.00000000001</span>
+        <span class="n">divide_by_zero_prevention</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#np.nextafter(0, 1)  #.00000000001</span>
         <span class="n">image_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X_output_datasets</span><span class="p">[</span><span class="n">s</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">+</span> <span class="n">divide_by_zero_prevention</span>
 
         <span class="c1"># copy/create matrix such that each image has num_pixels all set equal to the image&#39;s mean</span>
@@ -13725,6 +13727,11 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
             <span class="n">imean</span> <span class="o">=</span> <span class="n">image_mean</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
             <span class="n">image_mean_xl</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">imean</span><span class="p">)</span>
 
+        <span class="c1"># pure black image should not be in the dataset, but jic..</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">image_mean</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="c1">#image_mean = np.nextafter(np.float64(0), np.float64(1))  # smallest non-zero positive number  #1e-20  #</span>
+            <span class="n">image_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nextafter</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">image_mean</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">image_mean</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        
         <span class="n">X_output_datasets</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_output_datasets</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">-</span> <span class="n">image_mean_xl</span><span class="p">)</span> <span class="o">/</span> <span class="n">image_mean_xl</span>
         <span class="n">X_output_datasets</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_output_datasets</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">initial_shape</span><span class="p">)</span>
 
@@ -13781,7 +13788,7 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
 <div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscae, etc.</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.</span>
 <span class="c1">### Feel free to use as many code cells as needed.</span>
 
 <span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="k">import</span> <span class="n">shuffle</span>
@@ -13881,41 +13888,57 @@ assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
 </div>
 </div>### Define your architecture here.
 ### Feel free to use as many code cells as needed.
-"""
-# This was for an attempt at running LeNet on 1-channel grayscale images. Try various filter shapes, calculate output shape
-def get_conv_layer_from_filter(x, filter_shape):
-    input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
-    filter_height, filter_width = filter_shape
 
-    output_height = output_size(input_height, filter_height, stride)
-    output_width  = output_size(input_width,  filter_width,  stride)
-    output_depth  = input_depth
-    print("output_size", x , output_height)
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"># This was for an attempt at running LeNet on 1-channel grayscale images. </span>
+<span class="sd">#    Given various filter shapes, calculate output shape</span>
+<span class="sd">#    Unsuccessful.</span>
 
-    weights_shape  = [filter_height, filter_width, input_depth, output_depth]
-    bias_shape     = [output_depth]
+<span class="sd">def get_conv_layer_given_filter_shape(x, filter_shape):</span>
+<span class="sd">    input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]</span>
+<span class="sd">    filter_height, filter_width = filter_shape</span>
 
-    # initialize weights
-    filter_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))
-    filter_bias    = tf.Variable(tf.zeros(bias_shape))
+<span class="sd">    output_height = output_size(input_height, filter_height, stride)</span>
+<span class="sd">    output_width  = output_size(input_width,  filter_width,  stride)</span>
+<span class="sd">    output_depth  = input_depth</span>
+<span class="sd">    print(&quot;output_size&quot;, x , output_height)</span>
 
-    layer1 = tf.nn.conv2d(x, filter_weights, strides, padding) + filter_bias
-    print("conv output shape:", layer1.get_shape().as_list()[1:])
+<span class="sd">    weights_shape  = [filter_height, filter_width, input_depth, output_depth]</span>
+<span class="sd">    bias_shape     = [output_depth]</span>
 
-    # Activation
-    layer1 = tf.nn.relu(layer1)
+<span class="sd">    # initialize weights</span>
+<span class="sd">    filter_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))</span>
+<span class="sd">    filter_bias    = tf.Variable(tf.zeros(bias_shape))</span>
 
-    # Pooling (28,28,6?) --> (14,14,?6)
-    input_height,  input_width,  input_depth  = layer1.get_shape()[1:]
+<span class="sd">    conv_layer = tf.nn.conv2d(x, filter_weights, strides, padding) + filter_bias</span>
+<span class="sd">    print(&quot;conv output shape:&quot;, conv_layer.get_shape().as_list()[1:])</span>
 
-    ksize = [1, 2, 2, 1]
-    pool_strides = ksize
-    layer1 = tf.nn.max_pool(layer1, ksize, pool_strides, padding)
-    print("pool_output_shape: ", layer1.get_shape().as_list()[1:] )
+<span class="sd">    # Activation</span>
+<span class="sd">    conv_layer = tf.nn.relu(conv_layer)</span>
 
-    return layer1
-"""
+<span class="sd">    # Pooling (28,28,6?) --&gt; (14,14,?6)</span>
+<span class="sd">    input_height,  input_width,  input_depth  = conv_layer.get_shape()[1:]</span>
 
+<span class="sd">    ksize = [1, 2, 2, 1]</span>
+<span class="sd">    pool_strides = ksize</span>
+<span class="sd">    conv_layer = tf.nn.max_pool(conv_layer, ksize, pool_strides, padding)</span>
+<span class="sd">    print(&quot;pool_output_shape: &quot;, conv_layer.get_shape().as_list()[1:] )</span>
+
+<span class="sd">    return conv_layer</span>
+<span class="sd">&quot;&quot;&quot;</span> 
+<span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[14]:</div>
@@ -13935,25 +13958,26 @@ def get_conv_layer_from_filter(x, filter_shape):
     <span class="n">filter_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">(</span><span class="n">weights_shape</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">sigma</span><span class="p">))</span>
     <span class="n">filter_bias</span>    <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">bias_shape</span><span class="p">))</span>
 
-    <span class="n">layer1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">filter_weights</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span> <span class="o">+</span> <span class="n">filter_bias</span>
+    <span class="n">conv_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">filter_weights</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span> <span class="o">+</span> <span class="n">filter_bias</span>
 
-    <span class="c1">#print(conv_output_shape, &quot;=?=&quot;, layer1.get_shape().as_list()[1:])</span>
-    <span class="k">assert</span><span class="p">(</span> <span class="n">conv_output_shape</span> <span class="o">==</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="c1">#print(conv_output_shape, &quot;=?=&quot;, conv_layer.get_shape().as_list()[1:])</span>
+    <span class="k">assert</span><span class="p">(</span> <span class="n">conv_output_shape</span> <span class="o">==</span> <span class="n">conv_layer</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
 
     <span class="c1"># Activation</span>
-    <span class="n">layer1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer1</span><span class="p">)</span>
+    <span class="n">conv_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">conv_layer</span><span class="p">)</span>
 
     <span class="c1"># Pooling (28,28,6?) --&gt; (14,14,?6)</span>
-    <span class="n">input_height</span><span class="p">,</span>  <span class="n">input_width</span><span class="p">,</span>  <span class="n">input_depth</span>  <span class="o">=</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
-    <span class="n">output_height</span><span class="p">,</span> <span class="n">output_width</span><span class="p">,</span> <span class="n">output_depth</span> <span class="o">=</span> <span class="n">pool_output_shape</span> <span class="c1">#(14, 14, input_depth)</span>
+    <span class="n">input_height</span><span class="p">,</span>  <span class="n">input_width</span><span class="p">,</span>  <span class="n">input_depth</span>  <span class="o">=</span> <span class="n">conv_layer</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">output_height</span><span class="p">,</span> <span class="n">output_width</span><span class="p">,</span> <span class="n">output_depth</span> <span class="o">=</span> <span class="n">pool_output_shape</span>          <span class="c1">#(14, 14, input_depth)</span>
 
     <span class="n">ksize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
     <span class="n">pool_strides</span> <span class="o">=</span> <span class="n">ksize</span>
-    <span class="n">layer1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">max_pool</span><span class="p">(</span><span class="n">layer1</span><span class="p">,</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">pool_strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span>
-    <span class="c1">#print( pool_output_shape, &quot;=?=&quot;, layer1.get_shape().as_list()[1:] )</span>
-    <span class="k">assert</span><span class="p">(</span> <span class="n">pool_output_shape</span> <span class="o">==</span> <span class="n">layer1</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span> <span class="p">)</span>
+    <span class="n">conv_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">max_pool</span><span class="p">(</span><span class="n">conv_layer</span><span class="p">,</span> <span class="n">ksize</span><span class="p">,</span> <span class="n">pool_strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">)</span>
+    
+    <span class="c1">#print( pool_output_shape, &quot;=?=&quot;, conv_layer.get_shape().as_list()[1:] )</span>
+    <span class="k">assert</span><span class="p">(</span> <span class="n">pool_output_shape</span> <span class="o">==</span> <span class="n">conv_layer</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span> <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">layer1</span>
+    <span class="k">return</span> <span class="n">conv_layer</span>
 </pre></div>
 
 </div>
@@ -13998,8 +14022,8 @@ def get_conv_layer_from_filter(x, filter_shape):
         <span class="n">layer1</span> <span class="o">=</span> <span class="n">get_conv_layer</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span> <span class="p">[</span><span class="mi">14</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
         <span class="n">layer2</span> <span class="o">=</span> <span class="n">get_conv_layer</span><span class="p">(</span><span class="n">layer1</span><span class="p">,</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">16</span><span class="p">])</span>
     <span class="c1">#elif x.get_shape()[-1] == 1:</span>
-    <span class="c1">#    layer1 = get_conv_layer_from_filter(     x, [3,3])</span>
-    <span class="c1">#    layer2 = get_conv_layer_from_filter(layer1, [3,3])</span>
+    <span class="c1">#    layer1 = get_conv_layer_given_filter_shape(     x, [3,3])</span>
+    <span class="c1">#    layer2 = get_conv_layer_given_filter_shape(layer1, [3,3])</span>
     <span class="k">else</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;error: images should be 1d or 3d&quot;</span><span class="p">)</span>
     
     <span class="n">flattened</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">layer2</span><span class="p">)</span>
@@ -16443,11 +16467,6 @@ Model Saved
 <span class="c1"># to display legend</span>
 <span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
 
-<span class="c1">#from pylab import rcParams</span>
-<span class="c1"># set size of figure in inches (default is )</span>
-<span class="c1">#fig_width, fig_height = [7, 7]</span>
-<span class="c1">#rcParams[&#39;figure.figsize&#39;] = fig_width, fig_height</span>
-
 <span class="c1"># Read the array from disk</span>
 <span class="c1">#training_stats_read_from_disk = np.loadtxt(&#39;training_stats.txt&#39;)</span>
 <span class="c1">#print training_stats_read_from.shape</span>
@@ -17155,6 +17174,54 @@ zMysaqq09G1mZlY5btRmZmYl5kZtZmZWYm7UZmZmJeZGbWZmVmJu1GZmZiXmRm1mZlZi/wJaZISk
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## Compare Models</span>
+<span class="c1"># load figure training_stats_plotted-170327_1518.png</span>
+<span class="c1"># Model Architecture:</span>
+<span class="c1">#  - Lenet5: no dropout, no augmentantion, </span>
+<span class="c1">#  - Pre-proccessing: per image mean centered (-1,1) (not standardized though)</span>
+<span class="c1"># Comment on figure/training/model:</span>
+<span class="c1">#  Achieved required accuracy, but..</span>
+<span class="c1">#  -- the loss chart shows that our model is overfitting to the training data:</span>
+<span class="c1">#  -- as the training achieves 0% loss, the loss on validation set instead increases</span>
+<span class="c1">#  Two methods to reduce overfitting are:</span>
+<span class="c1">#  - add dropout layers: </span>
+<span class="c1">#  -- after the first fcc_layer, or after the firtst and second fcc_layers.</span>
+<span class="c1">#  -- good dropout value is generally .5 (keep_prob = 0.5)</span>
+<span class="c1">#  - augment the training data:</span>
+<span class="c1">#  -- on each batch, add a random rotation, zoom, color-cast/brightness, shift image up or down, etc to the entire batch</span>
+<span class="c1">#  Also, it seems that the learning rate could be decreased partway through training</span>
+<span class="c1">#  - not too bad on this model (was Very apparent on another model)</span>
+<span class="c1">#  -- as the accuracy seems to level out, but Oscillate once it&#39;s leveled out,</span>
+<span class="c1">#  -- I wonder if lowering the training rate at that point would be useful.</span>
+<span class="c1">#  -- maybe something that monitors the  accuracy, and notices once it&#39;s rather flat, but oscillates, then it can </span>
+<span class="c1">#  -- automatically decrease the learning rate by some set amount. Perhaps divide by 10 ?</span>
+<span class="c1">#  -- Dunno, But this oscillation appears to me to be a symptom of yaking too large a step. Great at first, but then</span>
+<span class="c1">#  -- as it hones in to a minimum, decreasing the step size may enable it to land at said assumed minimum. ??</span>
+<span class="c1">#  -- This could be a good experiment to try.</span>
+
+<span class="c1">## Add Dropouts after fcc_3 and fcc_4, with keep_probability = 0.5</span>
+<span class="c1"># load figure training_stats_plotted-??????????.png</span>
+<span class="c1"># Model Architecture:</span>
+<span class="c1">#  - Lenet5: added dropout to previous architecture. No augmentantion, </span>
+<span class="c1">#  - Pre-proccessing (same as previous model): per image mean centered (-1,1) (not standardized though)</span>
+
+<span class="c1">## Add randomized Augmentation to each batch (generate randomize settings, apply that settting to entire batch of images)</span>
+<span class="c1"># load figure training_stats_plotted-??????????.png</span>
+<span class="c1"># Model Architecture:</span>
+<span class="c1">#  - Lenet5: added augmentation to previous architecture.</span>
+<span class="c1">#  - Pre-proccessing (same as previous model): per image mean centered (-1,1) (not standardized though)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 <div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
@@ -17286,8 +17353,8 @@ Test Accuracy = 0.936
 
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-    <span class="c1">#display_images(datasets[0])</span>
     <span class="n">display_images</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+    
     <span class="n">datasets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Importing done...&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">datasets</span><span class="p">))</span>
@@ -18667,14 +18734,18 @@ AiFh0BMkSJDgAuH/ASCr0F0WGG6qAAAAAElFTkSuQmCC
 </div>
 
 </div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Analyze-Performance">Analyze Performance<a class="anchor-link" href="#Analyze-Performance">&#182;</a></h3>
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Analyze Performance</span>
+</pre></div>
+
 </div>
 </div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">

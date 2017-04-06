@@ -396,7 +396,7 @@ input_dataset = get_grayscale_datasets_1channel([X_train_ORIG, X_valid_ORIG, X_t
 X_train_gray3D_2, X_valid_gray3D_2, X_test_gray3D_2 = transform_grayscale_into_3D_grayscale(input_dataset)
 display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[1000]])
 
-print("resulting images are darker and lighter than the single channel grayscale, with every ratio I've tried")
+print("resulting images are darker and lighter than the single channel grayscale, with every ratio I've tried \n some ratios I've tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) \n Not sure how to create a 3-channel grayscale that looks visually identical to the 1-channel grayscale")
 
 
 # In[9]:
@@ -421,8 +421,9 @@ def get_per_channel_normalized_datasets(input_datasets):
     def combine_channels(R,G,B):
         return np.stack([R, G, B], axis=-1).reshape(-1, 32, 32, 3)
 
-    #    hack, since havent written loop yet 
+    #    hack, since havent written loop to cycle through the 3 datasets yet 
     X_data = input_datasets[0]
+    
     # run on training dataset
     R, G, B = separate_channels(X_data)
     r_norm = normalize(R)
@@ -445,6 +446,7 @@ def get_per_channel_normalized_datasets(input_datasets):
     X_train_normalized_per_channel = combine_channels(R, G, B)
 
     # displaying normalized image is useless, as values are no longer rgb values (0-255)
+    # print normalized values from sample image #500, pixel row #16: rgb values for all columns
     print(X_train_normalized_per_channel[500][16][:][:])
     
     return output_datasets
@@ -510,7 +512,7 @@ def get_per_channel_mean_zero_centered_datasets(input_datasets):
 
 # In[11]:
 
-# Try per image zero centering. Find mean for each image, apply that mean for each channel in said image
+# Try per image zero centering. Find mean for each image, apply that mean to each channel in said image
 
 def get_per_image_mean_centered_datasets(X_input_datasets):
     # ie datasets = [X_train, X_valid, X_test]
@@ -529,7 +531,7 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
         X_output_datasets[s].astype(np.float64, copy=False)
 
         # axis=1 averages all pixels in a single image; dtype=np.float64 for accuracy
-        divide_by_zero_prevention = 0 #.00000000001
+        divide_by_zero_prevention = 0 #np.nextafter(0, 1)  #.00000000001
         image_mean = np.mean(X_output_datasets[s], axis=1, dtype=np.float64) + divide_by_zero_prevention
 
         # copy/create matrix such that each image has num_pixels all set equal to the image's mean
@@ -539,6 +541,11 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
             imean = image_mean[i].astype(np.float64)
             image_mean_xl[i].fill(imean)
 
+        # pure black image should not be in the dataset, but jic..
+        if (image_mean == 0):
+            #image_mean = np.nextafter(np.float64(0), np.float64(1))  # smallest non-zero positive number  #1e-20  #
+            image_mean = np.nextafter(np.image_mean.dtype.type(0), np.image_mean.dtype.type(1))
+        
         X_output_datasets[s] = (X_output_datasets[s] - image_mean_xl) / image_mean_xl
         X_output_datasets[s] = X_output_datasets[s].reshape(initial_shape)
 
@@ -570,7 +577,7 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
 
 # In[12]:
 
-### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscae, etc.
+### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.
 ### Feel free to use as many code cells as needed.
 
 from sklearn.utils import shuffle
@@ -650,9 +657,15 @@ ksize = pool_strides
 # ### Model Architecture
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
+
+# In[ ]:
+
 """
-# This was for an attempt at running LeNet on 1-channel grayscale images. Try various filter shapes, calculate output shape
-def get_conv_layer_from_filter(x, filter_shape):
+# This was for an attempt at running LeNet on 1-channel grayscale images. 
+#    Given various filter shapes, calculate output shape
+#    Unsuccessful.
+
+def get_conv_layer_given_filter_shape(x, filter_shape):
     input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
     filter_height, filter_width = filter_shape
 
@@ -668,22 +681,24 @@ def get_conv_layer_from_filter(x, filter_shape):
     filter_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))
     filter_bias    = tf.Variable(tf.zeros(bias_shape))
 
-    layer1 = tf.nn.conv2d(x, filter_weights, strides, padding) + filter_bias
-    print("conv output shape:", layer1.get_shape().as_list()[1:])
+    conv_layer = tf.nn.conv2d(x, filter_weights, strides, padding) + filter_bias
+    print("conv output shape:", conv_layer.get_shape().as_list()[1:])
 
     # Activation
-    layer1 = tf.nn.relu(layer1)
+    conv_layer = tf.nn.relu(conv_layer)
 
     # Pooling (28,28,6?) --> (14,14,?6)
-    input_height,  input_width,  input_depth  = layer1.get_shape()[1:]
+    input_height,  input_width,  input_depth  = conv_layer.get_shape()[1:]
 
     ksize = [1, 2, 2, 1]
     pool_strides = ksize
-    layer1 = tf.nn.max_pool(layer1, ksize, pool_strides, padding)
-    print("pool_output_shape: ", layer1.get_shape().as_list()[1:] )
+    conv_layer = tf.nn.max_pool(conv_layer, ksize, pool_strides, padding)
+    print("pool_output_shape: ", conv_layer.get_shape().as_list()[1:] )
 
-    return layer1
-"""
+    return conv_layer
+""" 
+("")
+
 
 # In[14]:
 
@@ -701,25 +716,26 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
     filter_weights = tf.Variable(tf.truncated_normal(weights_shape, mean=mu, stddev=sigma))
     filter_bias    = tf.Variable(tf.zeros(bias_shape))
 
-    layer1 = tf.nn.conv2d(x, filter_weights, strides, padding) + filter_bias
+    conv_layer = tf.nn.conv2d(x, filter_weights, strides, padding) + filter_bias
 
-    #print(conv_output_shape, "=?=", layer1.get_shape().as_list()[1:])
-    assert( conv_output_shape == layer1.get_shape().as_list()[1:])
+    #print(conv_output_shape, "=?=", conv_layer.get_shape().as_list()[1:])
+    assert( conv_output_shape == conv_layer.get_shape().as_list()[1:])
 
     # Activation
-    layer1 = tf.nn.relu(layer1)
+    conv_layer = tf.nn.relu(conv_layer)
 
     # Pooling (28,28,6?) --> (14,14,?6)
-    input_height,  input_width,  input_depth  = layer1.get_shape()[1:]
-    output_height, output_width, output_depth = pool_output_shape #(14, 14, input_depth)
+    input_height,  input_width,  input_depth  = conv_layer.get_shape()[1:]
+    output_height, output_width, output_depth = pool_output_shape          #(14, 14, input_depth)
 
     ksize = [1, 2, 2, 1]
     pool_strides = ksize
-    layer1 = tf.nn.max_pool(layer1, ksize, pool_strides, padding)
-    #print( pool_output_shape, "=?=", layer1.get_shape().as_list()[1:] )
-    assert( pool_output_shape == layer1.get_shape().as_list()[1:] )
+    conv_layer = tf.nn.max_pool(conv_layer, ksize, pool_strides, padding)
+    
+    #print( pool_output_shape, "=?=", conv_layer.get_shape().as_list()[1:] )
+    assert( pool_output_shape == conv_layer.get_shape().as_list()[1:] )
 
-    return layer1
+    return conv_layer
 
 
 # In[15]:
@@ -748,8 +764,8 @@ def LeNet(x):
         layer1 = get_conv_layer(x, [28,28,6], [14,14,6])
         layer2 = get_conv_layer(layer1, [10,10,16], [5,5,16])
     #elif x.get_shape()[-1] == 1:
-    #    layer1 = get_conv_layer_from_filter(     x, [3,3])
-    #    layer2 = get_conv_layer_from_filter(layer1, [3,3])
+    #    layer1 = get_conv_layer_given_filter_shape(     x, [3,3])
+    #    layer2 = get_conv_layer_given_filter_shape(layer1, [3,3])
     else: print("error: images should be 1d or 3d")
     
     flattened = tf.contrib.layers.flatten(layer2)
@@ -992,11 +1008,6 @@ with tf.Session() as sess:
 # to display legend
 import matplotlib.patches as mpatches
 
-#from pylab import rcParams
-# set size of figure in inches (default is )
-#fig_width, fig_height = [7, 7]
-#rcParams['figure.figsize'] = fig_width, fig_height
-
 # Read the array from disk
 #training_stats_read_from_disk = np.loadtxt('training_stats.txt')
 #print training_stats_read_from.shape
@@ -1044,6 +1055,46 @@ filename = 'training_stats_plotted-' + time.strftime("%y%m%d_%H%M") + '.png'
 
 fig.savefig(filename, dpi=25)  # results in 160x120 px image
 print("Figure saved as " + filename + "\n")
+
+
+# In[ ]:
+
+## Compare Models
+# load figure training_stats_plotted-170327_1518.png
+# Model Architecture:
+#  - Lenet5: no dropout, no augmentantion, 
+#  - Pre-proccessing: per image mean centered (-1,1) (not standardized though)
+# Comment on figure/training/model:
+#  Achieved required accuracy, but..
+#  -- the loss chart shows that our model is overfitting to the training data:
+#  -- as the training achieves 0% loss, the loss on validation set instead increases
+#  Two methods to reduce overfitting are:
+#  - add dropout layers: 
+#  -- after the first fcc_layer, or after the firtst and second fcc_layers.
+#  -- good dropout value is generally .5 (keep_prob = 0.5)
+#  - augment the training data:
+#  -- on each batch, add a random rotation, zoom, color-cast/brightness, shift image up or down, etc to the entire batch
+#  Also, it seems that the learning rate could be decreased partway through training
+#  - not too bad on this model (was Very apparent on another model)
+#  -- as the accuracy seems to level out, but Oscillate once it's leveled out,
+#  -- I wonder if lowering the training rate at that point would be useful.
+#  -- maybe something that monitors the  accuracy, and notices once it's rather flat, but oscillates, then it can 
+#  -- automatically decrease the learning rate by some set amount. Perhaps divide by 10 ?
+#  -- Dunno, But this oscillation appears to me to be a symptom of yaking too large a step. Great at first, but then
+#  -- as it hones in to a minimum, decreasing the step size may enable it to land at said assumed minimum. ??
+#  -- This could be a good experiment to try.
+
+## Add Dropouts after fcc_3 and fcc_4, with keep_probability = 0.5
+# load figure training_stats_plotted-??????????.png
+# Model Architecture:
+#  - Lenet5: added dropout to previous architecture. No augmentantion, 
+#  - Pre-proccessing (same as previous model): per image mean centered (-1,1) (not standardized though)
+
+## Add randomized Augmentation to each batch (generate randomize settings, apply that settting to entire batch of images)
+# load figure training_stats_plotted-??????????.png
+# Model Architecture:
+#  - Lenet5: added augmentation to previous architecture.
+#  - Pre-proccessing (same as previous model): per image mean centered (-1,1) (not standardized though)
 
 
 # In[23]:
@@ -1125,8 +1176,8 @@ for s in range(num_datasets):
 
     dataset = np.asarray(dataset)
     print(dataset.shape)
-    #display_images(datasets[0])
     display_images(dataset)
+    
     datasets.append(dataset)
 
 print('Importing done...', len(datasets))
@@ -1146,7 +1197,10 @@ print('Importing done...', len(datasets))
 ### Feel free to use as many code cells as needed.
 
 
-# ### Analyze Performance
+# In[ ]:
+
+### Analyze Performance
+
 
 # In[ ]:
 
