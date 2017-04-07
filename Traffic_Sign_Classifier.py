@@ -1021,7 +1021,7 @@ with tf.Session() as sess:
 
 # ### Load and Output the Images
 
-# In[ ]:
+# In[36]:
 
 ### Load the images and plot them here.
 ### Feel free to use as many code cells as needed.
@@ -1039,9 +1039,12 @@ with tf.Session() as sess:
 # with tf.Session() as sess:
 #     saver.restore(sess, tf.train.latest_checkpoint('.')) 
 
+with tf.Session() as sess:
+    saver.restore(sess, tf.train.latest_checkpoint('./trained_models/.'))
 
 
-# In[ ]:
+
+# In[42]:
 
 import numpy as np
 import glob
@@ -1055,6 +1058,10 @@ paths = ['traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/*.jpg',
          'traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/*.jpg',
          'traffic_signs_from_web/32x32x3/3_difficult_NOT_in_signnames/*.jpg'
         ]
+dataset_descriptions = ['Set 1: Straightforward: \n        Expect Good Matches.', 
+                 'Set 2: These signs are Not part of the signnames.csv, but are Similar to Signs that were. \n        Curious if it picks signs that I think look similar',
+                 'Set 3: These signs are not part of signnames.csv, and quite different. \n        Curious to see what the nn makes out of these.'
+                ]
 
 num_datasets = len(paths)
 datasets = []
@@ -1064,12 +1071,13 @@ for s in range(num_datasets):
         dataset.append(misc.imread(image_path))    
 
     dataset = np.asarray(dataset)
-    print(dataset.shape)
+    #print(dataset.shape)
+    print("\n", dataset_descriptions[s])
     display_images(dataset)
     
     datasets.append(dataset)
 
-print('Importing done...', len(datasets))
+#print('Importing done...', len(datasets))
 
 
 # In[ ]:
