@@ -698,7 +698,6 @@ X_train, X_valid, X_test = get_per_image_mean_centered_datasets(input_dataset)
 y_train, y_valid, y_test = [y_train_SHUFFLED, y_valid_SHUFFLED, y_test_ORIG]
 
 
-
 # decide on a set training paramaters:
 mu = 0
 sigma = 0.01  #0.1   #.018  #.018 = 1.0/np.sqrt(pixels_x * pixels_y * color_depth) = 1/sqrt(32*32*3) = 1/55 = .018;  bw: 1/sqrt(32*32*1) = 1/32 = 0.03125
@@ -799,7 +798,7 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 # EPOCHS = 4
 # print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
 
-# In[ ]:
+# In[19]:
 
 import time
 
@@ -810,6 +809,7 @@ with tf.Session() as sess:
     training_stats = []
     
     print("Training...\n")
+    tstart = time.time()
     for i in range(EPOCHS):
         print("EPOCH: ", i+1, "of", EPOCHS, "EPOCHS")
         X_train, y_train = shuffle(X_train, y_train)
@@ -840,17 +840,18 @@ with tf.Session() as sess:
         # round to nearest even number at 4th decimal place
         #training_stats.append([np.around(validation_loss,4), np.around(training_loss,4), np.around(validation_accuracy,4), np.around(training_accuracy,4)])
         training_stats.append([validation_loss, training_loss, validation_accuracy, training_accuracy])
-        np.savetxt('training_stats.tmp.txt', training_stats)
+        np.savetxt('./training_stats/training_stats.tmp.txt', training_stats)
         
+    tend = time.time()
     model_timestamp = time.strftime("%y%m%d_%H%M")
-    filename = 'training_stats-' + model_timestamp + '.txt'
+    filename = './training_stats/training_stats_' + model_timestamp + '.txt'
     np.savetxt(filename, training_stats)
     print("\ntraining_stats Saved As: ", filename, "\n")    
 
     # save trained model
     print("Saving model..")
     saver = tf.train.Saver()
-    saver.save(sess, './trained_models/sh_trained_traffic_sign_classifier-' + model_timestamp)
+    saver.save(sess, './trained_models/sh_trained_traffic_sign_classifier_' + model_timestamp)
     print("Model Saved")
     print()
 
@@ -867,7 +868,7 @@ with tf.Session() as sess:
     
 
 
-# In[ ]:
+# In[20]:
 
 # TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets
 
@@ -920,13 +921,14 @@ plt.show()
     
 # model_timestamp = time.strftime("%y%m%d_%H%M")
 # model_timestamp for figure should match the timestamp from the model's file, not the current timestamp (see prev cell and top of this cell)
-filename = 'training_stats_plotted-' + model_timestamp + '.png'
+#filename = 'training_stats_plotted-' + model_timestamp + '.png'
+filename = 'training_stats_' + model_timestamp + '_plotted.png'
 
 fig.savefig(filename, dpi=25)  # results in 160x120 px image
 print("Figure saved as " + filename + "\n")
 
 
-# In[ ]:
+# In[21]:
 
 ## Compare Models
 # load figure training_stats_plotted-170327_1518.png
@@ -958,15 +960,33 @@ print("Figure saved as " + filename + "\n")
 # Model Architecture:
 #  - Lenet5: added dropout to previous architecture. No augmentantion, 
 #  - Pre-proccessing (same as previous model): per image mean centered (-1,1) (not standardized though)
+# Results
+#  - Overall Better, I think..
+# Training Model did not reach 0.000 loss or 100% accuracy, though it got very close. 
+# -- The Previous model definitely saturated out, perfectly (overfitting)
+#  - It took longer to train -"bumpy" it oscillates more frequently, however it is also a steadier average;
+#  -- ie the oscillations are shallower. In this way, it seems slightly more stable
+#  - Total validation loss is lower !
+#  - Validation Accuracy is about the same. It might not reach quite as high a max, but again, the oscillations are shallower.
+#  - Training Accuracy is slightly lower; still greater than 99% - It didn't reach perfect fit in 100 Epochs. Perhaps eventually it would ?
+#  - The difference between Training and Validation loss is less; the graphs are closer.
+# I'm not convinced that lowering the learning rate would be as helpful, as it looked in the previous model.
+# I probably will not run that experiment on either model.
+# Well, if I did, I'd probably do something like, when Validation Accuracy is 93% or 95%, divide learning rate by 10
+# That's quick and dirty: using knowledge from this pre3vious graph to inform a future model.
+# Ideally, it'd mathematically be programmed in. But that's more work than it's worth for this project.
+# The interest here, is to see if it's something that would even make sense to do - does it affect the model or no?
+
 
 ## Add randomized Augmentation to each batch (generate randomize settings, apply that settting to entire batch of images)
 # load figure training_stats_plotted-??????????.png
 # Model Architecture:
 #  - Lenet5: added augmentation to previous architecture.
 #  - Pre-proccessing (same as previous model): per image mean centered (-1,1) (not standardized though)
+# 
 
 
-# In[ ]:
+# In[22]:
 
 ## STOP !! Do NOT Proceed Until Model is FINISHED and has Validation >= 93%
 
