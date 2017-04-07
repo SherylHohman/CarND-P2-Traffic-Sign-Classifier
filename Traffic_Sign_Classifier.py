@@ -22,7 +22,7 @@
 # ---
 # ## Step 0: Load The Data
 
-# In[59]:
+# In[1]:
 
 # Load pickled data
 import pickle
@@ -64,7 +64,7 @@ assert(len(X_test_ORIG)  == len(y_test_ORIG))
 
 # ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
 
-# In[60]:
+# In[2]:
 
 ### Replace each question mark with the appropriate value. 
 ### Use python, pandas or numpy methods rather than hard coding the results
@@ -113,7 +113,7 @@ print("Number of classes =", num_classes)
 # 
 # **NOTE:** It's recommended you start with something simple first. If you wish to do more, come back to it after you've completed the rest of the sections.
 
-# In[61]:
+# In[3]:
 
 ### Data exploration visualization code goes here.
 ### Feel free to use as many code cells as needed.
@@ -159,7 +159,7 @@ fig1.savefig("data_plotted_image_distribution_amongst_classes.png", dpi=25)  # r
 print("figure saved as: 'data_plotted_image_distribution_amongst_classes.png'")
 
 
-# In[62]:
+# In[4]:
 
 # diplay list of sample images from training data set
 def display_images(images):
@@ -287,7 +287,7 @@ gray_train, gray_valid, gray_test = get_grayscale_datasets_1channel([X_train_ORI
 imgplot= plt.imshow(gray_train[1000], cmap = plt.get_cmap('gray'))
 
 
-# In[7]:
+# In[6]:
 
 # turn color data into grayscale image data
 from skimage import color
@@ -313,7 +313,7 @@ X_train_gray, X_valid_gray, X_test_gray = get_grayscale_datasets([X_train_ORIG, 
 display_images([X_train_gray[50], X_train_gray[500], X_train_gray[1000]])
 
 
-# In[8]:
+# In[7]:
 
 # turn grayscale into 3channel rgb grayscale
 # (not ideal paramater-wise = duplicated data, but for shipping through my LeNet, it should remove shaping problems)
@@ -349,7 +349,7 @@ display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[10
 print("resulting images are darker and lighter than the single channel grayscale, with every ratio I've tried \n some ratios I've tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) \n Not sure how to create a 3-channel grayscale that looks visually identical to the 1-channel grayscale")
 
 
-# In[10]:
+# In[8]:
 
 # Try per channel zero centering. Find mean for each channel, where the mean for that channel is across all training images
 # !! TERRIBLE RESULTS. tried a few learning_rates. NIX This technique !
@@ -407,7 +407,7 @@ def get_per_channel_mean_zero_centered_datasets(input_datasets):
 
 
 
-# In[11]:
+# In[9]:
 
 # Try per image zero centering. Find mean for each image, apply that mean to each channel in said image
 
@@ -433,18 +433,21 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
 
         # copy/create matrix such that each image has num_pixels all set equal to the image's mean
         image_mean_xl = np.empty([num_images, num_pixels], dtype=np.float64)
-            #print("image_shape", image_mean.shape, image_mean_xl.shape, "image_mean_xl shape")
+ 
         for i in range(num_images):
             imean = image_mean[i].astype(np.float64)
+           
+            # pure black image should not be in the dataset, but JustInCase.. divide by zero prevention
+            if (imean == 0):
+                # smallest non-zero positive number    #np.nextafter(0, 1)   #1e-20
+                imean = np.nextafter(np.image_mean.dtype.type(0), np.image_mean.dtype.type(1))
             image_mean_xl[i].fill(imean)
 
-        # pure black image should not be in the dataset, but jic..
-        if (image_mean == 0):
-            # smallest non-zero positive number
-            # image_mean = np.nextafter(np.float64(0), np.float64(1))   #np.nextafter(0, 1)   #1e-20
-            image_mean = np.nextafter(np.image_mean.dtype.type(0), np.image_mean.dtype.type(1))
         
+        # center the data (-1, 1) by subtracting and dividing the image by its mean
         X_output_datasets[s] = (X_output_datasets[s] - image_mean_xl) / image_mean_xl
+        
+        # restore to orig shape
         X_output_datasets[s] = X_output_datasets[s].reshape(initial_shape)
 
     return X_output_datasets
@@ -487,7 +490,7 @@ print(image_shape)
 assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
 '''
 
-# In[13]:
+# In[10]:
 
 # define training variables, constants
 
@@ -516,7 +519,7 @@ ksize = pool_strides
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
 
-# In[ ]:
+# In[11]:
 
 """
 # This was for an attempt at running LeNet on 1-channel grayscale images. 
@@ -558,7 +561,7 @@ def get_conv_layer_given_filter_shape(x, filter_shape):
 ("")
 
 
-# In[14]:
+# In[12]:
 
 def get_conv_layer(x, conv_output_shape, pool_output_shape):
     input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
@@ -596,7 +599,7 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
     return conv_layer
 
 
-# In[15]:
+# In[13]:
 
 def get_fcc_layer(prev_layer, output_length):
     input_length  = prev_layer.get_shape().as_list()[1]
@@ -613,7 +616,7 @@ def get_fcc_layer(prev_layer, output_length):
     return fcc_layer
 
 
-# In[16]:
+# In[14]:
 
 from tensorflow.contrib.layers import flatten
 
@@ -650,7 +653,7 @@ def LeNet(x):
 # A validation set can be used to assess how well the model is performing. A low accuracy on the training and validation
 # sets imply underfitting. A high accuracy on the training set but low accuracy on the validation set implies overfitting.
 
-# In[17]:
+# In[15]:
 
 ### Train your model here.
 ### Calculate and report the accuracy on the training and validation set.
@@ -659,7 +662,7 @@ def LeNet(x):
 ### Feel free to use as many code cells as needed.
 
 
-# In[12]:
+# In[16]:
 
 ### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.
 ### Feel free to use as many code cells as needed.
@@ -676,7 +679,7 @@ X_valid_SHUFFLED, y_valid_SHUFFLED = shuffle(X_valid_ORIG, y_valid_ORIG)
     # don't need to shuffle test data
 
 
-# In[18]:
+# In[17]:
 
 ## initialize
 
@@ -712,8 +715,8 @@ pixels_x, pixels_y, color_depth = image_shape[1:]
 
 # probability of saving the node: Training Set: 0.5 (DROPOUT_ON  = 0.5)
 #           NO DROPOUT ON: Valid, Test Sets!! : 1.0 (DROPOUT_OFF = 1.0)
-DROPOUT_OFF = 1.0  (dropout_keep_prob == 1.0 - keep everything)
-DROPOUT_ON  = 0.5  (dropout_keep_prob == 0.5 - randomly set half the nodes to zero)
+DROPOUT_OFF = 1.0  #(dropout_keep_probability == 1.0 : keep everything)
+DROPOUT_ON  = 0.5  #(dropout_keep_probability == 0.5 : randomly set half the nodes weights to zero)
 
 
 # initialize tf training variables !!
@@ -721,7 +724,7 @@ DROPOUT_ON  = 0.5  (dropout_keep_prob == 0.5 - randomly set half the nodes to ze
 x = tf.placeholder(tf.float32, (None, pixels_x, pixels_y, color_depth))
 y = tf.placeholder(tf.int64, (None))
 
-dropout_keep_prob = tf.placeholder(tf.float32)
+keep_probability = tf.placeholder(tf.float32)
 
 
 # run leNet
@@ -746,9 +749,7 @@ accuracy_calculation  = tf.reduce_mean(tf.cast(prediction_is_correct, tf.float32
 training_stats = []
 
 
-# 
-
-# In[19]:
+# In[18]:
 
 # evaluation routine
 def evaluate_data(X_data, y_data):
@@ -764,7 +765,7 @@ def evaluate_data(X_data, y_data):
         y_batch = y_data[batch_start:batch_end]
         
         accuracy, loss = sess.run([accuracy_calculation, loss_operation],
-                                  feed_dict = {x:X_batch, y:y_batch, dropout_keep_prob = DROPOUT_OFF})
+                                  feed_dict = {x:X_batch, y:y_batch, keep_probability: DROPOUT_OFF})
         
         this_batch_size = len(X_batch)
         
@@ -776,6 +777,8 @@ def evaluate_data(X_data, y_data):
         
     return total_accuracy, total_loss     
 
+
+# 
 # TEMP TRUNCATE DATA FOR INITIAL TESTING
 """  
 # truncate the training set to be just a bit larger than the BATCH_SIZE (so run at least 2 batches per epoch)
@@ -796,7 +799,7 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 # EPOCHS = 4
 # print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
 
-# In[1]:
+# In[ ]:
 
 import time
 
@@ -816,7 +819,7 @@ with tf.Session() as sess:
             features = X_train[batch_start:batch_end]
             labels   = y_train[batch_start:batch_end]
             #train
-            sess.run(training_operation, feed_dict = {x:features, y:labels, dropout_keep_prob = DROPOUT_ON})
+            sess.run(training_operation, feed_dict = {x:features, y:labels, keep_probability: DROPOUT_ON})
             if batch_start % 100 == 0:
                 print("        batch ", 1+batch_start//BATCH_SIZE, "of ", 1 + int(num_examples/BATCH_SIZE))#, "batches,  on EPOCH", i+1, "of", EPOCHS, "EPOCHS")
                       
@@ -835,7 +838,8 @@ with tf.Session() as sess:
         print()
         
         # round to nearest even number at 4th decimal place
-        training_stats.append([np.around(validation_loss,4), np.around(training_loss,4), np.around(validation_accuracy,4), np.around(training_accuracy,4)])
+        #training_stats.append([np.around(validation_loss,4), np.around(training_loss,4), np.around(validation_accuracy,4), np.around(training_accuracy,4)])
+        training_stats.append([validation_loss, training_loss, validation_accuracy, training_accuracy])
         np.savetxt('training_stats.tmp.txt', training_stats)
         
     model_timestamp = time.strftime("%y%m%d_%H%M")
@@ -846,7 +850,7 @@ with tf.Session() as sess:
     # save trained model
     print("Saving model..")
     saver = tf.train.Saver()
-    saver.save(sess, './sh_trained_traffic_sign_classifier')
+    saver.save(sess, './trained_models/sh_trained_traffic_sign_classifier-' + model_timestamp)
     print("Model Saved")
     print()
 
@@ -863,7 +867,7 @@ with tf.Session() as sess:
     
 
 
-# In[21]:
+# In[ ]:
 
 # TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets
 
@@ -962,7 +966,7 @@ print("Figure saved as " + filename + "\n")
 #  - Pre-proccessing (same as previous model): per image mean centered (-1,1) (not standardized though)
 
 
-# In[23]:
+# In[ ]:
 
 ## STOP !! Do NOT Proceed Until Model is FINISHED and has Validation >= 93%
 
@@ -970,10 +974,10 @@ print("Figure saved as " + filename + "\n")
     # overfitting  if: high accuracy on training but low accuracy on validation sets.
 
 assert (validation_accuracy >= 0.9300)
-#assert ('yes' == 'no')
+assert ('yes' == 'no')
 
 
-# In[24]:
+# In[ ]:
 
 # test the trained model
 with tf.Session() as sess:
@@ -997,7 +1001,7 @@ with tf.Session() as sess:
 
 # ### Load and Output the Images
 
-# In[64]:
+# In[ ]:
 
 ### Load the images and plot them here.
 ### Feel free to use as many code cells as needed.
@@ -1017,7 +1021,7 @@ with tf.Session() as sess:
 
 
 
-# In[106]:
+# In[ ]:
 
 import numpy as np
 import glob
@@ -1155,7 +1159,7 @@ def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_m
     # image_input =
     # Note: x should be the same name as your network's tensorflow data placeholder variable
     # If you get an error tf_activation is not defined it maybe having trouble accessing the variable from inside a function
-    activation = tf_activation.eval(session=sess,feed_dict={x : image_input, dropout_keep_prob = DROPOUT_OFF})
+    activation = tf_activation.eval(session=sess,feed_dict={x : image_input, dropout_keep_prob : DROPOUT_OFF})
     featuremaps = activation.shape[3]
     plt.figure(plt_num, figsize=(15,15))
     for featuremap in range(featuremaps):
