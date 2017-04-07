@@ -195,6 +195,56 @@ display_images(sample_images)
 
 
 
+# ----
+# 
+# ## Step 2: Design and Test a Model Architecture
+# 
+# Design and implement a deep learning model that learns to recognize traffic signs. Train and test your model on the [German Traffic Sign Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset).
+# 
+# The LeNet-5 implementation shown in the [classroom](https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/6df7ae49-c61c-4bb2-a23e-6527e69209ec/lessons/601ae704-1035-4287-8b11-e2c2716217ad/concepts/d4aca031-508f-4e0b-b493-e7b706120f81) at the end of the CNN lesson is a solid starting point. You'll have to change the number of classes and possibly the preprocessing, but aside from that it's plug and play! 
+# 
+# With the LeNet-5 solution from the lecture, you should expect a validation set accuracy of about 0.89. To meet specifications, the validation set accuracy will need to be at least 0.93. It is possible to get an even higher accuracy, but 0.93 is the minimum for a successful project submission. 
+# 
+# There are various aspects to consider when thinking about this problem:
+# 
+# - Neural network architecture (is the network over or underfitting?)
+# - Play around preprocessing techniques (normalization, rgb to grayscale, etc)
+# - Number of examples per label (some have more than others).
+# - Generate fake data.
+# 
+# Here is an example of a [published baseline model on this problem](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf). It's not required to be familiar with the approach used in the paper but, it's good practice to try to read papers like these.
+
+# ### Pre-process the Data Set (normalization, grayscale, etc.)
+
+# Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
+def test_reshaping_3D_into_4D():
+    # grayscale images have no depth dimension
+    # we need them to have a depth dimension of 1
+    gr = np.zeros([3,2,2])
+    print(gr)
+    gr = gr.reshape(3,2,2,1)
+    print(gr)
+
+    gr = np.zeros((3,2,2))
+    print(gr)
+    gr = np.reshape(gr, (3,2,2,1))
+    print(gr)
+
+    gr = np.zeros([3,2,2])
+    gr = [[["x11","x12"],["y11","y12"]],[["x21","x22"],["y21","y22"]],[["x31","x32"],["y31","y32"]]]
+    print(gr)
+    gr = np.reshape(gr,(3,2,2,1))
+    print(gr)
+    
+    print("old shape", X_train_gray.shape)
+    #X_train_gray.reshape(len(X_train_gray), 32, 32, 1)
+    np.reshape(X_train_gray, (len(X_train_gray), 32, 32, 1) )
+    print("new shape", X_train_gray.shape)
+    print("WHY DOES THIS VERSION _NOT_ WORK ?, WHEN THE OTHERS DO ?")
+    assert(False == True)
+
+#test_reshaping_3D_into_4D()
+;
 # In[5]:
 
 from skimage import color
@@ -235,106 +285,6 @@ def get_grayscale_datasets_1channel(input_datasets):
 # test the above proceedure
 gray_train, gray_valid, gray_test = get_grayscale_datasets_1channel([X_train_ORIG, X_valid_ORIG, X_test_ORIG])
 imgplot= plt.imshow(gray_train[1000], cmap = plt.get_cmap('gray'))
-
-'''
-from sklearn.preprocessing import normalize
-print("normalized grayscale image")
-fig = plt.figure(1)
-plt.subplot(1, 2, 1)
-normalized_gray_image1000 = normalize(X_train[500,:,:,2])#(gray_img1000)
-plt.imshow(normalized_gray_image1000, cmap = plt.get_cmap('gray'))
-#im2 = fig.add_subplot()
-#im2=plt.imshow(normalized_gray_image1000, cmap = plt.get_cmap('gray'))
-print("normalizing grayscale validation images")
-norm_gray_valid = color.rgb2gray(normalize(X_valid[:,:,:]))
-print("normalizing grayscale training images")
-norm_gray_train = color.rgb2gray(normalize(X_train[:,:,:]))
-print("normalizing grayscale test images")
-norm_gray_test = color.rgb2gray(gray_test)
-
-
-print("creating 3channel version of normalized grayscale image")
-gray_rgb_normalized_train = np.zeros(X_train.shape, np.uint8)
-gray_rgb_normalized_valid = np.zeros(X_valid.shape, np.uint8)
-gray_rgb_normalized_test  = np.zeros(X_test.shape,  np.uint8)
-print( [3 *4])
-
-#gray_rgb_normalized_train[:,:,:,0] = gray_rgb_normalized_train[:,:,:,1] = gray_rgb_normalized_train[:,:,:,2] = norm_gray_train
-gray_rgb_normalized_train[:,:,:,[norm_gray_train,norm_gray_train,norm_gray_train]] 
-print(gray_valid.shape, norm_gray_valid.shape)
-gray_rgb_normalized_valid[:,:,:,0] = gray_rgb_normalized_valid[:,:,:,1] = gray_rgb_normalized_valid[:,:,:,2] = norm_gray_valid
-#gray_rgb_normalized_test[i][:,:,0]  = gray_rgb_normalized_test[i][:,:,1]  = gray_rgb_normalized_test[i][:,:,2]  = norm_gray_test
-
-plt.subplot(1,2,2)
-plt.imshow(gray_rgb_normalized_test[500])
-''''''
-from sklearn.preprocessing import normalize
-# zero center the data
-# subtract the mean of TRAINING DATA from each of the train, valid, test sets
-X_train = X_train.astype(np.float32)
-X_valid = X_valid.astype(np.float32)
-X_test  = X_test.astype(np.float32)
-training_data_mean = np.mean(X_train, axis=0)
-print(training_data_mean.shape, training_data_mean)
-X_train -= training_data_mean
-X_valid -= training_data_mean
-X_test  -= training_data_mean
-
-# display
-sample_images=[X_train[50], X_train[500], X_train[1000]]
-display_images(sample_images)
-print(sample_images[0][16][16][0:5])
-'''
-# In[6]:
-
-# normalize datasets per channel
-## UNFINISHED !!
-
-from sklearn.preprocessing import normalize
-
-def get_per_channel_normalized_datasets(input_datasets):
-    X_train, X_valid, X_test = input_datasets
-    
-    def separate_channels(images):
-        # returns 2-D array
-        R = images[:,:,:,0].reshape(len(images),-1)
-        G = images[:,:,:,1].reshape(len(images),-1)
-        B = images[:,:,:,2].reshape(len(images),-1)
-        return [R,G,B]
-
-    def combine_channels(R,G,B):
-        return np.stack([R, G, B], axis=-1).reshape(-1, 32, 32, 3)
-
-    R, G, B = separate_channels(X_train)
-    r_norm = normalize(R)
-    print("normalized R")
-    
-    g_norm = normalize(G)
-    print("normalized G")
-    
-    b_norm = normalize(B)
-    print("normalized B")
-    
-    #TODO: save the normalization paramaters. Apply them to valid and test sets.
-    
-    R = r_norm.reshape(-1,32,32,1)
-    G = g_norm.reshape(-1,32,32,1)
-    B = b_norm.reshape(-1,32,32,1)
-    print(R.shape)
-    #print(R)
-    
-    X_train = combine_channels(R,G,B)
-
-    print(X_train[500][16][:][:])
-   
-    #TODO: use SAME normalization paramaters as above on validation and testing sets
-    assert (False == True)    
-
-    return [X_train, X_valid, X_testing]
-
-# cannot test this method until find out how to properly normalize valid and test sets.
-# maybe can just normalize them using same method as for training set
-# but I read that the SAME Train normalization params need to be applied to the valid and test sets.
 
 
 # In[7]:
@@ -397,59 +347,6 @@ X_train_gray3D_2, X_valid_gray3D_2, X_test_gray3D_2 = transform_grayscale_into_3
 display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[1000]])
 
 print("resulting images are darker and lighter than the single channel grayscale, with every ratio I've tried \n some ratios I've tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) \n Not sure how to create a 3-channel grayscale that looks visually identical to the 1-channel grayscale")
-
-
-# In[9]:
-
-# Try per channel normalization, where the normalization baseline (for each channel) is taken across the entire training dataset
-
-## !! This Method is Incomplete !! ##
-#TODO: Finish before using
-
-def get_per_channel_normalized_datasets(input_datasets):
-    # ie datasets = [X_train, X_valid, X_test]
-    assert("Unfinished" == "Don't Run This Code")
-    
-    from sklearn.preprocessing import normalize
-    def separate_channels(images):
-        # returns 2-D array
-        R = images[:,:,:,0].reshape(len(images),-1)
-        G = images[:,:,:,1].reshape(len(images),-1)
-        B = images[:,:,:,2].reshape(len(images),-1)
-        return [R,G,B]
-
-    def combine_channels(R,G,B):
-        return np.stack([R, G, B], axis=-1).reshape(-1, 32, 32, 3)
-
-    #    hack, since havent written loop to cycle through the 3 datasets yet 
-    X_data = input_datasets[0]
-    
-    # run on training dataset
-    R, G, B = separate_channels(X_data)
-    r_norm = normalize(R)
-    print("normalized R")
-    # TODO save normalization value. Must apply same value to both the validation and test sets.
-    g_norm = normalize(G)
-    print("normalized G")
-    # TODO save normalization value. Must apply same value to both the validation and test sets.
-    b_norm = normalize(B)
-    print("normalized B")
-    # TODO save normalization value. Must apply same value to both the validation and test sets.
-
-    R = r_norm.reshape(-1,32,32,1)
-    #print(R)
-    print(input_datasets[0].shape, R.shape)
-    G = g_norm.reshape(-1,32,32,1)
-    B = b_norm.reshape(-1,32,32,1)
-    print(R.shape)
-
-    X_train_normalized_per_channel = combine_channels(R, G, B)
-
-    # displaying normalized image is useless, as values are no longer rgb values (0-255)
-    # print normalized values from sample image #500, pixel row #16: rgb values for all columns
-    print(X_train_normalized_per_channel[500][16][:][:])
-    
-    return output_datasets
 
 
 # In[10]:
@@ -531,7 +428,7 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
         X_output_datasets[s].astype(np.float64, copy=False)
 
         # axis=1 averages all pixels in a single image; dtype=np.float64 for accuracy
-        divide_by_zero_prevention = 0 #np.nextafter(0, 1)  #.00000000001
+        divide_by_zero_prevention = 0   #.00000000001
         image_mean = np.mean(X_output_datasets[s], axis=1, dtype=np.float64) + divide_by_zero_prevention
 
         # copy/create matrix such that each image has num_pixels all set equal to the image's mean
@@ -543,7 +440,8 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
 
         # pure black image should not be in the dataset, but jic..
         if (image_mean == 0):
-            #image_mean = np.nextafter(np.float64(0), np.float64(1))  # smallest non-zero positive number  #1e-20  #
+            # smallest non-zero positive number
+            # image_mean = np.nextafter(np.float64(0), np.float64(1))   #np.nextafter(0, 1)   #1e-20
             image_mean = np.nextafter(np.image_mean.dtype.type(0), np.image_mean.dtype.type(1))
         
         X_output_datasets[s] = (X_output_datasets[s] - image_mean_xl) / image_mean_xl
@@ -551,48 +449,8 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
 
     return X_output_datasets
 
-
-# ----
-# 
-# ## Step 2: Design and Test a Model Architecture
-# 
-# Design and implement a deep learning model that learns to recognize traffic signs. Train and test your model on the [German Traffic Sign Dataset](http://benchmark.ini.rub.de/?section=gtsrb&subsection=dataset).
-# 
-# The LeNet-5 implementation shown in the [classroom](https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/6df7ae49-c61c-4bb2-a23e-6527e69209ec/lessons/601ae704-1035-4287-8b11-e2c2716217ad/concepts/d4aca031-508f-4e0b-b493-e7b706120f81) at the end of the CNN lesson is a solid starting point. You'll have to change the number of classes and possibly the preprocessing, but aside from that it's plug and play! 
-# 
-# With the LeNet-5 solution from the lecture, you should expect a validation set accuracy of about 0.89. To meet specifications, the validation set accuracy will need to be at least 0.93. It is possible to get an even higher accuracy, but 0.93 is the minimum for a successful project submission. 
-# 
-# There are various aspects to consider when thinking about this problem:
-# 
-# - Neural network architecture (is the network over or underfitting?)
-# - Play around preprocessing techniques (normalization, rgb to grayscale, etc)
-# - Number of examples per label (some have more than others).
-# - Generate fake data.
-# 
-# Here is an example of a [published baseline model on this problem](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf). It's not required to be familiar with the approach used in the paper but, it's good practice to try to read papers like these.
-
-# ### Pre-process the Data Set (normalization, grayscale, etc.)
-
-# Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
-
-# In[12]:
-
-### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.
-### Feel free to use as many code cells as needed.
-
-from sklearn.utils import shuffle
 from sklearn.preprocessing import normalize
 from skimage import color
-import tensorflow as tf
-
-# images as imported are already sized properly for leNet at (32x32)
-assert ((X_train_ORIG.shape[1],X_train_ORIG.shape[2]) == (32, 32))  #32px x 32px, 3 color channels:RGB
-
-# shuffle data
-X_train_SHUFFLED, y_train_SHUFFLED = shuffle(X_train_ORIG, y_train_ORIG)
-X_valid_SHUFFLED, y_valid_SHUFFLED = shuffle(X_valid_ORIG, y_valid_ORIG)
-    # don't need to shuffle test data
-
 
 ''' 
 # normalization
@@ -772,10 +630,13 @@ def LeNet(x):
     
     layer3 = get_fcc_layer(flattened, 120)
     layer3 = tf.nn.relu(layer3)
+    layer3 = tf.nn.dropout(layer3, keep_probability)
+    # maybe try dropout layer
 
     layer4 = get_fcc_layer(layer3, 84)
     layer4 = tf.nn.relu(layer4)
     # maybe try dropout layer
+    layer4 = tf.nn.dropout(layer4, keep_probability)
     
     logits = get_fcc_layer(layer4, num_classes)
     assert( [logits.get_shape().as_list()[1] ] == [num_classes])
@@ -798,23 +659,41 @@ def LeNet(x):
 ### Feel free to use as many code cells as needed.
 
 
+# In[12]:
+
+### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.
+### Feel free to use as many code cells as needed.
+
+from sklearn.utils import shuffle
+import tensorflow as tf
+
+# images as imported are already sized properly for leNet at (32x32)
+assert ((X_train_ORIG.shape[1],X_train_ORIG.shape[2]) == (32, 32))  #32px x 32px, 3 color channels:RGB
+
+# shuffle data
+X_train_SHUFFLED, y_train_SHUFFLED = shuffle(X_train_ORIG, y_train_ORIG)
+X_valid_SHUFFLED, y_valid_SHUFFLED = shuffle(X_valid_ORIG, y_valid_ORIG)
+    # don't need to shuffle test data
+
+
 # In[18]:
 
 ## initialize
 
-# choose which pre-processor to work with:
 input_dataset = [X_train_SHUFFLED, X_valid_SHUFFLED, X_test_ORIG]
 
+# choose which pre-processor to work with:
+
 # X_train, X_valid, X_test = get_grayscale_datasets_1channel(input_dataset)              # must convert to 3D to use LeNet
-# X_train, X_valid, X_test = get_per_channel_normalized_datasets(input_dataset)          # - UNFINISHED
 # X_train, X_valid, X_test = get_grayscale_datasets(input_dataset)                       # must convert to 3D to use LeNet
 # X_train, X_valid, X_test = transform_grayscale_into_3D_grayscale(get_grayscale_datasets(input_dataset)) # Got TERRIBLE RESULTS
-# X_train, X_valid, X_test = get_per_channel_mean_zero_centered_datasets(input_dataset)   # Got TERRIBLE RESULTS
-# X_train, X_valid, X_test = get_per_channel_normalized_datasets(input_dataset)           # - UNFINISHED
+# X_train, X_valid, X_test = get_per_channel_mean_zero_centered_datasets(input_dataset)  # Got TERRIBLE RESULTS
 X_train, X_valid, X_test = get_per_image_mean_centered_datasets(input_dataset)
+
 
 # labels do not get pre-processed
 y_train, y_valid, y_test = [y_train_SHUFFLED, y_valid_SHUFFLED, y_test_ORIG]
+
 
 
 # decide on a set training paramaters:
@@ -831,15 +710,22 @@ if len(image_shape) == 3:
 assert( len(image_shape) == 4 )
 pixels_x, pixels_y, color_depth = image_shape[1:]
 
+# probability of saving the node: Training Set: 0.5 (DROPOUT_ON  = 0.5)
+#           NO DROPOUT ON: Valid, Test Sets!! : 1.0 (DROPOUT_OFF = 1.0)
+DROPOUT_OFF = 1.0  (dropout_keep_prob == 1.0 - keep everything)
+DROPOUT_ON  = 0.5  (dropout_keep_prob == 0.5 - randomly set half the nodes to zero)
+
 
 # initialize tf training variables !!
 # features, labels
 x = tf.placeholder(tf.float32, (None, pixels_x, pixels_y, color_depth))
 y = tf.placeholder(tf.int64, (None))
 
+dropout_keep_prob = tf.placeholder(tf.float32)
+
+
 # run leNet
 logits = LeNet(x)
-
 
 # loss
 #   tf.nn.sparse_softmax_cross_entropy_with_logits combines:
@@ -854,38 +740,11 @@ training_operation = optimizer.minimize(loss_operation)
 # accuracy
 model_prediction = tf.argmax(logits, 1)
 prediction_is_correct = tf.equal(model_prediction, y)#labels)
-accuracy_calculation   = tf.reduce_mean(tf.cast(prediction_is_correct, tf.float32))
+accuracy_calculation  = tf.reduce_mean(tf.cast(prediction_is_correct, tf.float32))
 
-# save these for plotting how the model performed
+# save batch loss and accuracy results to visually plot how the model performed
 training_stats = []
 
-def test_reshaping_3D_into_4D():
-    # grayscale images have no depth dimension
-    # we need them to have a depth dimension of 1
-    gr = np.zeros([3,2,2])
-    print(gr)
-    gr = gr.reshape(3,2,2,1)
-    print(gr)
-
-    gr = np.zeros((3,2,2))
-    print(gr)
-    gr = np.reshape(gr, (3,2,2,1))
-    print(gr)
-
-    gr = np.zeros([3,2,2])
-    gr = [[["x11","x12"],["y11","y12"]],[["x21","x22"],["y21","y22"]],[["x31","x32"],["y31","y32"]]]
-    print(gr)
-    gr = np.reshape(gr,(3,2,2,1))
-    print(gr)
-    
-    print("old shape", X_train_gray.shape)
-    #X_train_gray.reshape(len(X_train_gray), 32, 32, 1)
-    np.reshape(X_train_gray, (len(X_train_gray), 32, 32, 1) )
-    print("new shape", X_train_gray.shape)
-    print("WHY DOES THIS VERSION _NOT_ WORK ?, WHEN THE OTHERS DO ?")
-    assert(False == True)
-
-#test_reshaping_3D_into_4D()
 
 # 
 
@@ -905,7 +764,7 @@ def evaluate_data(X_data, y_data):
         y_batch = y_data[batch_start:batch_end]
         
         accuracy, loss = sess.run([accuracy_calculation, loss_operation],
-                                  feed_dict = {x:X_batch, y:y_batch})
+                                  feed_dict = {x:X_batch, y:y_batch, dropout_keep_prob = DROPOUT_OFF})
         
         this_batch_size = len(X_batch)
         
@@ -937,7 +796,7 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 # EPOCHS = 4
 # print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
 
-# In[20]:
+# In[1]:
 
 import time
 
@@ -957,7 +816,7 @@ with tf.Session() as sess:
             features = X_train[batch_start:batch_end]
             labels   = y_train[batch_start:batch_end]
             #train
-            sess.run(training_operation, feed_dict = {x:features, y:labels})
+            sess.run(training_operation, feed_dict = {x:features, y:labels, dropout_keep_prob = DROPOUT_ON})
             if batch_start % 100 == 0:
                 print("        batch ", 1+batch_start//BATCH_SIZE, "of ", 1 + int(num_examples/BATCH_SIZE))#, "batches,  on EPOCH", i+1, "of", EPOCHS, "EPOCHS")
                       
@@ -965,7 +824,9 @@ with tf.Session() as sess:
         print(X_valid.shape)
         validation_accuracy, validation_loss = evaluate_data(X_valid, y_valid)
         training_accuracy,   training_loss = evaluate_data(X_train, y_train)
-        #print("EPOCH {} ...".format(i+1))
+        
+        # TODO: would be awesome to display live charts of these results, rather than this text output 
+        #      (see charts in next cell)
         print("Time: {:.3f} minutes".format(float( (time.time()-t0) / 60 )))
         print("Validation Loss = {:.3f}".format(validation_loss))
         print(" (Training Loss = {:.3f})".format(training_loss))
@@ -977,7 +838,8 @@ with tf.Session() as sess:
         training_stats.append([np.around(validation_loss,4), np.around(training_loss,4), np.around(validation_accuracy,4), np.around(training_accuracy,4)])
         np.savetxt('training_stats.tmp.txt', training_stats)
         
-    filename = 'training_stats-' + time.strftime("%y%m%d_%H%M") + '.txt'
+    model_timestamp = time.strftime("%y%m%d_%H%M")
+    filename = 'training_stats-' + model_timestamp + '.txt'
     np.savetxt(filename, training_stats)
     print("\ntraining_stats Saved As: ", filename, "\n")    
 
@@ -1010,6 +872,7 @@ import matplotlib.patches as mpatches
 
 # Read the array from disk
 #training_stats_read_from_disk = np.loadtxt('training_stats.txt')
+# IF read a model from disk, must also set model_timestamp associated with the filename !! else will run into error saving the figure
 #print training_stats_read_from.shape
 
 num_epochs = len(training_stats)
@@ -1050,8 +913,10 @@ plt.ylim((.9000, 1.0100))
 plt.tight_layout()
 plt.show()
 
-        
-filename = 'training_stats_plotted-' + time.strftime("%y%m%d_%H%M") + '.png'
+    
+# model_timestamp = time.strftime("%y%m%d_%H%M")
+# model_timestamp for figure should match the timestamp from the model's file, not the current timestamp (see prev cell and top of this cell)
+filename = 'training_stats_plotted-' + model_timestamp + '.png'
 
 fig.savefig(filename, dpi=25)  # results in 160x120 px image
 print("Figure saved as " + filename + "\n")
@@ -1290,7 +1155,7 @@ def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_m
     # image_input =
     # Note: x should be the same name as your network's tensorflow data placeholder variable
     # If you get an error tf_activation is not defined it maybe having trouble accessing the variable from inside a function
-    activation = tf_activation.eval(session=sess,feed_dict={x : image_input})
+    activation = tf_activation.eval(session=sess,feed_dict={x : image_input, dropout_keep_prob = DROPOUT_OFF})
     featuremaps = activation.shape[3]
     plt.figure(plt_num, figsize=(15,15))
     for featuremap in range(featuremaps):

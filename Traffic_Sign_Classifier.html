@@ -12822,6 +12822,73 @@ BoPBMCawG7rBYDCMCeyGbjAYDGMCu6EbDAbDmOD/A9SiMPwcjieVAAAAAElFTkSuQmCC
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<hr>
+<h2 id="Step-2:-Design-and-Test-a-Model-Architecture">Step 2: Design and Test a Model Architecture<a class="anchor-link" href="#Step-2:-Design-and-Test-a-Model-Architecture">&#182;</a></h2><p>Design and implement a deep learning model that learns to recognize traffic signs. Train and test your model on the <a href="http://benchmark.ini.rub.de/?section=gtsrb&amp;subsection=dataset">German Traffic Sign Dataset</a>.</p>
+<p>The LeNet-5 implementation shown in the <a href="https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/6df7ae49-c61c-4bb2-a23e-6527e69209ec/lessons/601ae704-1035-4287-8b11-e2c2716217ad/concepts/d4aca031-508f-4e0b-b493-e7b706120f81">classroom</a> at the end of the CNN lesson is a solid starting point. You'll have to change the number of classes and possibly the preprocessing, but aside from that it's plug and play!</p>
+<p>With the LeNet-5 solution from the lecture, you should expect a validation set accuracy of about 0.89. To meet specifications, the validation set accuracy will need to be at least 0.93. It is possible to get an even higher accuracy, but 0.93 is the minimum for a successful project submission.</p>
+<p>There are various aspects to consider when thinking about this problem:</p>
+<ul>
+<li>Neural network architecture (is the network over or underfitting?)</li>
+<li>Play around preprocessing techniques (normalization, rgb to grayscale, etc)</li>
+<li>Number of examples per label (some have more than others).</li>
+<li>Generate fake data.</li>
+</ul>
+<p>Here is an example of a <a href="http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf">published baseline model on this problem</a>. It's not required to be familiar with the approach used in the paper but, it's good practice to try to read papers like these.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Pre-process-the-Data-Set-(normalization,-grayscale,-etc.)">Pre-process the Data Set (normalization, grayscale, etc.)<a class="anchor-link" href="#Pre-process-the-Data-Set-(normalization,-grayscale,-etc.)">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.</p>
+
+</div>
+</div>
+</div>def test_reshaping_3D_into_4D():
+    # grayscale images have no depth dimension
+    # we need them to have a depth dimension of 1
+    gr = np.zeros([3,2,2])
+    print(gr)
+    gr = gr.reshape(3,2,2,1)
+    print(gr)
+
+    gr = np.zeros((3,2,2))
+    print(gr)
+    gr = np.reshape(gr, (3,2,2,1))
+    print(gr)
+
+    gr = np.zeros([3,2,2])
+    gr = [[["x11","x12"],["y11","y12"]],[["x21","x22"],["y21","y22"]],[["x31","x32"],["y31","y32"]]]
+    print(gr)
+    gr = np.reshape(gr,(3,2,2,1))
+    print(gr)
+    
+    print("old shape", X_train_gray.shape)
+    #X_train_gray.reshape(len(X_train_gray), 32, 32, 1)
+    np.reshape(X_train_gray, (len(X_train_gray), 32, 32, 1) )
+    print("new shape", X_train_gray.shape)
+    print("WHY DOES THIS VERSION _NOT_ WORK ?, WHEN THE OTHERS DO ?")
+    assert(False == True)
+
+#test_reshaping_3D_into_4D()
+;
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
@@ -13006,114 +13073,6 @@ ioJfiET5f+uGuLbbenr7AAAAAElFTkSuQmCC
 
 </div>
 
-</div>
-</div>
-
-</div>'''
-from sklearn.preprocessing import normalize
-print("normalized grayscale image")
-fig = plt.figure(1)
-plt.subplot(1, 2, 1)
-normalized_gray_image1000 = normalize(X_train[500,:,:,2])#(gray_img1000)
-plt.imshow(normalized_gray_image1000, cmap = plt.get_cmap('gray'))
-#im2 = fig.add_subplot()
-#im2=plt.imshow(normalized_gray_image1000, cmap = plt.get_cmap('gray'))
-print("normalizing grayscale validation images")
-norm_gray_valid = color.rgb2gray(normalize(X_valid[:,:,:]))
-print("normalizing grayscale training images")
-norm_gray_train = color.rgb2gray(normalize(X_train[:,:,:]))
-print("normalizing grayscale test images")
-norm_gray_test = color.rgb2gray(gray_test)
-
-
-print("creating 3channel version of normalized grayscale image")
-gray_rgb_normalized_train = np.zeros(X_train.shape, np.uint8)
-gray_rgb_normalized_valid = np.zeros(X_valid.shape, np.uint8)
-gray_rgb_normalized_test  = np.zeros(X_test.shape,  np.uint8)
-print( [3 *4])
-
-#gray_rgb_normalized_train[:,:,:,0] = gray_rgb_normalized_train[:,:,:,1] = gray_rgb_normalized_train[:,:,:,2] = norm_gray_train
-gray_rgb_normalized_train[:,:,:,[norm_gray_train,norm_gray_train,norm_gray_train]] 
-print(gray_valid.shape, norm_gray_valid.shape)
-gray_rgb_normalized_valid[:,:,:,0] = gray_rgb_normalized_valid[:,:,:,1] = gray_rgb_normalized_valid[:,:,:,2] = norm_gray_valid
-#gray_rgb_normalized_test[i][:,:,0]  = gray_rgb_normalized_test[i][:,:,1]  = gray_rgb_normalized_test[i][:,:,2]  = norm_gray_test
-
-plt.subplot(1,2,2)
-plt.imshow(gray_rgb_normalized_test[500])
-''''''
-from sklearn.preprocessing import normalize
-# zero center the data
-# subtract the mean of TRAINING DATA from each of the train, valid, test sets
-X_train = X_train.astype(np.float32)
-X_valid = X_valid.astype(np.float32)
-X_test  = X_test.astype(np.float32)
-training_data_mean = np.mean(X_train, axis=0)
-print(training_data_mean.shape, training_data_mean)
-X_train -= training_data_mean
-X_valid -= training_data_mean
-X_test  -= training_data_mean
-
-# display
-sample_images=[X_train[50], X_train[500], X_train[1000]]
-display_images(sample_images)
-print(sample_images[0][16][16][0:5])
-'''
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># normalize datasets per channel</span>
-<span class="c1">## UNFINISHED !!</span>
-
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">normalize</span>
-
-<span class="k">def</span> <span class="nf">get_per_channel_normalized_datasets</span><span class="p">(</span><span class="n">input_datasets</span><span class="p">):</span>
-    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">input_datasets</span>
-    
-    <span class="k">def</span> <span class="nf">separate_channels</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
-        <span class="c1"># returns 2-D array</span>
-        <span class="n">R</span> <span class="o">=</span> <span class="n">images</span><span class="p">[:,:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">G</span> <span class="o">=</span> <span class="n">images</span><span class="p">[:,:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">B</span> <span class="o">=</span> <span class="n">images</span><span class="p">[:,:,:,</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">R</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">B</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">combine_channels</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">B</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-
-    <span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="n">separate_channels</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-    <span class="n">r_norm</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;normalized R&quot;</span><span class="p">)</span>
-    
-    <span class="n">g_norm</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;normalized G&quot;</span><span class="p">)</span>
-    
-    <span class="n">b_norm</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;normalized B&quot;</span><span class="p">)</span>
-    
-    <span class="c1">#TODO: save the normalization paramaters. Apply them to valid and test sets.</span>
-    
-    <span class="n">R</span> <span class="o">=</span> <span class="n">r_norm</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">G</span> <span class="o">=</span> <span class="n">g_norm</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">B</span> <span class="o">=</span> <span class="n">b_norm</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-    <span class="c1">#print(R)</span>
-    
-    <span class="n">X_train</span> <span class="o">=</span> <span class="n">combine_channels</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="n">X_train</span><span class="p">[</span><span class="mi">500</span><span class="p">][</span><span class="mi">16</span><span class="p">][:][:])</span>
-   
-    <span class="c1">#TODO: use SAME normalization paramaters as above on validation and testing sets</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="kc">False</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>    
-
-    <span class="k">return</span> <span class="p">[</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">X_testing</span><span class="p">]</span>
-
-<span class="c1"># cannot test this method until find out how to properly normalize valid and test sets.</span>
-<span class="c1"># maybe can just normalize them using same method as for training set</span>
-<span class="c1"># but I read that the SAME Train normalization params need to be applied to the valid and test sets.</span>
-</pre></div>
-
-</div>
 </div>
 </div>
 
@@ -13569,67 +13528,6 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Try per channel normalization, where the normalization baseline (for each channel) is taken across the entire training dataset</span>
-
-<span class="c1">## !! This Method is Incomplete !! ##</span>
-<span class="c1">#TODO: Finish before using</span>
-
-<span class="k">def</span> <span class="nf">get_per_channel_normalized_datasets</span><span class="p">(</span><span class="n">input_datasets</span><span class="p">):</span>
-    <span class="c1"># ie datasets = [X_train, X_valid, X_test]</span>
-    <span class="k">assert</span><span class="p">(</span><span class="s2">&quot;Unfinished&quot;</span> <span class="o">==</span> <span class="s2">&quot;Don&#39;t Run This Code&quot;</span><span class="p">)</span>
-    
-    <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">normalize</span>
-    <span class="k">def</span> <span class="nf">separate_channels</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
-        <span class="c1"># returns 2-D array</span>
-        <span class="n">R</span> <span class="o">=</span> <span class="n">images</span><span class="p">[:,:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">G</span> <span class="o">=</span> <span class="n">images</span><span class="p">[:,:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">B</span> <span class="o">=</span> <span class="n">images</span><span class="p">[:,:,:,</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">),</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">R</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">B</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">combine_channels</span><span class="p">(</span><span class="n">R</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">B</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-
-    <span class="c1">#    hack, since havent written loop to cycle through the 3 datasets yet </span>
-    <span class="n">X_data</span> <span class="o">=</span> <span class="n">input_datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    
-    <span class="c1"># run on training dataset</span>
-    <span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="n">separate_channels</span><span class="p">(</span><span class="n">X_data</span><span class="p">)</span>
-    <span class="n">r_norm</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;normalized R&quot;</span><span class="p">)</span>
-    <span class="c1"># TODO save normalization value. Must apply same value to both the validation and test sets.</span>
-    <span class="n">g_norm</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;normalized G&quot;</span><span class="p">)</span>
-    <span class="c1"># TODO save normalization value. Must apply same value to both the validation and test sets.</span>
-    <span class="n">b_norm</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;normalized B&quot;</span><span class="p">)</span>
-    <span class="c1"># TODO save normalization value. Must apply same value to both the validation and test sets.</span>
-
-    <span class="n">R</span> <span class="o">=</span> <span class="n">r_norm</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-    <span class="c1">#print(R)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">input_datasets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-    <span class="n">G</span> <span class="o">=</span> <span class="n">g_norm</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">B</span> <span class="o">=</span> <span class="n">b_norm</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">R</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-
-    <span class="n">X_train_normalized_per_channel</span> <span class="o">=</span> <span class="n">combine_channels</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
-
-    <span class="c1"># displaying normalized image is useless, as values are no longer rgb values (0-255)</span>
-    <span class="c1"># print normalized values from sample image #500, pixel row #16: rgb values for all columns</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">X_train_normalized_per_channel</span><span class="p">[</span><span class="mi">500</span><span class="p">][</span><span class="mi">16</span><span class="p">][:][:])</span>
-    
-    <span class="k">return</span> <span class="n">output_datasets</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
@@ -13717,7 +13615,7 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
         <span class="n">X_output_datasets</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># axis=1 averages all pixels in a single image; dtype=np.float64 for accuracy</span>
-        <span class="n">divide_by_zero_prevention</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#np.nextafter(0, 1)  #.00000000001</span>
+        <span class="n">divide_by_zero_prevention</span> <span class="o">=</span> <span class="mi">0</span>   <span class="c1">#.00000000001</span>
         <span class="n">image_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X_output_datasets</span><span class="p">[</span><span class="n">s</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">+</span> <span class="n">divide_by_zero_prevention</span>
 
         <span class="c1"># copy/create matrix such that each image has num_pixels all set equal to the image&#39;s mean</span>
@@ -13729,7 +13627,8 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
 
         <span class="c1"># pure black image should not be in the dataset, but jic..</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">image_mean</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="c1">#image_mean = np.nextafter(np.float64(0), np.float64(1))  # smallest non-zero positive number  #1e-20  #</span>
+            <span class="c1"># smallest non-zero positive number</span>
+            <span class="c1"># image_mean = np.nextafter(np.float64(0), np.float64(1))   #np.nextafter(0, 1)   #1e-20</span>
             <span class="n">image_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nextafter</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">image_mean</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">image_mean</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
         
         <span class="n">X_output_datasets</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_output_datasets</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">-</span> <span class="n">image_mean_xl</span><span class="p">)</span> <span class="o">/</span> <span class="n">image_mean_xl</span>
@@ -13742,74 +13641,9 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<hr>
-<h2 id="Step-2:-Design-and-Test-a-Model-Architecture">Step 2: Design and Test a Model Architecture<a class="anchor-link" href="#Step-2:-Design-and-Test-a-Model-Architecture">&#182;</a></h2><p>Design and implement a deep learning model that learns to recognize traffic signs. Train and test your model on the <a href="http://benchmark.ini.rub.de/?section=gtsrb&amp;subsection=dataset">German Traffic Sign Dataset</a>.</p>
-<p>The LeNet-5 implementation shown in the <a href="https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/6df7ae49-c61c-4bb2-a23e-6527e69209ec/lessons/601ae704-1035-4287-8b11-e2c2716217ad/concepts/d4aca031-508f-4e0b-b493-e7b706120f81">classroom</a> at the end of the CNN lesson is a solid starting point. You'll have to change the number of classes and possibly the preprocessing, but aside from that it's plug and play!</p>
-<p>With the LeNet-5 solution from the lecture, you should expect a validation set accuracy of about 0.89. To meet specifications, the validation set accuracy will need to be at least 0.93. It is possible to get an even higher accuracy, but 0.93 is the minimum for a successful project submission.</p>
-<p>There are various aspects to consider when thinking about this problem:</p>
-<ul>
-<li>Neural network architecture (is the network over or underfitting?)</li>
-<li>Play around preprocessing techniques (normalization, rgb to grayscale, etc)</li>
-<li>Number of examples per label (some have more than others).</li>
-<li>Generate fake data.</li>
-</ul>
-<p>Here is an example of a <a href="http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf">published baseline model on this problem</a>. It's not required to be familiar with the approach used in the paper but, it's good practice to try to read papers like these.</p>
+</div>from sklearn.preprocessing import normalize
+from skimage import color
 
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Pre-process-the-Data-Set-(normalization,-grayscale,-etc.)">Pre-process the Data Set (normalization, grayscale, etc.)<a class="anchor-link" href="#Pre-process-the-Data-Set-(normalization,-grayscale,-etc.)">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.</span>
-<span class="c1">### Feel free to use as many code cells as needed.</span>
-
-<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="k">import</span> <span class="n">shuffle</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">normalize</span>
-<span class="kn">from</span> <span class="nn">skimage</span> <span class="k">import</span> <span class="n">color</span>
-<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-
-<span class="c1"># images as imported are already sized properly for leNet at (32x32)</span>
-<span class="k">assert</span> <span class="p">((</span><span class="n">X_train_ORIG</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">X_train_ORIG</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>  <span class="c1">#32px x 32px, 3 color channels:RGB</span>
-
-<span class="c1"># shuffle data</span>
-<span class="n">X_train_SHUFFLED</span><span class="p">,</span> <span class="n">y_train_SHUFFLED</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="n">X_train_ORIG</span><span class="p">,</span> <span class="n">y_train_ORIG</span><span class="p">)</span>
-<span class="n">X_valid_SHUFFLED</span><span class="p">,</span> <span class="n">y_valid_SHUFFLED</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="n">X_valid_ORIG</span><span class="p">,</span> <span class="n">y_valid_ORIG</span><span class="p">)</span>
-    <span class="c1"># don&#39;t need to shuffle test data</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
 ''' 
 # normalization
 print("normalizing")
@@ -14030,10 +13864,13 @@ assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
     
     <span class="n">layer3</span> <span class="o">=</span> <span class="n">get_fcc_layer</span><span class="p">(</span><span class="n">flattened</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span>
     <span class="n">layer3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer3</span><span class="p">)</span>
+    <span class="n">layer3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">layer3</span><span class="p">,</span> <span class="n">keep_probability</span><span class="p">)</span>
+    <span class="c1"># maybe try dropout layer</span>
 
     <span class="n">layer4</span> <span class="o">=</span> <span class="n">get_fcc_layer</span><span class="p">(</span><span class="n">layer3</span><span class="p">,</span> <span class="mi">84</span><span class="p">)</span>
     <span class="n">layer4</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">layer4</span><span class="p">)</span>
     <span class="c1"># maybe try dropout layer</span>
+    <span class="n">layer4</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">layer4</span><span class="p">,</span> <span class="n">keep_probability</span><span class="p">)</span>
     
     <span class="n">logits</span> <span class="o">=</span> <span class="n">get_fcc_layer</span><span class="p">(</span><span class="n">layer4</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span>
     <span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="n">logits</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">num_classes</span><span class="p">])</span>
@@ -14086,24 +13923,50 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.</span>
+<span class="c1">### Feel free to use as many code cells as needed.</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="k">import</span> <span class="n">shuffle</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="c1"># images as imported are already sized properly for leNet at (32x32)</span>
+<span class="k">assert</span> <span class="p">((</span><span class="n">X_train_ORIG</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">X_train_ORIG</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>  <span class="c1">#32px x 32px, 3 color channels:RGB</span>
+
+<span class="c1"># shuffle data</span>
+<span class="n">X_train_SHUFFLED</span><span class="p">,</span> <span class="n">y_train_SHUFFLED</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="n">X_train_ORIG</span><span class="p">,</span> <span class="n">y_train_ORIG</span><span class="p">)</span>
+<span class="n">X_valid_SHUFFLED</span><span class="p">,</span> <span class="n">y_valid_SHUFFLED</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="n">X_valid_ORIG</span><span class="p">,</span> <span class="n">y_valid_ORIG</span><span class="p">)</span>
+    <span class="c1"># don&#39;t need to shuffle test data</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 <div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## initialize</span>
 
-<span class="c1"># choose which pre-processor to work with:</span>
 <span class="n">input_dataset</span> <span class="o">=</span> <span class="p">[</span><span class="n">X_train_SHUFFLED</span><span class="p">,</span> <span class="n">X_valid_SHUFFLED</span><span class="p">,</span> <span class="n">X_test_ORIG</span><span class="p">]</span>
 
+<span class="c1"># choose which pre-processor to work with:</span>
+
 <span class="c1"># X_train, X_valid, X_test = get_grayscale_datasets_1channel(input_dataset)              # must convert to 3D to use LeNet</span>
-<span class="c1"># X_train, X_valid, X_test = get_per_channel_normalized_datasets(input_dataset)          # - UNFINISHED</span>
 <span class="c1"># X_train, X_valid, X_test = get_grayscale_datasets(input_dataset)                       # must convert to 3D to use LeNet</span>
 <span class="c1"># X_train, X_valid, X_test = transform_grayscale_into_3D_grayscale(get_grayscale_datasets(input_dataset)) # Got TERRIBLE RESULTS</span>
-<span class="c1"># X_train, X_valid, X_test = get_per_channel_mean_zero_centered_datasets(input_dataset)   # Got TERRIBLE RESULTS</span>
-<span class="c1"># X_train, X_valid, X_test = get_per_channel_normalized_datasets(input_dataset)           # - UNFINISHED</span>
+<span class="c1"># X_train, X_valid, X_test = get_per_channel_mean_zero_centered_datasets(input_dataset)  # Got TERRIBLE RESULTS</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_valid</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">get_per_image_mean_centered_datasets</span><span class="p">(</span><span class="n">input_dataset</span><span class="p">)</span>
+
 
 <span class="c1"># labels do not get pre-processed</span>
 <span class="n">y_train</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="p">[</span><span class="n">y_train_SHUFFLED</span><span class="p">,</span> <span class="n">y_valid_SHUFFLED</span><span class="p">,</span> <span class="n">y_test_ORIG</span><span class="p">]</span>
+
 
 
 <span class="c1"># decide on a set training paramaters:</span>
@@ -14120,15 +13983,22 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 <span class="k">assert</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="p">)</span>
 <span class="n">pixels_x</span><span class="p">,</span> <span class="n">pixels_y</span><span class="p">,</span> <span class="n">color_depth</span> <span class="o">=</span> <span class="n">image_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
+<span class="c1"># probability of saving the node: Training Set: 0.5 (DROPOUT_ON  = 0.5)</span>
+<span class="c1">#           NO DROPOUT ON: Valid, Test Sets!! : 1.0 (DROPOUT_OFF = 1.0)</span>
+<span class="n">DROPOUT_OFF</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="p">(</span><span class="n">dropout_keep_prob</span> <span class="o">==</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">keep</span> <span class="n">everything</span><span class="p">)</span>
+<span class="n">DROPOUT_ON</span>  <span class="o">=</span> <span class="mf">0.5</span>  <span class="p">(</span><span class="n">dropout_keep_prob</span> <span class="o">==</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="n">randomly</span> <span class="nb">set</span> <span class="n">half</span> <span class="n">the</span> <span class="n">nodes</span> <span class="n">to</span> <span class="n">zero</span><span class="p">)</span>
+
 
 <span class="c1"># initialize tf training variables !!</span>
 <span class="c1"># features, labels</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">pixels_x</span><span class="p">,</span> <span class="n">pixels_y</span><span class="p">,</span> <span class="n">color_depth</span><span class="p">))</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">))</span>
 
+<span class="n">dropout_keep_prob</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+
 <span class="c1"># run leNet</span>
 <span class="n">logits</span> <span class="o">=</span> <span class="n">LeNet</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-
 
 <span class="c1"># loss</span>
 <span class="c1">#   tf.nn.sparse_softmax_cross_entropy_with_logits combines:</span>
@@ -14143,9 +14013,9 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 <span class="c1"># accuracy</span>
 <span class="n">model_prediction</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">prediction_is_correct</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">model_prediction</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="c1">#labels)</span>
-<span class="n">accuracy_calculation</span>   <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">prediction_is_correct</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+<span class="n">accuracy_calculation</span>  <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">prediction_is_correct</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
 
-<span class="c1"># save these for plotting how the model performed</span>
+<span class="c1"># save batch loss and accuracy results to visually plot how the model performed</span>
 <span class="n">training_stats</span> <span class="o">=</span> <span class="p">[]</span>
 </pre></div>
 
@@ -14168,34 +14038,7 @@ filter Tensor(&#34;MaxPool:0&#34;, shape=(?, 14, 14, 6), dtype=float32) 5
 </div>
 </div>
 
-</div>def test_reshaping_3D_into_4D():
-    # grayscale images have no depth dimension
-    # we need them to have a depth dimension of 1
-    gr = np.zeros([3,2,2])
-    print(gr)
-    gr = gr.reshape(3,2,2,1)
-    print(gr)
-
-    gr = np.zeros((3,2,2))
-    print(gr)
-    gr = np.reshape(gr, (3,2,2,1))
-    print(gr)
-
-    gr = np.zeros([3,2,2])
-    gr = [[["x11","x12"],["y11","y12"]],[["x21","x22"],["y21","y22"]],[["x31","x32"],["y31","y32"]]]
-    print(gr)
-    gr = np.reshape(gr,(3,2,2,1))
-    print(gr)
-    
-    print("old shape", X_train_gray.shape)
-    #X_train_gray.reshape(len(X_train_gray), 32, 32, 1)
-    np.reshape(X_train_gray, (len(X_train_gray), 32, 32, 1) )
-    print("new shape", X_train_gray.shape)
-    print("WHY DOES THIS VERSION _NOT_ WORK ?, WHEN THE OTHERS DO ?")
-    assert(False == True)
-
-#test_reshaping_3D_into_4D()
-
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -14224,7 +14067,7 @@ filter Tensor(&#34;MaxPool:0&#34;, shape=(?, 14, 14, 6), dtype=float32) 5
         <span class="n">y_batch</span> <span class="o">=</span> <span class="n">y_data</span><span class="p">[</span><span class="n">batch_start</span><span class="p">:</span><span class="n">batch_end</span><span class="p">]</span>
         
         <span class="n">accuracy</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">accuracy_calculation</span><span class="p">,</span> <span class="n">loss_operation</span><span class="p">],</span>
-                                  <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">X_batch</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">y_batch</span><span class="p">})</span>
+                                  <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">X_batch</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">y_batch</span><span class="p">,</span> <span class="n">dropout_keep_prob</span> <span class="o">=</span> <span class="n">DROPOUT_OFF</span><span class="p">})</span>
         
         <span class="n">this_batch_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_batch</span><span class="p">)</span>
         
@@ -14263,7 +14106,7 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
@@ -14284,7 +14127,7 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
             <span class="n">features</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">batch_start</span><span class="p">:</span><span class="n">batch_end</span><span class="p">]</span>
             <span class="n">labels</span>   <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">batch_start</span><span class="p">:</span><span class="n">batch_end</span><span class="p">]</span>
             <span class="c1">#train</span>
-            <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">training_operation</span><span class="p">,</span> <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">features</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">labels</span><span class="p">})</span>
+            <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">training_operation</span><span class="p">,</span> <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span><span class="n">features</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span><span class="n">labels</span><span class="p">,</span> <span class="n">dropout_keep_prob</span> <span class="o">=</span> <span class="n">DROPOUT_ON</span><span class="p">})</span>
             <span class="k">if</span> <span class="n">batch_start</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;        batch &quot;</span><span class="p">,</span> <span class="mi">1</span><span class="o">+</span><span class="n">batch_start</span><span class="o">//</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="s2">&quot;of &quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_examples</span><span class="o">/</span><span class="n">BATCH_SIZE</span><span class="p">))</span><span class="c1">#, &quot;batches,  on EPOCH&quot;, i+1, &quot;of&quot;, EPOCHS, &quot;EPOCHS&quot;)</span>
                       
@@ -14292,7 +14135,9 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
         <span class="nb">print</span><span class="p">(</span><span class="n">X_valid</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="n">validation_accuracy</span><span class="p">,</span> <span class="n">validation_loss</span> <span class="o">=</span> <span class="n">evaluate_data</span><span class="p">(</span><span class="n">X_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">)</span>
         <span class="n">training_accuracy</span><span class="p">,</span>   <span class="n">training_loss</span> <span class="o">=</span> <span class="n">evaluate_data</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-        <span class="c1">#print(&quot;EPOCH {} ...&quot;.format(i+1))</span>
+        
+        <span class="c1"># TODO: would be awesome to display live charts of these results, rather than this text output </span>
+        <span class="c1">#      (see charts in next cell)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Time: </span><span class="si">{:.3f}</span><span class="s2"> minutes&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t0</span><span class="p">)</span> <span class="o">/</span> <span class="mi">60</span> <span class="p">)))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Validation Loss = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">validation_loss</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; (Training Loss = </span><span class="si">{:.3f}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">training_loss</span><span class="p">))</span>
@@ -14304,7 +14149,8 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
         <span class="n">training_stats</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">validation_loss</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">training_loss</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">validation_accuracy</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">training_accuracy</span><span class="p">,</span><span class="mi">4</span><span class="p">)])</span>
         <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s1">&#39;training_stats.tmp.txt&#39;</span><span class="p">,</span> <span class="n">training_stats</span><span class="p">)</span>
         
-    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;training_stats-&#39;</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%y%m</span><span class="si">%d</span><span class="s2">_%H%M&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
+    <span class="n">model_timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%y%m</span><span class="si">%d</span><span class="s2">_%H%M&quot;</span><span class="p">)</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;training_stats-&#39;</span> <span class="o">+</span> <span class="n">model_timestamp</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span>
     <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">training_stats</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">training_stats Saved As: &quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>    
 
@@ -14337,2119 +14183,18 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 
 
 <div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Training...
-
-EPOCH:  1 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.558 minutes
-Validation Loss = 2.146
- (Training Loss = 2.052)
-Validation Accuracy = 0.295
- (Training Accuracy = 0.323)
-
-EPOCH:  2 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.548 minutes
-Validation Loss = 1.600
- (Training Loss = 1.313)
-Validation Accuracy = 0.500
- (Training Accuracy = 0.557)
-
-EPOCH:  3 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.554 minutes
-Validation Loss = 1.012
- (Training Loss = 0.670)
-Validation Accuracy = 0.711
- (Training Accuracy = 0.788)
-
-EPOCH:  4 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.560 minutes
-Validation Loss = 0.777
- (Training Loss = 0.387)
-Validation Accuracy = 0.792
- (Training Accuracy = 0.882)
-
-EPOCH:  5 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.566 minutes
-Validation Loss = 0.624
- (Training Loss = 0.221)
-Validation Accuracy = 0.844
- (Training Accuracy = 0.936)
-
-EPOCH:  6 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.558 minutes
-Validation Loss = 0.525
- (Training Loss = 0.139)
-Validation Accuracy = 0.880
- (Training Accuracy = 0.962)
-
-EPOCH:  7 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.569 minutes
-Validation Loss = 0.591
- (Training Loss = 0.138)
-Validation Accuracy = 0.854
- (Training Accuracy = 0.957)
-
-EPOCH:  8 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.567 minutes
-Validation Loss = 0.487
- (Training Loss = 0.080)
-Validation Accuracy = 0.895
- (Training Accuracy = 0.977)
-
-EPOCH:  9 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.566 minutes
-Validation Loss = 0.470
- (Training Loss = 0.069)
-Validation Accuracy = 0.908
- (Training Accuracy = 0.980)
-
-EPOCH:  10 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.571 minutes
-Validation Loss = 0.457
- (Training Loss = 0.060)
-Validation Accuracy = 0.908
- (Training Accuracy = 0.982)
-
-EPOCH:  11 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.570 minutes
-Validation Loss = 0.479
- (Training Loss = 0.040)
-Validation Accuracy = 0.908
- (Training Accuracy = 0.989)
-
-EPOCH:  12 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.569 minutes
-Validation Loss = 0.480
- (Training Loss = 0.046)
-Validation Accuracy = 0.914
- (Training Accuracy = 0.986)
-
-EPOCH:  13 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.569 minutes
-Validation Loss = 0.518
- (Training Loss = 0.031)
-Validation Accuracy = 0.905
- (Training Accuracy = 0.991)
-
-EPOCH:  14 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.568 minutes
-Validation Loss = 0.456
- (Training Loss = 0.021)
-Validation Accuracy = 0.917
- (Training Accuracy = 0.994)
-
-EPOCH:  15 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.570 minutes
-Validation Loss = 0.471
- (Training Loss = 0.039)
-Validation Accuracy = 0.914
- (Training Accuracy = 0.987)
-
-EPOCH:  16 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.570 minutes
-Validation Loss = 0.479
- (Training Loss = 0.021)
-Validation Accuracy = 0.919
- (Training Accuracy = 0.994)
-
-EPOCH:  17 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.566 minutes
-Validation Loss = 0.485
- (Training Loss = 0.023)
-Validation Accuracy = 0.920
- (Training Accuracy = 0.993)
-
-EPOCH:  18 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.569 minutes
-Validation Loss = 0.498
- (Training Loss = 0.017)
-Validation Accuracy = 0.927
- (Training Accuracy = 0.995)
-
-EPOCH:  19 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.569 minutes
-Validation Loss = 0.527
- (Training Loss = 0.017)
-Validation Accuracy = 0.927
- (Training Accuracy = 0.995)
-
-EPOCH:  20 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.570 minutes
-Validation Loss = 0.484
- (Training Loss = 0.013)
-Validation Accuracy = 0.929
- (Training Accuracy = 0.997)
-
-EPOCH:  21 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.569 minutes
-Validation Loss = 0.540
- (Training Loss = 0.025)
-Validation Accuracy = 0.926
- (Training Accuracy = 0.992)
-
-EPOCH:  22 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.567 minutes
-Validation Loss = 0.503
- (Training Loss = 0.020)
-Validation Accuracy = 0.928
- (Training Accuracy = 0.993)
-
-EPOCH:  23 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.567 minutes
-Validation Loss = 0.496
- (Training Loss = 0.022)
-Validation Accuracy = 0.932
- (Training Accuracy = 0.993)
-
-EPOCH:  24 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.568 minutes
-Validation Loss = 0.518
- (Training Loss = 0.017)
-Validation Accuracy = 0.931
- (Training Accuracy = 0.995)
-
-EPOCH:  25 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.576 minutes
-Validation Loss = 0.543
- (Training Loss = 0.007)
-Validation Accuracy = 0.934
- (Training Accuracy = 0.998)
-
-EPOCH:  26 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.576 minutes
-Validation Loss = 0.469
- (Training Loss = 0.003)
-Validation Accuracy = 0.941
- (Training Accuracy = 0.999)
-
-EPOCH:  27 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.573 minutes
-Validation Loss = 0.559
- (Training Loss = 0.016)
-Validation Accuracy = 0.927
- (Training Accuracy = 0.995)
-
-EPOCH:  28 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.576 minutes
-Validation Loss = 0.561
- (Training Loss = 0.006)
-Validation Accuracy = 0.927
- (Training Accuracy = 0.998)
-
-EPOCH:  29 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.572 minutes
-Validation Loss = 0.553
- (Training Loss = 0.002)
-Validation Accuracy = 0.934
- (Training Accuracy = 1.000)
-
-EPOCH:  30 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.576 minutes
-Validation Loss = 0.531
- (Training Loss = 0.001)
-Validation Accuracy = 0.941
- (Training Accuracy = 1.000)
-
-EPOCH:  31 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.573 minutes
-Validation Loss = 0.535
- (Training Loss = 0.000)
-Validation Accuracy = 0.941
- (Training Accuracy = 1.000)
-
-EPOCH:  32 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.573 minutes
-Validation Loss = 0.546
- (Training Loss = 0.000)
-Validation Accuracy = 0.942
- (Training Accuracy = 1.000)
-
-EPOCH:  33 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.573 minutes
-Validation Loss = 0.561
- (Training Loss = 0.000)
-Validation Accuracy = 0.943
- (Training Accuracy = 1.000)
-
-EPOCH:  34 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.573 minutes
-Validation Loss = 0.564
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  35 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.573 minutes
-Validation Loss = 0.488
- (Training Loss = 0.042)
-Validation Accuracy = 0.927
- (Training Accuracy = 0.987)
-
-EPOCH:  36 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.573 minutes
-Validation Loss = 0.447
- (Training Loss = 0.013)
-Validation Accuracy = 0.932
- (Training Accuracy = 0.996)
-
-EPOCH:  37 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.577 minutes
-Validation Loss = 0.437
- (Training Loss = 0.003)
-Validation Accuracy = 0.940
- (Training Accuracy = 0.999)
-
-EPOCH:  38 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.576 minutes
-Validation Loss = 0.475
- (Training Loss = 0.001)
-Validation Accuracy = 0.944
- (Training Accuracy = 1.000)
-
-EPOCH:  39 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.575 minutes
-Validation Loss = 0.474
- (Training Loss = 0.001)
-Validation Accuracy = 0.943
- (Training Accuracy = 1.000)
-
-EPOCH:  40 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.576 minutes
-Validation Loss = 0.535
- (Training Loss = 0.000)
-Validation Accuracy = 0.941
- (Training Accuracy = 1.000)
-
-EPOCH:  41 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.574 minutes
-Validation Loss = 0.509
- (Training Loss = 0.000)
-Validation Accuracy = 0.944
- (Training Accuracy = 1.000)
-
-EPOCH:  42 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.576 minutes
-Validation Loss = 0.523
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  43 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.577 minutes
-Validation Loss = 0.527
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  44 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.576 minutes
-Validation Loss = 0.538
- (Training Loss = 0.000)
-Validation Accuracy = 0.946
- (Training Accuracy = 1.000)
-
-EPOCH:  45 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.576 minutes
-Validation Loss = 0.555
- (Training Loss = 0.000)
-Validation Accuracy = 0.944
- (Training Accuracy = 1.000)
-
-EPOCH:  46 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.578 minutes
-Validation Loss = 0.557
- (Training Loss = 0.000)
-Validation Accuracy = 0.946
- (Training Accuracy = 1.000)
-
-EPOCH:  47 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.577 minutes
-Validation Loss = 0.562
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  48 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.579 minutes
-Validation Loss = 0.576
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  49 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.581 minutes
-Validation Loss = 0.578
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  50 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.578 minutes
-Validation Loss = 0.590
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  51 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.579 minutes
-Validation Loss = 0.598
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  52 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.580 minutes
-Validation Loss = 0.606
- (Training Loss = 0.000)
-Validation Accuracy = 0.946
- (Training Accuracy = 1.000)
-
-EPOCH:  53 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.583 minutes
-Validation Loss = 0.615
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  54 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.582 minutes
-Validation Loss = 0.619
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  55 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.584 minutes
-Validation Loss = 0.624
- (Training Loss = 0.000)
-Validation Accuracy = 0.946
- (Training Accuracy = 1.000)
-
-EPOCH:  56 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.586 minutes
-Validation Loss = 0.635
- (Training Loss = 0.000)
-Validation Accuracy = 0.944
- (Training Accuracy = 1.000)
-
-EPOCH:  57 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.584 minutes
-Validation Loss = 0.644
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  58 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.584 minutes
-Validation Loss = 0.651
- (Training Loss = 0.000)
-Validation Accuracy = 0.946
- (Training Accuracy = 1.000)
-
-EPOCH:  59 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.587 minutes
-Validation Loss = 0.656
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  60 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.585 minutes
-Validation Loss = 0.663
- (Training Loss = 0.000)
-Validation Accuracy = 0.946
- (Training Accuracy = 1.000)
-
-EPOCH:  61 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.583 minutes
-Validation Loss = 0.666
- (Training Loss = 0.000)
-Validation Accuracy = 0.946
- (Training Accuracy = 1.000)
-
-EPOCH:  62 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.586 minutes
-Validation Loss = 0.675
- (Training Loss = 0.000)
-Validation Accuracy = 0.946
- (Training Accuracy = 1.000)
-
-EPOCH:  63 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.586 minutes
-Validation Loss = 0.689
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  64 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.590 minutes
-Validation Loss = 0.702
- (Training Loss = 0.000)
-Validation Accuracy = 0.946
- (Training Accuracy = 1.000)
-
-EPOCH:  65 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.586 minutes
-Validation Loss = 0.706
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  66 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.589 minutes
-Validation Loss = 0.716
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  67 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.587 minutes
-Validation Loss = 0.721
- (Training Loss = 0.000)
-Validation Accuracy = 0.946
- (Training Accuracy = 1.000)
-
-EPOCH:  68 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.589 minutes
-Validation Loss = 0.721
- (Training Loss = 0.000)
-Validation Accuracy = 0.946
- (Training Accuracy = 1.000)
-
-EPOCH:  69 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.589 minutes
-Validation Loss = 0.730
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  70 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.595 minutes
-Validation Loss = 0.756
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  71 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.627 minutes
-Validation Loss = 0.755
- (Training Loss = 0.000)
-Validation Accuracy = 0.946
- (Training Accuracy = 1.000)
-
-EPOCH:  72 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.596 minutes
-Validation Loss = 0.766
- (Training Loss = 0.000)
-Validation Accuracy = 0.945
- (Training Accuracy = 1.000)
-
-EPOCH:  73 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.599 minutes
-Validation Loss = 0.782
- (Training Loss = 0.000)
-Validation Accuracy = 0.944
- (Training Accuracy = 1.000)
-
-EPOCH:  74 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.599 minutes
-Validation Loss = 0.764
- (Training Loss = 0.000)
-Validation Accuracy = 0.946
- (Training Accuracy = 1.000)
-
-EPOCH:  75 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.576 minutes
-Validation Loss = 0.497
- (Training Loss = 0.010)
-Validation Accuracy = 0.932
- (Training Accuracy = 0.997)
-
-EPOCH:  76 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.578 minutes
-Validation Loss = 0.516
- (Training Loss = 0.005)
-Validation Accuracy = 0.936
- (Training Accuracy = 0.998)
-
-EPOCH:  77 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.576 minutes
-Validation Loss = 0.481
- (Training Loss = 0.012)
-Validation Accuracy = 0.939
- (Training Accuracy = 0.997)
-
-EPOCH:  78 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.575 minutes
-Validation Loss = 0.445
- (Training Loss = 0.004)
-Validation Accuracy = 0.945
- (Training Accuracy = 0.999)
-
-EPOCH:  79 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.577 minutes
-Validation Loss = 0.528
- (Training Loss = 0.003)
-Validation Accuracy = 0.943
- (Training Accuracy = 0.999)
-
-EPOCH:  80 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.578 minutes
-Validation Loss = 0.433
- (Training Loss = 0.014)
-Validation Accuracy = 0.945
- (Training Accuracy = 0.996)
-
-EPOCH:  81 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.580 minutes
-Validation Loss = 0.610
- (Training Loss = 0.004)
-Validation Accuracy = 0.943
- (Training Accuracy = 0.999)
-
-EPOCH:  82 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.574 minutes
-Validation Loss = 0.585
- (Training Loss = 0.002)
-Validation Accuracy = 0.945
- (Training Accuracy = 0.999)
-
-EPOCH:  83 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.577 minutes
-Validation Loss = 0.511
- (Training Loss = 0.001)
-Validation Accuracy = 0.950
- (Training Accuracy = 1.000)
-
-EPOCH:  84 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.576 minutes
-Validation Loss = 0.458
- (Training Loss = 0.000)
-Validation Accuracy = 0.955
- (Training Accuracy = 1.000)
-
-EPOCH:  85 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.570 minutes
-Validation Loss = 0.470
- (Training Loss = 0.000)
-Validation Accuracy = 0.954
- (Training Accuracy = 1.000)
-
-EPOCH:  86 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.567 minutes
-Validation Loss = 0.485
- (Training Loss = 0.000)
-Validation Accuracy = 0.954
- (Training Accuracy = 1.000)
-
-EPOCH:  87 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.565 minutes
-Validation Loss = 0.500
- (Training Loss = 0.000)
-Validation Accuracy = 0.953
- (Training Accuracy = 1.000)
-
-EPOCH:  88 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.570 minutes
-Validation Loss = 0.513
- (Training Loss = 0.000)
-Validation Accuracy = 0.953
- (Training Accuracy = 1.000)
-
-EPOCH:  89 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.563 minutes
-Validation Loss = 0.525
- (Training Loss = 0.000)
-Validation Accuracy = 0.954
- (Training Accuracy = 1.000)
-
-EPOCH:  90 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.564 minutes
-Validation Loss = 0.537
- (Training Loss = 0.000)
-Validation Accuracy = 0.954
- (Training Accuracy = 1.000)
-
-EPOCH:  91 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.564 minutes
-Validation Loss = 0.547
- (Training Loss = 0.000)
-Validation Accuracy = 0.954
- (Training Accuracy = 1.000)
-
-EPOCH:  92 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.567 minutes
-Validation Loss = 0.555
- (Training Loss = 0.000)
-Validation Accuracy = 0.954
- (Training Accuracy = 1.000)
-
-EPOCH:  93 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.573 minutes
-Validation Loss = 0.561
- (Training Loss = 0.000)
-Validation Accuracy = 0.954
- (Training Accuracy = 1.000)
-
-EPOCH:  94 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.570 minutes
-Validation Loss = 0.574
- (Training Loss = 0.000)
-Validation Accuracy = 0.954
- (Training Accuracy = 1.000)
-
-EPOCH:  95 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.573 minutes
-Validation Loss = 0.582
- (Training Loss = 0.000)
-Validation Accuracy = 0.954
- (Training Accuracy = 1.000)
-
-EPOCH:  96 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.580 minutes
-Validation Loss = 0.591
- (Training Loss = 0.000)
-Validation Accuracy = 0.954
- (Training Accuracy = 1.000)
-
-EPOCH:  97 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.601 minutes
-Validation Loss = 0.600
- (Training Loss = 0.000)
-Validation Accuracy = 0.953
- (Training Accuracy = 1.000)
-
-EPOCH:  98 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.597 minutes
-Validation Loss = 0.612
- (Training Loss = 0.000)
-Validation Accuracy = 0.953
- (Training Accuracy = 1.000)
-
-EPOCH:  99 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.579 minutes
-Validation Loss = 0.615
- (Training Loss = 0.000)
-Validation Accuracy = 0.953
- (Training Accuracy = 1.000)
-
-EPOCH:  100 of 100 EPOCHS
-        batch  1 of  272
-        batch  26 of  272
-        batch  51 of  272
-        batch  76 of  272
-        batch  101 of  272
-        batch  126 of  272
-        batch  151 of  272
-        batch  176 of  272
-        batch  201 of  272
-        batch  226 of  272
-        batch  251 of  272
-(4410, 32, 32, 3)
-evaluating..
-evaluating..
-Time: 0.585 minutes
-Validation Loss = 0.626
- (Training Loss = 0.000)
-Validation Accuracy = 0.953
- (Training Accuracy = 1.000)
-
-
-training_stats Saved As:  training_stats-170327_1518.txt 
-
-Saving model..
-Model Saved
-
- !! Congratulations!! Your model meets the minimum required Validation Accuracy of 0.93
-   You may now run your model on the Test Set :-)
-
-</pre>
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-1-8256d7d7d08b&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> 
+<span class="ansi-green-intense-fg ansi-bold">      3</span> <span class="ansi-red-intense-fg ansi-bold"># train our model</span>
+<span class="ansi-green-fg">----&gt; 4</span><span class="ansi-red-fg"> </span><span class="ansi-green-intense-fg ansi-bold">with</span> tf<span class="ansi-yellow-intense-fg ansi-bold">.</span>Session<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span> <span class="ansi-green-intense-fg ansi-bold">as</span> sess<span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-intense-fg ansi-bold">      5</span>     sess<span class="ansi-yellow-intense-fg ansi-bold">.</span>run<span class="ansi-yellow-intense-fg ansi-bold">(</span>tf<span class="ansi-yellow-intense-fg ansi-bold">.</span>global_variables_initializer<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-intense-fg ansi-bold">      6</span>     num_examples <span class="ansi-yellow-intense-fg ansi-bold">=</span> len<span class="ansi-yellow-intense-fg ansi-bold">(</span>X_train<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+
+<span class="ansi-red-fg">NameError</span>: name &#39;tf&#39; is not defined</pre>
 </div>
 </div>
 
@@ -16469,6 +14214,7 @@ Model Saved
 
 <span class="c1"># Read the array from disk</span>
 <span class="c1">#training_stats_read_from_disk = np.loadtxt(&#39;training_stats.txt&#39;)</span>
+<span class="c1"># IF read a model from disk, must also set model_timestamp associated with the filename !! else will run into error saving the figure</span>
 <span class="c1">#print training_stats_read_from.shape</span>
 
 <span class="n">num_epochs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">training_stats</span><span class="p">)</span>
@@ -16509,8 +14255,10 @@ Model Saved
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-        
-<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;training_stats_plotted-&#39;</span> <span class="o">+</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%y%m</span><span class="si">%d</span><span class="s2">_%H%M&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span>
+    
+<span class="c1"># model_timestamp = time.strftime(&quot;%y%m%d_%H%M&quot;)</span>
+<span class="c1"># model_timestamp for figure should match the timestamp from the model&#39;s file, not the current timestamp (see prev cell and top of this cell)</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;training_stats_plotted-&#39;</span> <span class="o">+</span> <span class="n">model_timestamp</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span>
 
 <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>  <span class="c1"># results in 160x120 px image</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Figure saved as &quot;</span> <span class="o">+</span> <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -18861,7 +16609,7 @@ a = np.array([[ 0.24879643,  0.07032244,  0.12641572,  0.34763842,  0.07893497,
     <span class="c1"># image_input =</span>
     <span class="c1"># Note: x should be the same name as your network&#39;s tensorflow data placeholder variable</span>
     <span class="c1"># If you get an error tf_activation is not defined it maybe having trouble accessing the variable from inside a function</span>
-    <span class="n">activation</span> <span class="o">=</span> <span class="n">tf_activation</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">sess</span><span class="p">,</span><span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span> <span class="p">:</span> <span class="n">image_input</span><span class="p">})</span>
+    <span class="n">activation</span> <span class="o">=</span> <span class="n">tf_activation</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">sess</span><span class="p">,</span><span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span> <span class="p">:</span> <span class="n">image_input</span><span class="p">,</span> <span class="n">dropout_keep_prob</span> <span class="o">=</span> <span class="n">DROPOUT_OFF</span><span class="p">})</span>
     <span class="n">featuremaps</span> <span class="o">=</span> <span class="n">activation</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">plt_num</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">featuremap</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">featuremaps</span><span class="p">):</span>
