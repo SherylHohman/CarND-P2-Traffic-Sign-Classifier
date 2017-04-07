@@ -17150,7 +17150,7 @@ jDEd2P8DEC6SJJ9w9hEAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## STOP !! Do NOT Proceed Until Model is FINISHED and has Validation &gt;= 93%</span>
@@ -17159,7 +17159,29 @@ jDEd2P8DEC6SJJ9w9hEAAAAASUVORK5CYII=
     <span class="c1"># overfitting  if: high accuracy on training but low accuracy on validation sets.</span>
 
 <span class="k">assert</span> <span class="p">(</span><span class="n">validation_accuracy</span> <span class="o">&gt;=</span> <span class="mf">0.9300</span><span class="p">)</span>
-<span class="k">assert</span> <span class="p">(</span><span class="s1">&#39;yes&#39;</span> <span class="o">==</span> <span class="s1">&#39;no&#39;</span><span class="p">)</span>
+<span class="c1">#assert (&#39;yes&#39; == &#39;no&#39;)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># test the trained model</span>
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+    <span class="n">saver</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">latest_checkpoint</span><span class="p">(</span><span class="s1">&#39;./trained_models/.&#39;</span><span class="p">))</span>
+
+    <span class="n">test_accuracy</span><span class="p">,</span> <span class="n">test_loss</span> <span class="o">=</span> <span class="n">evaluate_data</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">test_accuracy</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test Loss     = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_loss</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test Accuracy = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_accuracy</span><span class="p">))</span>
+    
+<span class="c1">#assert (&#39;yes&#39; == &#39;no&#39;)</span>
 </pre></div>
 
 </div>
@@ -17171,41 +17193,15 @@ jDEd2P8DEC6SJJ9w9hEAAAAASUVORK5CYII=
 
 
 <div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">AssertionError</span>                            Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-22-662a495ee6e4&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">      5</span> 
-<span class="ansi-green-intense-fg ansi-bold">      6</span> <span class="ansi-green-intense-fg ansi-bold">assert</span> <span class="ansi-yellow-intense-fg ansi-bold">(</span>validation_accuracy <span class="ansi-yellow-intense-fg ansi-bold">&gt;=</span> <span class="ansi-cyan-intense-fg ansi-bold">0.9300</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
-<span class="ansi-green-fg">----&gt; 7</span><span class="ansi-red-fg"> </span><span class="ansi-green-intense-fg ansi-bold">assert</span> <span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#39;yes&#39;</span> <span class="ansi-yellow-intense-fg ansi-bold">==</span> <span class="ansi-blue-intense-fg ansi-bold">&#39;no&#39;</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
-
-<span class="ansi-red-fg">AssertionError</span>: </pre>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>evaluating..
+0.940063341062
+Test Loss     = 0.632
+Test Accuracy = 0.940
+</pre>
 </div>
 </div>
 
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># test the trained model</span>
-<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
-    <span class="n">saver</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">latest_checkpoint</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">))</span>
-
-    <span class="n">test_accuracy</span><span class="p">,</span> <span class="n">test_loss</span> <span class="o">=</span> <span class="n">evaluate_data</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">test_accuracy</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test Loss     = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_loss</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Test Accuracy = </span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">test_accuracy</span><span class="p">))</span>
-    
-<span class="c1">#assert (&#39;yes&#39; == &#39;no&#39;)</span>
-</pre></div>
-
-</div>
 </div>
 </div>
 
