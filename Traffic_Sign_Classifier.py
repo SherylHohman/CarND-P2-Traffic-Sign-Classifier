@@ -1028,7 +1028,7 @@ with tf.Session() as sess:
 
 # ### Load and Output the Images
 
-# In[36]:
+# In[130]:
 
 ### Load the images and plot them here.
 ### Feel free to use as many code cells as needed.
@@ -1051,7 +1051,7 @@ with tf.Session() as sess:
 
 
 
-# In[127]:
+# In[131]:
 
 import numpy as np
 import glob
@@ -1062,13 +1062,11 @@ from scipy import misc
 #                     np.uint8).reshape(img.size[1], img.size[0], 3)
 
 paths = ['traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/*.jpg',
-         'traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/*.jpg'#,
-         #'traffic_signs_from_web/32x32x3/3_difficult_NOT_in_signnames/*.jpg'
+         'traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/*.jpg'
         ]
 dataset_descriptions = ['Set 1: Straightforward: \n        Expect Good Matches.', 
-                 'Set 2: These signs are Not part of the signnames.csv, but are Similar to Signs that were. \n        Curious if it picks signs that I think look similar'#,
-                 #'Set 3: These signs are not part of signnames.csv, and quite different. \n        Curious to see what the nn makes out of these.'
-                ]
+                        'Set 2: These signs are Not part of the signnames.csv, but are Similar to Signs that were. \n        Curious if it picks signs that I think look similar'                 
+                       ]
 
 num_datasets = len(paths)
 web_datasets_ORIG = []
@@ -1087,7 +1085,7 @@ for s in range(num_datasets):
 print('Importing done...', len(web_datasets_ORIG), "sets of traffic sign images from the web")
 
 
-# In[128]:
+# In[132]:
 
 # pre-process images
 #pp_images = pre_processed_signs_from_web = get_per_image_mean_centered_datasets(datasets)
@@ -1099,7 +1097,7 @@ print(X_set1.shape)
 
 # ### Predict the Sign Type for Each Image
 
-# In[129]:
+# In[133]:
 
 ### Run the predictions here and use the model to output the prediction for each image.
 ### Make sure to pre-process the images with the same pre-processing pipeline used earlier.
@@ -1130,15 +1128,43 @@ for set in [signs_set1, signs_set2]:
 
 
 
-# In[ ]:
+# ### Analyze Performance
+# My classifier performed terrible on the images I expected good results on.
+# Signs 1, 6: To be fair, I could have cropped these better.
+# Sign 6: I expect should get a correct answer with closer cropping.  
+#     Then again, I was overly optimistic that it would do well even given the bad crop I handed it. 
+#     I can imagine that the crop I gave it lent a partial figure-8 shape to confuse it, though at the wrong scale??
+# Sign 2: Was in black an white, so it is missing color information, which may have otherwise helped nudge it to the correct answer.  
+#     Additionally, the sign was skewed at an angle, and placed against another sign, 
+#     so it's overall shape could be difficult to discern.
+#     Unfortunately, the misinterpretation is Grave:  
+#         'No Entry' sign became an "End All Speed and Passing Limits" 
+#         - the exact Opposite of the intended !
+# Sign 3:  No Idea what happened there! Perhaps the edges of the triangle resembled a 5, though at the wrong scale??
+#     If so this is similar to what I "imagine" threw it off for image 6. Or I just have an imagination.
+# Sign 4 and 5, Fortunately, It got these Correct !!
+# 
+# So this classifier was correct on 2/6 images, or 33% correct. 
+# That's Far lower than the test, and validation sets!!  It's downright Terrible.
+# 
+# The second dataset consisted of street signs that were not part of the street_sign names our classifier was trained on.
+#     Indeed, the correct sign names do not even exist in the csv signnames file, 
+#     so it was impossible for our classifier to get any of these correct.
+#     I was simply curious how it would interpret them: would see the same type similarities **I** see when looking at them?
+#     would it make the same choices I would ?
+# Sign 2: Surprisingly, it got almost about as close a guess as possible. Must be beginner's luck
+# Sign 5: Was also surprisingly good guess.
+# Signs 3, 6, 7: These three signs I Expected the classifier to, no-brainer, return specific predictions. 
+#     Nope. It passed over images which I think they look Very similar to, 
+#     in favor of images that I think look not at all similar to these signs. I'm clueless what it was "thinking"
+# Signs 1, 4: I expected rubbish responses to these rubbish images. Never-the-less, I see no resemblence to what it _did_ choose. 
+#     I guess NaN was not an option?
 
-### Analyze Performance
-
-
-# In[ ]:
+# In[137]:
 
 ### Calculate the accuracy for these 5 new images. 
 ### For example, if the model predicted 1 out of 5 signs correctly, it's 20% accurate on these new images.
+print("Classifier was ", 100*2//6, "% accurate on the new images, getting 2 of 6 correct")
 
 
 # ### Output Top 5 Softmax Probabilities For Each Image Found on the Web
