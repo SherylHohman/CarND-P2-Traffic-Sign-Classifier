@@ -643,6 +643,7 @@ def LeNet(x):
     
     logits = get_fcc_layer(layer4, num_classes)
     assert( [logits.get_shape().as_list()[1] ] == [num_classes])
+    print(logits)
 
     
     return logits
@@ -723,6 +724,7 @@ DROPOUT_ON  = 0.5  #(dropout_keep_probability == 0.5 : randomly set half the nod
 x = tf.placeholder(tf.float32, (None, pixels_x, pixels_y, color_depth))
 y = tf.placeholder(tf.int64, (None))
 
+# using dropout on training set at fcc_3 and fcc_4, not on validation loss calculation, or on test set.
 keep_probability = tf.placeholder(tf.float32)
 
 
@@ -778,7 +780,7 @@ def evaluate_data(X_data, y_data):
 
 
 # 
-# TEMP TRUNCATE DATA FOR INITIAL TESTING
+# TEMP TRUNCATE DATA FOR Alpha TESTING the code
 """  
 # truncate the training set to be just a bit larger than the BATCH_SIZE (so run at least 2 batches per epoch)
 tr = int(BATCH_SIZE * 1.2)
@@ -843,6 +845,8 @@ with tf.Session() as sess:
         np.savetxt('./training_stats/training_stats.tmp.txt', training_stats)
         
     tend = time.time()
+    print("\nElapsed Training Time: {:.3f} minutes".format(float( (time.time()-tstart) / 60 )))
+    
     model_timestamp = time.strftime("%y%m%d_%H%M")
     filename = './training_stats/training_stats_' + model_timestamp + '.txt'
     np.savetxt(filename, training_stats)
@@ -977,6 +981,9 @@ print("Figure saved as " + filename + "\n")
 # Ideally, it'd mathematically be programmed in. But that's more work than it's worth for this project.
 # The interest here, is to see if it's something that would even make sense to do - does it affect the model or no?
 
+# Would like to see how Augmentation would affect the training graphs. This model performs well enough, however to move on.
+#   It's more important to complete this project right now.  Perhaps Augmentation (or even inception) can be done at another time
+
 
 ## Add randomized Augmentation to each batch (generate randomize settings, apply that settting to entire batch of images)
 # load figure training_stats_plotted-??????????.png
@@ -1044,7 +1051,7 @@ with tf.Session() as sess:
 
 
 
-# In[42]:
+# In[127]:
 
 import numpy as np
 import glob
@@ -1055,43 +1062,72 @@ from scipy import misc
 #                     np.uint8).reshape(img.size[1], img.size[0], 3)
 
 paths = ['traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/*.jpg',
-         'traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/*.jpg',
-         'traffic_signs_from_web/32x32x3/3_difficult_NOT_in_signnames/*.jpg'
+         'traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/*.jpg'#,
+         #'traffic_signs_from_web/32x32x3/3_difficult_NOT_in_signnames/*.jpg'
         ]
 dataset_descriptions = ['Set 1: Straightforward: \n        Expect Good Matches.', 
-                 'Set 2: These signs are Not part of the signnames.csv, but are Similar to Signs that were. \n        Curious if it picks signs that I think look similar',
-                 'Set 3: These signs are not part of signnames.csv, and quite different. \n        Curious to see what the nn makes out of these.'
+                 'Set 2: These signs are Not part of the signnames.csv, but are Similar to Signs that were. \n        Curious if it picks signs that I think look similar'#,
+                 #'Set 3: These signs are not part of signnames.csv, and quite different. \n        Curious to see what the nn makes out of these.'
                 ]
 
 num_datasets = len(paths)
-datasets = []
+web_datasets_ORIG = []
 for s in range(num_datasets):
-    dataset = []
+    new_dataset = []
     for image_path in glob.glob(paths[s]):
-        dataset.append(misc.imread(image_path))    
+        new_dataset.append(misc.imread(image_path))    
 
-    dataset = np.asarray(dataset)
+    new_dataset = np.asarray(new_dataset)
     #print(dataset.shape)
     print("\n", dataset_descriptions[s])
-    display_images(dataset)
+    display_images(new_dataset)
     
-    datasets.append(dataset)
+    web_datasets_ORIG.append(new_dataset)
 
-#print('Importing done...', len(datasets))
+print('Importing done...', len(web_datasets_ORIG), "sets of traffic sign images from the web")
 
 
-# In[ ]:
+# In[128]:
 
 # pre-process images
+#pp_images = pre_processed_signs_from_web = get_per_image_mean_centered_datasets(datasets)
+
+X_set1, X_set2, X_set3 = get_per_image_mean_centered_datasets(web_datasets_ORIG)
+print(X_set1.shape)
+
 
 
 # ### Predict the Sign Type for Each Image
 
-# In[ ]:
+# In[129]:
 
 ### Run the predictions here and use the model to output the prediction for each image.
 ### Make sure to pre-process the images with the same pre-processing pipeline used earlier.
 ### Feel free to use as many code cells as needed.
+
+# create np.array of signnames from our csv file. throw "index" away, only want the sign_names
+index, sign_names = np.genfromtxt('./signnames.csv', unpack=True, dtype=np.str_, delimiter=',', skip_header=1)
+#print(csv)
+
+
+with tf.Session() as sess:
+    saver.restore(sess, tf.train.latest_checkpoint('./trained_models/.'))
+    
+    predictions = tf.argmax(logits, 1)
+       
+    # eval extracts the values from the tensor, and returns them in the form of an np.array, so we can use them
+    #   ie cannot use predictions (tensors) directly (except as tensors inside tf)
+    signs_set1 = predictions.eval(feed_dict = {x: X_set1, keep_probability: DROPOUT_OFF}) 
+    signs_set2 = predictions.eval(feed_dict = {x: X_set2, keep_probability: DROPOUT_OFF}) 
+
+set_num = 0
+for set in [signs_set1, signs_set2]:
+    display_images(web_datasets_ORIG[set_num])
+    for sign in set:        
+        print(sign_names[sign])
+    set_num += 1
+    print('\n')
+
 
 
 # In[ ]:
@@ -1187,7 +1223,7 @@ def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_m
     # image_input =
     # Note: x should be the same name as your network's tensorflow data placeholder variable
     # If you get an error tf_activation is not defined it maybe having trouble accessing the variable from inside a function
-    activation = tf_activation.eval(session=sess,feed_dict={x : image_input, dropout_keep_prob : DROPOUT_OFF})
+    activation = tf_activation.eval(session=sess,feed_dict={x : image_input})
     featuremaps = activation.shape[3]
     plt.figure(plt_num, figsize=(15,15))
     for featuremap in range(featuremaps):
