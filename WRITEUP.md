@@ -99,54 +99,56 @@ Seeing these images was a good insight for me.
 
 ### PreProcessing
 
-Cells **In [5]**, **In [6]**, **In [7]**, **In [8]**, **In [9]**, **In [73]** contain various routines for pre-processing images.   Mostly they focus on grayscaling, and mean-centering the distribution of pixel values.  
+**In [5]**, **In [6]**, **In [7]**, **In [8]**, **In [9]**, **In [73]**  
+Contain various routines for pre-processing images.   Mostly they focus on various   
+ways of grayscaling, and mean-centering the distribution of pixel values.  
 
-####**Grayscaling** 
-#####..what did NOT work
+####**Grayscaling**  
+#####**..what did NOT work**  
 Grayscaling images did not prove useful for me in my training.
 In order for my LeNet architecture to work on grayscale images, they had to be represented as color images (3-channel grayscale images).  
 Turning images into a single channel grayscale seemed to improve the exposure/contrast on the couple sample images I looked at. 
 However once I converted it to a 3-channel rgb grayscale, the clarity returned to muddiness.  I tried various methods of scaling the pixel values across the 3 channels in attempt of retaining the visual gains I'd acheived during my single-channel grayscale conversion, but was not successful. 
 Some of the attempts I made are noted in the notebook. 
 When I trained on rgb grayscale images, the results were nil. 
-
-**In [5]** `get_grayscale_datasets_1channel()` and  
+  
+**In [5]** `get_grayscale_datasets_1channel()` and   
 **In [6]** `get_grayscale_datasets()`  
 
 ![alt text][image5]  
 one channel grayscale images  
-![alt text][image6]
+![alt text][image6]  
 
 **In [7]** `transform_grayscale_into_3D_grayscale()`   
 
 3-channel grayscale images  
 ![alt text][image7]  
 Notice: The result of transforming a 1D grayscale image into a 3-channel grayscale image,  
-is that the contrast(?) gains from converting color to gray  are lost, even though the scale from normalization has been retained.  
+is that the contrast(?) gains from converting color to gray  are lost, even though the scale from normalization has been retained.   
 ![alt text][image80]  
 
 ####**Normalizing**  
-#####..what did NOT work
-**In  [8]** `get_per_channel_mean_zero_centered_datasets()`  
-**In [84]** `get_normalized_images()`  
+#####**..what did NOT work**   
+**In  [8]** `get_per_channel_mean_zero_centered_datasets()`   
+**In [84]** `get_normalized_images()`   
 I tried normalizing the pixel values across the entire training dataset, and I also tried normalizing per channel.  Both methods were unsuccessful.  Although I these were the most common normalization techniques I read about, when I trained on these preprocessing techniques, the results were miserable - looking about the same as an untrained network.  
 Perhaps I implemented them incorrectly.  
 In retrospect, I believe the use case for that technique is for comparing, say frames from a security camera.  In that case the exposure for images is the same from frame to frame (changes with time of day).  What is different is brightness/contrast etc in different parts of the image.  
 In our case, the images are taken from many different exposures, lighting conditions, color casts, etc. They are taken in different physical locations. So in this way, there would not be a uniformity across all images in the training set that we should try to normalize on.  Instead, the images are zoomed in, and while they may contain shadows cutting across an image that could "confuse" the network, generally they are fairly uniform within an image. And shadows, etc are features that we want to train on anyway, as they are going to occur "in the wild".  We want our network to recognize a sign whether it has a shadow cutting across it or not.  
 This is my reasoning why the per channel, and per training set normalization techniques did not work.  
 
-####..And why my per-image Normalization technique DID work.  
+####**..And why my per-image Normalization technique DID work.**   
 
-**In [9]** `get_per_image_mean_centered_datasets()`  
-This the normalization / preprocessing function I used to train my network.
+**In [9]** `get_per_image_mean_centered_datasets()`   
+This the normalization / preprocessing function I used to train my network.  
 
-I took each image, summed up all the pixel values in all the channels, divided this by all the pixels (32 x 32 x 3 = 3072) to arrive at the average value for a pixel in that image.
+I took each image, summed up all the pixel values in all the channels, divided this by all the pixels (32 x 32 x 3 = 3072) to arrive at the average value for a pixel in that image.  
 
-Then I subtracted this number from every pixel in the image.  This gave me "pixel" values from -128 to +128, centered at 0. _(one of those 128s should probably be 127, like -127 to 128 ??)_  
+Then I subtracted this number from every pixel in the image.  This gave me "pixel" values from -128 to +128, centered at 0. _(one of those 128s should probably be 127, like -127 to 128 ??)_   
 
 After that, I Divide every "pixel" value by the average to give me values for ranging from -1 to 1, normalized at 0.  
 
-Though it seems more common to use 0 to 1 for images, I liked the idea of centering the image's mean at zero, the most common range/centering, it seems, for non-image data. 
+Though it seems more common to use 0 to 1 for images, I liked the idea of centering the image's mean at zero, the most common range/centering, it seems, for non-image data.  
 
 I did NOT divide by standard deviation to "standardize" the set.  Although this is common, and often recommended, I found other literature indicating it was not necessarily useful for these images.  
 
@@ -155,25 +157,25 @@ When it came time to upgrade my model, I wanted to change _one thing at a time_ 
 While I considered adding standardization, it also stood to reason that I would gain more by adding other techniques such as adding a dropout layer, or augmenting my data.  
 This per-image mean centering Leaped ahead of other preprocessing techniques I'd tried, and was thrilled.  
 I surpassed teh 93% minimum required, using this technique alone.  
-I don't think (though it might be nice to try a comparison) it would have improved my results Greatly.
+I don't think (though it might be nice to try a comparison) it would have improved my results Greatly.  
 
-It was much more interesting to me to focus on my training architecture than to fiddle with a preprocessing technique that worked well :-)
+It was much more interesting to me to focus on my training architecture than to fiddle with a preprocessing technique that worked well :-)  
 
-#####No images to display here.  
+#####**No images to display here.**  
 In normalizing my data, "pixel values" were turned into values between -1 and 1.  
- 
+  
 Hence the arrays representing my images'pixel values are no longer in the 0-255 range for displaying images.  
 Perhaps there is a library function that can display such values as an image. I did not see one.  And decided it unnecessary to try viewing the resulting transformation visually. ;-)  
 
 
-####2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
+####2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)  
 
 The code for splitting the data into training and validation sets is contained in the fifth code cell of the IPython notebook.  
 
 **In [1]** Reads in the image data.  The data was pre-separated into Training, Validation, and Testing sets.  
-```
+```  
 Number of classes = 43  
-Number of Training examples   = 34799 : 67.1% of total  
+Number of Training examples   = 34799 : 67.1% of total   
 Number of Validation examples =  4410 :  8.5% of total  
 Number of Testing examples    = 12630 : 24.4% of total  
 ```  
@@ -190,14 +192,14 @@ I also figure the Ya'all knew what you were doing when you handed us pre-split d
 
 **In [76]** Chooses a Preprocessing alogrithm to use on the data.  
 I obtained good results from the **In [9]** `get_per_image_mean_centered_datasets()` alogrithm.  
-It also sets the `learning_rate`, `sigma`
+It also sets the `learning_rate`, `sigma`  
 
 **In [10]** Sets some "Constants" for my training alogrithm.  
 ```   
 EPOCHS = 100  
-BATCH_SIZE = 128
+BATCH_SIZE = 128  
 
-padding = "VALID"  
+padding = "VALID"   
 stride = 1  
 strides = [1, stride, stride, 1]  
 pool_stride = 2  
@@ -207,38 +209,38 @@ ksize = pool_strides
 I also defined functions to calculate/return:  
 `filter_size(in_size, out_size, stride)`  , and  
 `output_size(in_size, filter_size, stride)`  
-for my convolution layers using 'VALID' padding
+for my convolution layers using 'VALID' padding  
 
 ##### Data Augmentation **TODO: FIX**  
 Although I would really like to add a function for augmenting my data, I did not get that far (yet).  
 I would probably begin by rotating all images in a batch by some randomly chosen constant value. Perhaps in the range of +- 15 or 20 degrees.  
 Zoom might be another method.  Adding a color cast, lightening or darkening all pixels, or turning an entire batch into grayscale images (randomly choose some percentage of batches to be converted).  
-Any of these methods would simulate having additional training data to feed through my network.  The network would take longer to train, and would be even less prone to overfitting.  It would also likely be more accurate.
+Any of these methods would simulate having additional training data to feed through my network.  The network would take longer to train, and would be even less prone to overfitting.  It would also likely be more accurate.  
 
 ##### Dropout  **TODO: FIX**  
 I chose to use Dropouts to address the overfitting issue I ran into with my first Good training Model.  With the use of dropouts, I do not need Data Augmentation to address overfitting: dropouts handled this rather well.  
-Dropout decreased the Loss in my validation set.
+Dropout decreased the Loss in my validation set.  
 
 It also took longer to train, and increased the frequency of oscillation, though it decreased the Magnitued of oscillation <loss and accuracy>.  I prefer this steadier average value.  
 
-However Data Augmentation would likely improve classification accuracy (and decrease loss).
+However Data Augmentation would likely improve classification accuracy (and decrease loss).  
 
 ##### Overfitting  **TODO: FIX**  
 I chose to use Dropouts to address the overfitting issue I ran into with my first Good training Model.  With the use of dropouts, I do not need Data Augmentation to address overfitting: dropouts handled this rather well.  
-Dropout decreased the Loss in my validation set.
+Dropout decreased the Loss in my validation set.  
 
 It also took longer to train, and increased the frequency of oscillation, though it decreased the Magnitued of oscillation <loss and accuracy>.  I prefer this steadier average value.  
 
-However Data Augmentation would likely improve classification accuracy (and decrease loss).
-In the images I tested my trained network on, I included grayscale images, signs that were taken at an angle, and images that had poor croppings.  For this reason, I believe an augmented dataset would improve Classification, and Confidence results on the found images I supplied.
+However Data Augmentation would likely improve classification accuracy (and decrease loss).  
+In the images I tested my trained network on, I included grayscale images, signs that were taken at an angle, and images that had poor croppings.  For this reason, I believe an augmented dataset would improve Classification, and Confidence results on the found images I supplied.  
 
 #### Architecture  
 
-####3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
+####3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.  
 
-The code for my final model is located in the seventh cell of the ipython notebook. 
+The code for my final model is located in the seventh cell of the ipython notebook.  
 
-My final model consisted of the following layers:
+My final model consisted of the following layers:  
 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
@@ -254,50 +256,50 @@ My final model consisted of the following layers:
  
 
 
-####4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
+####4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.  
 
-The code for training the model is located in the eigth cell of the ipython notebook. 
+The code for training the model is located in the eigth cell of the ipython notebook.  
 
-To train the model, I used an ....
+To train the model, I used an ....  
 
-####5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
+####5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.  
 
-The code for calculating the accuracy of the model is located in the ninth cell of the Ipython notebook.
+The code for calculating the accuracy of the model is located in the ninth cell of the Ipython notebook.  
 
-My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+My final model results were:  
+* training set accuracy of ?  
+* validation set accuracy of ?   
+* test set accuracy of ?  
 
-If an iterative approach was chosen:
-* What was the first architecture that was tried and why was it chosen?
-* What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to over fitting or under fitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-* Which parameters were tuned? How were they adjusted and why?
-* What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
+If an iterative approach was chosen:  
+* What was the first architecture that was tried and why was it chosen?  
+* What were some problems with the initial architecture?  
+* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to over fitting or under fitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.  
+* Which parameters were tuned? How were they adjusted and why?  
+* What are some of the important design choices and why were they chosen?  For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?  
 
-If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
+If a well known architecture was chosen:  
+* What architecture was chosen?  
+* Why did you believe it would be relevant to the traffic sign application?  
+* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?  
  
 
-###Test a Model on New Images
+###Test a Model on New Images  
 
-####1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
+####1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.  
 
-Here are five German traffic signs that I found on the web:
+Here are five German traffic signs that I found on the web:  
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+![alt text][image4] ![alt text][image5] ![alt text][image6]  
+![alt text][image7] ![alt text][image8]  
 
-The first image might be difficult to classify because ...
+The first image might be difficult to classify because ...  
 
-####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
+####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).  
 
-The code for making predictions on my final model is located in the tenth cell of the Ipython notebook.
+The code for making predictions on my final model is located in the tenth cell of the Ipython notebook.  
 
-Here are the results of the prediction:
+Here are the results of the prediction:  
 
 | Image			        |     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
@@ -308,13 +310,13 @@ Here are the results of the prediction:
 | Slippery Road			| Slippery Road      							|
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...  
 
-####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)  
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
+The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.  
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were  
 
 | Probability         	|     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
@@ -325,4 +327,4 @@ For the first image, the model is relatively sure that this is a stop sign (prob
 | .01				    | Slippery Road      							|
 
 
-For the second image ... 
+For the second image ...  
