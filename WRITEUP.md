@@ -85,11 +85,16 @@ It can also be seen that some image classes are highly favored, while others hav
   -- signs that have the greatest consequences if misread? )  
   -- How about the signs most likely to be misread? (and how could we know the answer to this question _before_ training?)  
 
+__
+
 Cell **In [4]** displays some sample images from the Training set.  
 
-TODO: WHY IS THE WRONG IMAGE DISPLAYING HERE
-
 ![alt text][image11]
+
+From this we can see that the exposure of images varies widely.  
+It appears (from this small selection) that the images are cropped close, and are taken straight on.  
+I also have a better idea of the resolution and size of the images that the network is training with.  
+Seeing these images was a good insight for me.
 
 ###Design and Test a Model Architecture
 
