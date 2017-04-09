@@ -238,21 +238,48 @@ In the images I tested my trained network on, I included grayscale images, signs
 
 ####3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.  
 
-The code for my final model is located in the seventh cell of the ipython notebook.  
+12, 13, 75
 
-My final model consisted of the following layers:  
+#### LeNet Architecture
+**In [75]** is LeNet architecture  
+**In [12]**, **In[13]** contain implementation details for conv and fcc layers  
 
-| Layer         		|     Description	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Input         		| 32x32x3 RGB image   							| 
-| Convolution 3x3     	| 1x1 stride, same padding, outputs 32x32x64 	|
-| RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 16x16x64 				|
-| Convolution 3x3	    | etc.      									|
-| Fully connected		| etc.        									|
-| Softmax				| etc.        									|
-|						|												|
-|						|												|
+```  
+Layer                     In-Shape      Out-Shape   Description / Settings    Function Used  
+
+Input Layer                           (32, 32, 3)  RBG Image, Preprocessed  
+
+Layer 1:  
+convolution             (32, 32, 3)   (28, 28, 6)   filter = ?  stride = 1    tf.nn.conv2d()  
+activation   RELU       (28, 28, 6)   (28, 28, 6)                             tf.nn.relu()  
+pooling      Max Pool   (28, 28, 6)   (14, 14, 6)   ksize  = 2  stride = 2    tf.nn.max_pool  
+
+Layer 2:  
+convolution             (14, 14,  6)  (10, 10, 16)  filter = ?  stride = 1    tf.nn.conv2d()  
+activation   RELU       (10, 10, 16)  (10, 10, 16)                            tf.nn.relu()  
+pooling      Max Pool   (10, 10, 16)  ( 5,  5, 16)  ksize  = 2  stride = 2    tf.nn.max_pool()  
+
+Flatten:                ( 5,  5, 16)  (          )  
+
+Layer 3:  
+fully connected                (120)         (120)                            prev * weights + bias  
+activation    RELU             (120)         (120)                            tf.nn.relu()  
+dropout                        (120)         (120)  keep_probability = 0.5    tf.nn.dropout()  
+ 
+Layer 4:  
+fully connected                (120)          (84)                            prev * weights + bias  
+activation    RELU              (84)          (84)                            tf.nn.relu()  
+dropout                         (84)          (84)  keep_probability = 0.5    tf.nn.dropout()  
+
+Layer 5:  
+fully connected                 (84)          (43)                            prev * weights + bias  
+logits  
+```  
+sparce_softmax_.... (**TODO**)
+
+ Each Layer begins with all bias elements initialized to 0 
+ and weights randomly distributed along a normal distribution ??centered??(mean) at zero, and standard deviation of 0.1 ?? aka in the range of +- 0.1 ?? (**TODO**)  
+
  
 
 
