@@ -19,15 +19,18 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./data_plotted_image_distribution_amongst_classes.png "Visualization_1: Distribution of Images between classes, and across Training, Validation, and Test Sets"
-[image11]: ./sample_traffic_signs_from_training_set.png "Visualization_2: Sample Images from the Training Set"
-[image10]: ./sample_traffic_signs_from_training_set.png "Visualization 2"
-[image2]: ./examples/grayscale.jpg "Grayscaling"
-[image3]: ./examples/random_noise.jpg "Random Noise"
-[image4]: ./examples/placeholder.png "Traffic Sign 1"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
+[image3]: ./data_plotted_image_distribution_amongst_classes.png "Visualization_1: Distribution of Images between classes, and across Training, Validation, and Test Sets"
+[image80]: ./sample_traffic_signs_from_training_set.png "Visualization_2: Sample Images from the Training Set"
+[image5]: ./sample_grayscale-1channel_conversion.png "sample image converted to 1D grayscale"
+[image6]: ./sample_grayscale_conversions_single_channel.png "sample images converted to 1D grayscale" 
+[image7]: ./sample_grayscale_1D_to_3D_conversion.png "grayscale image converted from 1D to 3D loose tonal benefits gained in the rgb to gray conversion"
+[image12]: ./sample_traffic_signs_from_training_set.png "Visualization 2"
+[image10]: ./examples/grayscale.jpg "Grayscaling"
+[image2]: ./examples/random_noise.jpg "Random Noise"
+[image9]: ./examples/placeholder.png "Traffic Sign 1"
+[image13]: ./examples/placeholder.png "Traffic Sign 2"
+[image14]: ./examples/placeholder.png "Traffic Sign 3"
+[image1]: ./examples/placeholder.png "Traffic Sign 4"
 [image8]: ./examples/placeholder.png "Traffic Sign 5"
 
 ## Rubric Points
@@ -42,20 +45,12 @@ You're reading it! and here is a link to my [project code](https://github.com/Sh
 
 ###Data Set Summary & Exploration
 
-####1. Provide a basic summary of the data set and identify where in your code the summary was done. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
+####1. Provide a basic summary of the data set 
 
-The code for this step is contained in cell **In [2]** of the Jupyter notebook.  
+**In [2]** uses _numpy_ library togather basic statistics about the dataset 
 
-I used the _numpy_ library to calculate summary statistics of the traffic
-signs data set:
 I also used a [routine](http://stackoverflow.com/a/850962/5411817) to read the number of output classes directly from the signnames.csv file.
 
-* The size of training set is ?
-* The size of test set is ?
-* The shape of a traffic sign image is ?
-* The number of unique classes/labels in the data set is ?
-
-Here are the results I calculated:
 ```
 Number of training examples   = 34799  
 Number of validation examples = 4410  
@@ -64,14 +59,16 @@ Image data shape = (32, 32, 3)
 Number of classes = 43  
 ```
 
-####2. Include an exploratory visualization of the dataset and identify where the code is in your code file.
+####2. Include an exploratory visualization of the dataset 
 
-The code for this step is contained in the third code cell **In [3]**  and **In [4]** of the IPython notebook.  
+**In [3]**  and **In [80]** visualizally explore the data set.  
 
-Here is an exploratory visualization of the data set.  
-Cell **In [3]** displays a bar chart showing distribution of the data in the Training, Validation, and Test sets.  
+  
+Cell **In [3]** displays a bar chart showing distribution of the data  
+- across the Training, Validation, and Test sets, and  
+- across the classes we are training on. 
 
-![alt text][image1]
+![alt text][image3]
 
 As you can see, the distribution of each type of image is similar across the three datasets.  
 This is Good.  
@@ -79,17 +76,17 @@ This is Good.
 It can also be seen that some image classes are highly favored, while others have relatively few examples.  
 - Was this favortism well chosen ?   
 - Were the "most important" signs the ones with the greatest representation ?    
-  -- and how do we define "most important" :  
+- How do we define "most important" ?   
   -- most common?  
   -- signs that entail the greatest danger?  
-  -- signs that have the greatest consequences if misread? )  
-  -- How about the signs most likely to be misread? (and how could we know the answer to this question _before_ training?)  
+  -- signs that have the greatest consequences if misread?   
+  -- signs most likely to be misread? (and how could we know the answer to this question _before_ training?)  
 
 __
 
-Cell **In [4]** displays some sample images from the Training set.  
+Cell **In [80]** displays some sample images from the Training set.  
 
-![alt text][image11]
+![alt text][image80]
 
 From this we can see that the exposure of images varies widely.  
 It appears (from this small selection) that the images are cropped close, and are taken straight on.  
@@ -100,11 +97,12 @@ Seeing these images was a good insight for me.
 
 ####1. Identify where in your code, and Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
 
-The code for this step is contained in the fourth code cell of the IPython notebook.
+### PreProcessing
 
 Cells **In [5]**, **In [6]**, **In [7]**, **In [8]**, **In [9]**, **In [73]** contain various routines for pre-processing images.   Mostly they focus on grayscaling, and mean-centering the distribution of pixel values.  
 
-**Grayscaling** images did not prove useful for me in my training.
+####**Grayscaling** 
+Grayscaling images did not prove useful for me in my training.
 In order for my LeNet architecture to work on grayscale images, they had to be represented as color images (3-channel grayscale images).  
 Turning images into a single channel grayscale seemed to improve the exposure/contrast on the couple sample images I looked at. 
 However once I converted it to a 3-channel rgb grayscale, the clarity returned to muddiness.  I tried various methods of scaling the pixel values across the 3 channels in attempt of retaining the visual gains I'd acheived during my single-channel grayscale conversion, but was not successful. 
@@ -113,43 +111,60 @@ When I trained on rgb grayscale images, the results were nil.
 
 **In [5]** `get_grayscale_datasets_1channel()` and  
 **In [6]** `get_grayscale_datasets()`  
-show one channel grayscale images
 
-**In [7]** `transform_grayscale_into_3D_grayscale()`  
-shows the result of transforming a 1D grayscale image into a 3-channel grayscale image
+![alt text][image5]  
+one channel grayscale images  
+![alt text][image6]
 
-Here is an example of a traffic sign image before and after grayscaling.
+**In [7]** `transform_grayscale_into_3D_grayscale()`   
 
-![alt text][image2]
+3-channel grayscale images  
+![alt text][image7]  
+Notice: The result of transforming a 1D grayscale image into a 3-channel grayscale image,  
+is that the contrast(?) gains from converting color to gray  are lost, even though the scale from normalization has been retained.  
+![alt text][image80]  
 
-
-**In [8]** `get_per_channel_mean_zero_centered_datasets()` 
+####**Normalizing**  
+#####..what did NOT work
+**In  [8]** `get_per_channel_mean_zero_centered_datasets()`  
+**In [84]** `get_normalized_images()`  
 I tried normalizing the pixel values across the entire training dataset, and I also tried normalizing per channel.  Both methods were unsuccessful.  Although I these were the most common normalization techniques I read about, when I trained on these preprocessing techniques, the results were miserable - looking about the same as an untrained network.  
 Perhaps I implemented them incorrectly.  
 In retrospect, I believe the use case for that technique is for comparing, say frames from a security camera.  In that case the exposure for images is the same from frame to frame (changes with time of day).  What is different is brightness/contrast etc in different parts of the image.  
 In our case, the images are taken from many different exposures, lighting conditions, color casts, etc. They are taken in different physical locations. So in this way, there would not be a uniformity across all images in the training set that we should try to normalize on.  Instead, the images are zoomed in, and while they may contain shadows cutting across an image that could "confuse" the network, generally they are fairly uniform within an image. And shadows, etc are features that we want to train on anyway, as they are going to occur "in the wild".  We want our network to recognize a sign whether it has a shadow cutting across it or not.  
 This is my reasoning why the per channel, and per training set normalization techniques did not work.  
 
-..And why my per image normalization technique DID work.  
+####..And why my per-image normalization technique DID work.  
+
 **In [9]** `get_per_image_mean_centered_datasets()`  
-This the normalization technique that I wound up using for training my network.
+This the normalization / preprocessing function I used to train my network.
 
+I took each image, summed up all the pixel values in all the channels, divided this by all the pixels (32 x 32 x 3 = 3072) to arrive at the average value for a pixel in that image.
+
+Then I subtracted this number from every pixel in the image.  This gave me "pixel" values from -128 to +128, centered at 0. _(one of those 128s should probably be 127, like -127 to 128 ??)_  
+
+After that, I Divide every "pixel" value by the average to give me values for ranging from -1 to 1, normalized at 0.  
+
+Though it seems more common to use 0 to 1 for images, I liked the idea of centering the image's mean at zero, the most common range/centering, it seems, for non-image data. 
+
+I did NOT divide by standard deviation to "standardize" the set.  Although this is common, and often recommended, I found other literature indicating it was not necessarily useful for these images.  
+
+This was the first model that I had success with.   
+When it came time to upgrade my model, I wanted to change _one thing at a time_ so I could see the effects it had on my network.  
+While I considered adding standardization, it also stood to reason that I would gain more by adding other techniques such as adding a dropout layer, or augmenting my data.  
+This per-image mean centering Leaped ahead of other preprocessing techniques I'd tried, and was thrilled.  
+I surpassed teh 93% minimum required, using this technique alone.  
+I don't think (though it might be nice to try a comparison) it would have improved my results Greatly.
+
+It was much more interesting to me to focus on my training architecture than to fiddle with a preprocessing technique that worked well :-)
+
+#####No images to display here.  
 In normalizing my data, "pixel values" were turned into values between -1 and 1.  
-Though it seems more common to use 0 to 1 for images, I liked the idea of centering the image's mean at zero, which seems to be the most common method for non-image data.  
-Point is, though, the arrays representing my images no longer hold values 0-255, hence cannot be displayed. Perhaps there is a library function that can display such an image. I did not see one. And I did not find it necessary to try viewing the resulting data visually.  
-ie: no images to display here ;-)  
+ 
+Hence the arrays representing my images'pixel values are no longer in the 0-255 range for displaying images.  
+Perhaps there is a library function that can display such values as an image. I did not see one.  And decided it unnecessary to try viewing the resulting transformation visually. ;-)  
 
 
-
-
-
-As a first step, I decided to convert the images to grayscale because ...
-
-Here is an example of a traffic sign image before and after grayscaling.
-
-![alt text][image2]
-
-As a last step, I normalized the image data because ...
 
 ####2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
 
