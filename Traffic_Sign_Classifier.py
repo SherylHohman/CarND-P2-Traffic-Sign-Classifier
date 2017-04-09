@@ -64,7 +64,7 @@ assert(len(X_test_ORIG)  == len(y_test_ORIG))
 
 # ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
 
-# In[2]:
+# In[106]:
 
 ### Replace each question mark with the appropriate value. 
 ### Use python, pandas or numpy methods rather than hard coding the results
@@ -97,12 +97,13 @@ def bufcount(filename):
 # first line in datafile is classnames: ClassID, SignName 
 num_classes = bufcount('./signnames.csv') - 1
 
-
-print("Number of training examples   =", n_train)
-print("Number of validation examples =", n_valid)
-print("Number of testing examples    =", n_test)
-print("Image data shape =", image_shape)
+print("Image data shape =", image_shape,"\n")
 print("Number of classes =", num_classes)
+n_total = n_train + n_valid + n_test
+print("Number of training examples   =", "{:5}".format(n_train), ": {:4.1f}% of total".format(100*n_train/n_total))
+print("Number of validation examples =", "{:5}".format(n_valid), ": {:4.1f}% of total".format(100*n_valid/n_total))
+print("Number of testing examples    =", "{:5}".format(n_test),  ": {:4.1f}% of total".format(100*n_test/n_total))
+
 
 
 # ### Include an exploratory visualization of the dataset
