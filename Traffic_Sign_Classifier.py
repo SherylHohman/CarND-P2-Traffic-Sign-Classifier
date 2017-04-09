@@ -398,10 +398,6 @@ def get_per_channel_mean_zero_centered_datasets(input_datasets):
         zero_centered[set] = combine_channels(channels, initial_shape)
     # end for loop
 
-    #X_train_per_channel_mean_zero_centered = zero_centered[0]
-    #X_valid_per_channel_mean_zero_centered = zero_centered[1]
-    #X_test_per_channel_mean_zero_centered  = zero_centered[2]
-
     print(zero_centered[0].shape, zero_centered[1].shape, zero_centered[2].shape)
     return zero_centered
 
@@ -413,7 +409,8 @@ def get_per_channel_mean_zero_centered_datasets(input_datasets):
 
 def get_per_image_mean_centered_datasets(X_input_datasets):
     # ie datasets = [X_train, X_valid, X_test]
-    X_output_datasets = [[], [], []] #np.empty(len(datasets))
+    
+    X_output_datasets=[]
 
     for s in range(len(X_input_datasets)):
         setX = X_input_datasets[s]
@@ -421,15 +418,14 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
         num_images = initial_shape[0]
 
         # returns new copy with shape [num_images, num_pixels]
-        X_output_datasets[s] = setX.reshape(num_images,-1)
-        num_pixels = X_output_datasets[s].shape[-1]
+        X_output_dataset = setX.reshape(num_images,-1)
+        num_pixels = X_output_dataset.shape[-1]
         
         # for accurate calculation of mean
-        X_output_datasets[s].astype(np.float64, copy=False)
+        X_output_dataset.astype(np.float64, copy=False)
 
         # axis=1 averages all pixels in a single image; dtype=np.float64 for accuracy
-        divide_by_zero_prevention = 0   #.00000000001
-        image_mean = np.mean(X_output_datasets[s], axis=1, dtype=np.float64) + divide_by_zero_prevention
+        image_mean = np.mean(X_output_dataset, axis=1, dtype=np.float64)
 
         # copy/create matrix such that each image has num_pixels all set equal to the image's mean
         image_mean_xl = np.empty([num_images, num_pixels], dtype=np.float64)
@@ -441,14 +437,19 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
             if (imean == 0):
                 # smallest non-zero positive number    #np.nextafter(0, 1)   #1e-20
                 imean = np.nextafter(np.image_mean.dtype.type(0), np.image_mean.dtype.type(1))
+            
+            # set all pixel dimensions to the image's mean 
             image_mean_xl[i].fill(imean)
 
         
         # center the data (-1, 1) by subtracting and dividing the image by its mean
-        X_output_datasets[s] = (X_output_datasets[s] - image_mean_xl) / image_mean_xl
+        X_output_dataset = (X_output_dataset - image_mean_xl) / image_mean_xl
         
         # restore to orig shape
-        X_output_datasets[s] = X_output_datasets[s].reshape(initial_shape)
+        X_output_dataset = X_output_dataset.reshape(initial_shape)
+        
+        # add to list of returned datasets
+        X_output_datasets.append(X_output_dataset)
 
     return X_output_datasets
 
@@ -684,7 +685,7 @@ X_valid_SHUFFLED, y_valid_SHUFFLED = shuffle(X_valid_ORIG, y_valid_ORIG)
 
 ## initialize
 
-input_dataset = [X_train_SHUFFLED, X_valid_SHUFFLED, X_test_ORIG]
+input_datasets = [X_train_SHUFFLED, X_valid_SHUFFLED, X_test_ORIG]
 
 # choose which pre-processor to work with:
 
@@ -692,7 +693,7 @@ input_dataset = [X_train_SHUFFLED, X_valid_SHUFFLED, X_test_ORIG]
 # X_train, X_valid, X_test = get_grayscale_datasets(input_dataset)                       # must convert to 3D to use LeNet
 # X_train, X_valid, X_test = transform_grayscale_into_3D_grayscale(get_grayscale_datasets(input_dataset)) # Got TERRIBLE RESULTS
 # X_train, X_valid, X_test = get_per_channel_mean_zero_centered_datasets(input_dataset)  # Got TERRIBLE RESULTS
-X_train, X_valid, X_test = get_per_image_mean_centered_datasets(input_dataset)
+X_train, X_valid, X_test = get_per_image_mean_centered_datasets(input_datasets)
 
 
 # labels do not get pre-processed
@@ -722,7 +723,7 @@ DROPOUT_ON  = 0.5  #(dropout_keep_probability == 0.5 : randomly set half the nod
 # initialize tf training variables !!
 # features, labels
 x = tf.placeholder(tf.float32, (None, pixels_x, pixels_y, color_depth))
-y = tf.placeholder(tf.int64, (None))
+y = tf.placeholder(tf.int64,   (None))
 
 # using dropout on training set at fcc_3 and fcc_4, not on validation loss calculation, or on test set.
 keep_probability = tf.placeholder(tf.float32)
@@ -804,6 +805,7 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 
 import time
 
+assert("no" =="Don't Retrain Model !")
 # train our model
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
@@ -874,6 +876,7 @@ with tf.Session() as sess:
 
 # In[20]:
 
+assert("no" == "no need to display empty plot")
 # TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets
 
 # to display legend
@@ -1004,10 +1007,11 @@ assert (validation_accuracy >= 0.9300)
 #assert ('yes' == 'no')
 
 
-# In[35]:
+# In[24]:
 
 # test the trained model
 with tf.Session() as sess:
+    saver = tf.train.Saver()
     saver.restore(sess, tf.train.latest_checkpoint('./trained_models/.'))
 
     test_accuracy, test_loss = evaluate_data(X_test, y_test)
@@ -1028,7 +1032,13 @@ with tf.Session() as sess:
 
 # ### Load and Output the Images
 
-# In[130]:
+# In[25]:
+
+#import numpy as np
+#import tensorflow as ts
+
+
+# In[26]:
 
 ### Load the images and plot them here.
 ### Feel free to use as many code cells as needed.
@@ -1051,21 +1061,19 @@ with tf.Session() as sess:
 
 
 
-# In[131]:
+# In[27]:
 
 import numpy as np
 import glob
 from scipy import misc
 
-# img = Image.open('visualize_cnn.png')
-# arr8 = np.array(img.getdata(),
-#                     np.uint8).reshape(img.size[1], img.size[0], 3)
-
 paths = ['traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/*.jpg',
-         'traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/*.jpg'
+         'traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/*.jpg',
+         'traffic_signs_from_web/32x32x3/3_difficult_NOT_in_signnames/*.jpg',
         ]
 dataset_descriptions = ['Set 1: Straightforward: \n        Expect Good Matches.', 
-                        'Set 2: These signs are Not part of the signnames.csv, but are Similar to Signs that were. \n        Curious if it picks signs that I think look similar'                 
+                        'Set 2: These signs are Not part of the signnames.csv, but are Similar to Signs that were. \n        Curious if it picks signs that I think look similar',
+                        'set 3: These signs are NOT in signnames, and are not similar to any signs that are. \n        Ignore This Set. Not Useful, or Interesting. \n        As a Hack, I need to keep 3 datasets, so it stays'
                        ]
 
 num_datasets = len(paths)
@@ -1076,28 +1084,37 @@ for s in range(num_datasets):
         new_dataset.append(misc.imread(image_path))    
 
     new_dataset = np.asarray(new_dataset)
-    #print(dataset.shape)
+       
     print("\n", dataset_descriptions[s])
     display_images(new_dataset)
+    print(new_dataset.shape)
     
     web_datasets_ORIG.append(new_dataset)
+    
+print('\nImporting done...', len(web_datasets_ORIG), "sets of traffic sign images from the web")
 
-print('Importing done...', len(web_datasets_ORIG), "sets of traffic sign images from the web")
 
+# 
 
-# In[132]:
+# In[28]:
 
 # pre-process images
-#pp_images = pre_processed_signs_from_web = get_per_image_mean_centered_datasets(datasets)
+
+# hack: web_datasets_ORIG MUST have 3 datasets:
+#       get_per_image_mean_centered_datasets expects a list of 3 datasets 
+#       dunno how to init np.none[[],[],[]] without hardcoding number of arrays, so the Hack stays.
+
 
 X_set1, X_set2, X_set3 = get_per_image_mean_centered_datasets(web_datasets_ORIG)
-print(X_set1.shape)
+#X_set1, X_set2 = get_per_image_mean_centered_datasets([web_datasets_ORIG[0], web_datasets_ORIG[1]])
 
 
+
+# ### Output Top 5 Softmax Probabilities For Each Image Found on the Web
 
 # ### Predict the Sign Type for Each Image
 
-# In[133]:
+# In[29]:
 
 ### Run the predictions here and use the model to output the prediction for each image.
 ### Make sure to pre-process the images with the same pre-processing pipeline used earlier.
@@ -1160,14 +1177,12 @@ for set in [signs_set1, signs_set2]:
 # Signs 1, 4: I expected rubbish responses to these rubbish images. Never-the-less, I see no resemblence to what it _did_ choose. 
 #     I guess NaN was not an option?
 
-# In[137]:
+# In[30]:
 
 ### Calculate the accuracy for these 5 new images. 
 ### For example, if the model predicted 1 out of 5 signs correctly, it's 20% accurate on these new images.
 print("Classifier was ", 100*2//6, "% accurate on the new images, getting 2 of 6 correct")
 
-
-# ### Output Top 5 Softmax Probabilities For Each Image Found on the Web
 
 # For each of the new images, print out the model's softmax probabilities to show the **certainty** of the model's predictions (limit the output to the top 5 probabilities for each image). [`tf.nn.top_k`](https://www.tensorflow.org/versions/r0.12/api_docs/python/nn.html#top_k) could prove helpful here. 
 # 
@@ -1207,12 +1222,83 @@ print("Classifier was ", 100*2//6, "% accurate on the new images, getting 2 of 6
 # 
 # Looking just at the first row we get `[ 0.34763842,  0.24879643,  0.12789202]`, you can confirm these are the 3 largest probabilities in `a`. You'll also notice `[3, 0, 5]` are the corresponding indices.
 
-# In[ ]:
+# In[39]:
 
 ### Print out the top five softmax probabilities for the predictions on the German traffic sign images found on the web. 
 ### Feel free to use as many code cells as needed.
 
+with tf.Session() as sess:
+    saver.restore(sess, tf.train.latest_checkpoint('./trained_models/.'))   
+    
+    probabilities = tf.nn.softmax(logits).eval(feed_dict={x : X_set1, keep_probability : DROPOUT_OFF})
+    set_index = 0  # corresponds to the index in list: web_datasets_ORIG, used for displaying the correct images
 
+    num_images = len(probabilities)
+    num_guesses = 5
+    
+    # get top 5 probabilities, and class_id for each image
+    top_5_probs, top_5_class_ids = sess.run(tf.nn.top_k(tf.constant(probabilities), k=num_guesses))
+    
+for i in range(num_images):
+    display_images([web_datasets_ORIG[set_index][i]])
+    for guess in range(num_guesses):
+        percentage = top_5_probs[i][guess] * 10000//1 / 100
+        sign_name  = sign_names[top_5_class_ids[i][guess]]
+        print('{0:7.2f}%'.format(percentage), sign_name)
+    print("\n")
+
+
+ 
+
+"""
+Interesting how cropping changed the predictions.   
+Good Cropping really matters. (Giving my trained model, anyhow)  
+I'm surprised that the 100km/h speed limit did not even make the list, even with good cropping.  
+How did the second to last image have 2 predictions at less than 0 % ??  
+Is this a red-flag that something is wrong (with alogrithm) ??  Or that rounding hit an overflow ??  
+"""
+# In[38]:
+
+# This is total duplication of above cell. (Not DRY)
+# EXCEPT: runing it on _X_set2, set_index==1 instead
+#..out of CURIOSITY. 
+
+
+with tf.Session() as sess:
+    saver.restore(sess, tf.train.latest_checkpoint('./trained_models/.'))   
+    
+    probabilities = tf.nn.softmax(logits).eval(feed_dict={x : X_set2, keep_probability : DROPOUT_OFF})
+    set_index = 1
+
+    num_images = len(probabilities)
+    num_guesses = 5
+    
+    # get top 5 probabilities, and class_id for each image in form of numpy arrays
+    top_5_probs, top_5_class_ids = sess.run(tf.nn.top_k(tf.constant(probabilities), k=num_guesses))
+    
+for i in range(num_images):
+    display_images([web_datasets_ORIG[set_index][i]])
+    for guess in range(num_guesses):
+        percentage = top_5_probs[i][guess] * 10000//1 / 100
+        sign_name  = sign_names[top_5_class_ids[i][guess]]
+        print('{0:7.2f}%'.format(percentage), sign_name)
+    print("\n")
+
+
+ 
+
+"""
+Interesting results on this dataset,  
+  so I'll leave the cell intact
+Remember none of these images were in the training set; the correct answer is not in the list of labels provided.  
+So it was impossible for our classifier to get these correct (except, sort of, on the first image..)  
+- It's interesting to me that on the 1st image, it did manage to locate the "sub-sign" within it, as 5th prob'  
+- The 2nd image also chose what I consider the closest two answers as it's top two  
+-- though the difference in confidence is vastly different, and perhaps swapped from what might be expected.  
+- The 3rd, 5th,6th images do NOT focus on the Number depicted, which is what *I* do when interpolating their meaning.
+--  It surprises me that it does not choose 
+- The 4th image, however, does seem to consider the number, and the "not / end-of" in it's top two choices
+"""
 # ---
 # 
 # ## Step 4: Visualize the Neural Network's State with Test Images
