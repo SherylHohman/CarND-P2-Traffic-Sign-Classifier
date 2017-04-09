@@ -12916,7 +12916,7 @@ BoPBMCawG7rBYDCMCeyGbjAYDGMCu6EbDAbDmOD/A9SiMPwcjieVAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[81]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">skimage</span> <span class="k">import</span> <span class="n">color</span>
@@ -12956,7 +12956,11 @@ BoPBMCawG7rBYDCMCeyGbjAYDGMCu6EbDAbDmOD/A9SiMPwcjieVAAAAAElFTkSuQmCC
 
 <span class="c1"># test the above proceedure</span>
 <span class="n">gray_train</span><span class="p">,</span> <span class="n">gray_valid</span><span class="p">,</span> <span class="n">gray_test</span> <span class="o">=</span> <span class="n">get_grayscale_datasets_1channel</span><span class="p">([</span><span class="n">X_train_ORIG</span><span class="p">,</span> <span class="n">X_valid_ORIG</span><span class="p">,</span> <span class="n">X_test_ORIG</span><span class="p">])</span>
-<span class="n">imgplot</span><span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gray_train</span><span class="p">[</span><span class="mi">1000</span><span class="p">],</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;gray&#39;</span><span class="p">))</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">display_images</span><span class="p">([</span><span class="n">gray_train</span><span class="p">[</span><span class="mi">1000</span><span class="p">]])</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;sample_grayscale-1channel_conversion.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;figure saved as &#39;sample_grayscale-1channel_conversion.png&#39;&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13104,7 +13108,7 @@ ioJfiET5f+uGuLbbenr7AAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[82]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># turn color data into grayscale image data</span>
@@ -13128,7 +13132,10 @@ ioJfiET5f+uGuLbbenr7AAAAAElFTkSuQmCC
 <span class="n">X_train_gray</span><span class="p">,</span> <span class="n">X_valid_gray</span><span class="p">,</span> <span class="n">X_test_gray</span> <span class="o">=</span> <span class="n">get_grayscale_datasets</span><span class="p">([</span><span class="n">X_train_ORIG</span><span class="p">,</span> <span class="n">X_valid_ORIG</span><span class="p">,</span> <span class="n">X_test_ORIG</span><span class="p">])</span>
 
 <span class="c1"># display sample grayscale images from dataset</span>
-<span class="n">display_images</span><span class="p">([</span><span class="n">X_train_gray</span><span class="p">[</span><span class="mi">50</span><span class="p">],</span> <span class="n">X_train_gray</span><span class="p">[</span><span class="mi">500</span><span class="p">],</span> <span class="n">X_train_gray</span><span class="p">[</span><span class="mi">1000</span><span class="p">]])</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">display_images</span><span class="p">([</span><span class="n">X_train_gray</span><span class="p">[</span><span class="mi">50</span><span class="p">],</span> <span class="n">X_train_gray</span><span class="p">[</span><span class="mi">500</span><span class="p">],</span> <span class="n">X_train_gray</span><span class="p">[</span><span class="mi">1000</span><span class="p">]])</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;sample_grayscale_conversions_single_channel.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;figure saved as &#39;sample_grayscale_conversions_single_channel.png&#39;&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13319,13 +13326,20 @@ BwKBQEcQC3ogEAh0BLGgBwKBQEcQC3ogEAh0BP8Pyfo+JrnQMy4AAAAASUVORK5CYII=
 
 </div>
 
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>figure saved as &#39;sample_grayscale_conversions_single_channel.png&#39;
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[86]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># turn grayscale into 3channel rgb grayscale</span>
@@ -13356,10 +13370,15 @@ BwKBQEcQC3ogEAh0BLGgBwKBQEcQC3ogEAh0BP8Pyfo+JrnQMy4AAAAASUVORK5CYII=
 
 <span class="c1">#input_dataset = get_grayscale_datasets([X_train, X_valid, X_test])</span>
 <span class="n">input_dataset</span> <span class="o">=</span> <span class="n">get_grayscale_datasets_1channel</span><span class="p">([</span><span class="n">X_train_ORIG</span><span class="p">,</span> <span class="n">X_valid_ORIG</span><span class="p">,</span> <span class="n">X_test_ORIG</span><span class="p">])</span>
-<span class="n">X_train_gray3D_2</span><span class="p">,</span> <span class="n">X_valid_gray3D_2</span><span class="p">,</span> <span class="n">X_test_gray3D_2</span> <span class="o">=</span> <span class="n">transform_grayscale_into_3D_grayscale</span><span class="p">(</span><span class="n">input_dataset</span><span class="p">)</span>
-<span class="n">display_images</span><span class="p">([</span><span class="n">X_train_gray3D_2</span><span class="p">[</span><span class="mi">50</span><span class="p">],</span> <span class="n">X_train_gray3D_2</span><span class="p">[</span><span class="mi">500</span><span class="p">],</span> <span class="n">X_train_gray3D_2</span><span class="p">[</span><span class="mi">1000</span><span class="p">]])</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;resulting images are darker and lighter than the single channel grayscale, with every ratio I&#39;ve tried </span><span class="se">\n</span><span class="s2"> some ratios I&#39;ve tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) </span><span class="se">\n</span><span class="s2"> Not sure how to create a 3-channel grayscale that looks visually identical to the 1-channel grayscale&quot;</span><span class="p">)</span>
+<span class="n">X_train_gray3D_2</span><span class="p">,</span> <span class="n">X_valid_gray3D_2</span><span class="p">,</span> <span class="n">X_test_gray3D_2</span> <span class="o">=</span> <span class="n">transform_grayscale_into_3D_grayscale</span><span class="p">(</span><span class="n">input_dataset</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">display_images</span><span class="p">([</span><span class="n">X_train_gray3D_2</span><span class="p">[</span><span class="mi">50</span><span class="p">],</span> <span class="n">X_train_gray3D_2</span><span class="p">[</span><span class="mi">500</span><span class="p">],</span> <span class="n">X_train_gray3D_2</span><span class="p">[</span><span class="mi">1000</span><span class="p">]])</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;sample_grayscale_1D_to_3D_conversion.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;saved figure as &#39;sample_grayscale_1D_to_3D_conversion.png&#39;&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">resulting images are darker and lighter than the single channel grayscale, with every ratio I&#39;ve tried </span><span class="se">\n</span><span class="s2"> some ratios I&#39;ve tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) </span><span class="se">\n</span><span class="s2"> Not sure how to create a 3-channel grayscale that looks visually identical to the 1-channel grayscale&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13542,7 +13561,9 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>resulting images are darker and lighter than the single channel grayscale, with every ratio I&#39;ve tried 
+<pre>saved figure as &#39;sample_grayscale_1D_to_3D_conversion.png&#39;
+
+resulting images are darker and lighter than the single channel grayscale, with every ratio I&#39;ve tried 
  some ratios I&#39;ve tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) 
  Not sure how to create a 3-channel grayscale that looks visually identical to the 1-channel grayscale
 </pre>
@@ -13675,66 +13696,56 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[73]:</div>
+<div class="prompt input_prompt">In&nbsp;[84]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">normalize</span>
 <span class="kn">from</span> <span class="nn">skimage</span> <span class="k">import</span> <span class="n">color</span>
 
-<span class="sd">&#39;&#39;&#39; </span>
-<span class="sd"># normalization</span>
-<span class="sd">print(&quot;normalizing&quot;)</span>
-<span class="sd">#for i in range(len(X_train))</span>
-<span class="sd">#X_train=[(i, tf.image.per_image_standardization(X_train[i])) for i in range(len(X_train))] </span>
-<span class="sd">#list(map(lambda x: x**2, range(10)))</span>
-<span class="sd">#tf.image.per_image_standardization(X_valid)</span>
-<span class="sd">#tf.image.per_image_standardization(X_test)</span>
-<span class="sd">##X_valid=[(i, tf.image.per_image_standardization(X_valid[i])) for i in range(len(X_valid))] </span>
-<span class="sd">#X_test=[(i, tf.image.per_image_standardization(X_test[i]))  for i in range(len(X_test))]</span>
-<span class="sd">#X_valid = N_valid</span>
+<span class="c1"># training on images processed via this method did not work</span>
 
-<span class="sd">X_train_preprocessed = normalized(X_train)</span>
-<span class="sd">X_valid_preprocessed = normalized(X_valid)</span>
-<span class="sd">X_test_preprocessed  = normalized(X_test)</span>
+<span class="k">def</span> <span class="nf">get_normalized_images</span><span class="p">(</span><span class="n">image_sets</span><span class="p">):</span>
+    <span class="n">X_train</span> <span class="o">=</span> <span class="n">image_sets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">X_valid</span> <span class="o">=</span> <span class="n">image_sets</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">X_test</span>  <span class="o">=</span> <span class="n">image_sets</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    
+    <span class="c1"># normalization</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;normalizing&quot;</span><span class="p">)</span>
+    <span class="c1">#for i in range(len(X_train))</span>
+    <span class="c1">#X_train=[(i, tf.image.per_image_standardization(X_train[i])) for i in range(len(X_train))] </span>
+    <span class="c1">#list(map(lambda x: x**2, range(10)))</span>
+    <span class="c1">#tf.image.per_image_standardization(X_valid)</span>
+    <span class="c1">#tf.image.per_image_standardization(X_test)</span>
+    <span class="c1">##X_valid=[(i, tf.image.per_image_standardization(X_valid[i])) for i in range(len(X_valid))] </span>
+    <span class="c1">#X_test=[(i, tf.image.per_image_standardization(X_test[i]))  for i in range(len(X_test))]</span>
+    <span class="c1">#X_valid = N_valid</span>
 
-<span class="sd">print(&quot;normalized image:&quot;)</span>
-<span class="sd">x_1000_normalized = normalize(X_train_preprocessed[1000])</span>
-<span class="sd">imgplot = plt.imshow(x_1000_normalized)</span>
+    <span class="n">X_train_preprocessed</span> <span class="o">=</span> <span class="n">normalized</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+    <span class="n">X_valid_preprocessed</span> <span class="o">=</span> <span class="n">normalized</span><span class="p">(</span><span class="n">X_valid</span><span class="p">)</span>
+    <span class="n">X_test_preprocessed</span>  <span class="o">=</span> <span class="n">normalized</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-<span class="sd"># to grayscale</span>
-<span class="sd">#Gray Scale you could use cvtcolor from OpenCV:</span>
-<span class="sd">#gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;normalized image:&quot;</span><span class="p">)</span>
+    <span class="n">x_1000_normalized</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">X_train_preprocessed</span><span class="p">[</span><span class="mi">1000</span><span class="p">])</span>
+    <span class="n">imgplot</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x_1000_normalized</span><span class="p">)</span>
 
-<span class="sd">print(&quot;to grayscale&quot;)</span>
-<span class="sd">X_train_preprocessed = color.rgb2gray(X_train_preprocessed)</span>
-<span class="sd">X_valid_preprocessed = color.rgb2gray(X_valid_preprocessed)</span>
-<span class="sd">X_test_preprocessed  = color.rgb2gray(X_test_preprocessed)</span>
-<span class="sd">print(&quot;grayscale done&quot;)</span>
-<span class="sd">#imgplot = plt.imshow(X_train[1000], cmap=&quot;gray&quot;)</span>
-<span class="sd">image_shape = X_train_preprocessed.get_shape().as_list()[1:]</span>
-<span class="sd">print(image_shape)</span>
-<span class="sd">assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale</span>
-<span class="sd">&#39;&#39;&#39;</span>
-<span class="p">;</span>
+    <span class="c1"># to grayscale</span>
+    <span class="c1">#Gray Scale you could use cvtcolor from OpenCV:</span>
+    <span class="c1">#gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;to grayscale&quot;</span><span class="p">)</span>
+    <span class="n">X_train_preprocessed</span> <span class="o">=</span> <span class="n">color</span><span class="o">.</span><span class="n">rgb2gray</span><span class="p">(</span><span class="n">X_train_preprocessed</span><span class="p">)</span>
+    <span class="n">X_valid_preprocessed</span> <span class="o">=</span> <span class="n">color</span><span class="o">.</span><span class="n">rgb2gray</span><span class="p">(</span><span class="n">X_valid_preprocessed</span><span class="p">)</span>
+    <span class="n">X_test_preprocessed</span>  <span class="o">=</span> <span class="n">color</span><span class="o">.</span><span class="n">rgb2gray</span><span class="p">(</span><span class="n">X_test_preprocessed</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;grayscale done&quot;</span><span class="p">)</span>
+    <span class="c1">#imgplot = plt.imshow(X_train[1000], cmap=&quot;gray&quot;)</span>
+    <span class="n">image_shape</span> <span class="o">=</span> <span class="n">X_train_preprocessed</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">image_shape</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">image_shape</span> <span class="o">==</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1">#32px x 32px, 1 color channel: grayscale</span>
+    
+    <span class="k">return</span> <span class="p">[</span><span class="n">X_train_preprocessed</span><span class="p">,</span> <span class="n">X_valid_preprocessed</span><span class="p">,</span> <span class="n">X_test_preprocessed</span><span class="p">]</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[73]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>&#39;&#39;</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 

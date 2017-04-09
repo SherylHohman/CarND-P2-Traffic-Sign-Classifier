@@ -255,7 +255,7 @@ def test_reshaping_3D_into_4D():
 #test_reshaping_3D_into_4D()
 
 
-# In[5]:
+# In[81]:
 
 from skimage import color
 
@@ -294,10 +294,14 @@ def get_grayscale_datasets_1channel(input_datasets):
 
 # test the above proceedure
 gray_train, gray_valid, gray_test = get_grayscale_datasets_1channel([X_train_ORIG, X_valid_ORIG, X_test_ORIG])
-imgplot= plt.imshow(gray_train[1000], cmap = plt.get_cmap('gray'))
+
+fig = display_images([gray_train[1000]])
+
+fig.savefig("sample_grayscale-1channel_conversion.png", dpi=25)
+print("figure saved as 'sample_grayscale-1channel_conversion.png'")
 
 
-# In[6]:
+# In[82]:
 
 # turn color data into grayscale image data
 from skimage import color
@@ -320,10 +324,13 @@ def get_grayscale_datasets(input_datasets):
 X_train_gray, X_valid_gray, X_test_gray = get_grayscale_datasets([X_train_ORIG, X_valid_ORIG, X_test_ORIG])
 
 # display sample grayscale images from dataset
-display_images([X_train_gray[50], X_train_gray[500], X_train_gray[1000]])
+fig = display_images([X_train_gray[50], X_train_gray[500], X_train_gray[1000]])
+
+fig.savefig("sample_grayscale_conversions_single_channel.png", dpi=25)
+print("figure saved as 'sample_grayscale_conversions_single_channel.png'")
 
 
-# In[7]:
+# In[86]:
 
 # turn grayscale into 3channel rgb grayscale
 # (not ideal paramater-wise = duplicated data, but for shipping through my LeNet, it should remove shaping problems)
@@ -353,10 +360,15 @@ def transform_grayscale_into_3D_grayscale(input_dataset, ratioR=1, ratioG=1, rat
 
 #input_dataset = get_grayscale_datasets([X_train, X_valid, X_test])
 input_dataset = get_grayscale_datasets_1channel([X_train_ORIG, X_valid_ORIG, X_test_ORIG])
-X_train_gray3D_2, X_valid_gray3D_2, X_test_gray3D_2 = transform_grayscale_into_3D_grayscale(input_dataset)
-display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[1000]])
 
-print("resulting images are darker and lighter than the single channel grayscale, with every ratio I've tried \n some ratios I've tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) \n Not sure how to create a 3-channel grayscale that looks visually identical to the 1-channel grayscale")
+X_train_gray3D_2, X_valid_gray3D_2, X_test_gray3D_2 = transform_grayscale_into_3D_grayscale(input_dataset)
+
+fig = display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[1000]])
+
+fig.savefig("sample_grayscale_1D_to_3D_conversion.png", dpi=25)
+print("saved figure as 'sample_grayscale_1D_to_3D_conversion.png'")
+
+print("\nresulting images are darker and lighter than the single channel grayscale, with every ratio I've tried \n some ratios I've tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) \n Not sure how to create a 3-channel grayscale that looks visually identical to the 1-channel grayscale")
 
 
 # In[8]:
@@ -464,46 +476,52 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
     return X_output_datasets
 
 
-# In[73]:
+# In[84]:
 
 from sklearn.preprocessing import normalize
 from skimage import color
 
-''' 
-# normalization
-print("normalizing")
-#for i in range(len(X_train))
-#X_train=[(i, tf.image.per_image_standardization(X_train[i])) for i in range(len(X_train))] 
-#list(map(lambda x: x**2, range(10)))
-#tf.image.per_image_standardization(X_valid)
-#tf.image.per_image_standardization(X_test)
-##X_valid=[(i, tf.image.per_image_standardization(X_valid[i])) for i in range(len(X_valid))] 
-#X_test=[(i, tf.image.per_image_standardization(X_test[i]))  for i in range(len(X_test))]
-#X_valid = N_valid
+# training on images processed via this method did not work
 
-X_train_preprocessed = normalized(X_train)
-X_valid_preprocessed = normalized(X_valid)
-X_test_preprocessed  = normalized(X_test)
+def get_normalized_images(image_sets):
+    X_train = image_sets[0]
+    X_valid = image_sets[1]
+    X_test  = image_sets[2]
+    
+    # normalization
+    print("normalizing")
+    #for i in range(len(X_train))
+    #X_train=[(i, tf.image.per_image_standardization(X_train[i])) for i in range(len(X_train))] 
+    #list(map(lambda x: x**2, range(10)))
+    #tf.image.per_image_standardization(X_valid)
+    #tf.image.per_image_standardization(X_test)
+    ##X_valid=[(i, tf.image.per_image_standardization(X_valid[i])) for i in range(len(X_valid))] 
+    #X_test=[(i, tf.image.per_image_standardization(X_test[i]))  for i in range(len(X_test))]
+    #X_valid = N_valid
 
-print("normalized image:")
-x_1000_normalized = normalize(X_train_preprocessed[1000])
-imgplot = plt.imshow(x_1000_normalized)
+    X_train_preprocessed = normalized(X_train)
+    X_valid_preprocessed = normalized(X_valid)
+    X_test_preprocessed  = normalized(X_test)
 
-# to grayscale
-#Gray Scale you could use cvtcolor from OpenCV:
-#gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    print("normalized image:")
+    x_1000_normalized = normalize(X_train_preprocessed[1000])
+    imgplot = plt.imshow(x_1000_normalized)
 
-print("to grayscale")
-X_train_preprocessed = color.rgb2gray(X_train_preprocessed)
-X_valid_preprocessed = color.rgb2gray(X_valid_preprocessed)
-X_test_preprocessed  = color.rgb2gray(X_test_preprocessed)
-print("grayscale done")
-#imgplot = plt.imshow(X_train[1000], cmap="gray")
-image_shape = X_train_preprocessed.get_shape().as_list()[1:]
-print(image_shape)
-assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
-'''
-("")
+    # to grayscale
+    #Gray Scale you could use cvtcolor from OpenCV:
+    #gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    print("to grayscale")
+    X_train_preprocessed = color.rgb2gray(X_train_preprocessed)
+    X_valid_preprocessed = color.rgb2gray(X_valid_preprocessed)
+    X_test_preprocessed  = color.rgb2gray(X_test_preprocessed)
+    print("grayscale done")
+    #imgplot = plt.imshow(X_train[1000], cmap="gray")
+    image_shape = X_train_preprocessed.get_shape().as_list()[1:]
+    print(image_shape)
+    assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
+    
+    return [X_train_preprocessed, X_valid_preprocessed, X_test_preprocessed]
 
 
 # In[10]:
