@@ -19,7 +19,7 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/visualization.jpg "Visualization"
+[image1]: ./data_plotted_image_distribution_amongst_classes.png "Visualization"
 [image2]: ./examples/grayscale.jpg "Grayscaling"
 [image3]: ./examples/random_noise.jpg "Random Noise"
 [image4]: ./examples/placeholder.png "Traffic Sign 1"
@@ -36,29 +36,54 @@ The goals / steps of this project are the following:
 
 ####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
 
-You're reading it! and here is a link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
+You're reading it! and here is a link to my [project code](https://github.com/SherylHohman/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
 
 ###Data Set Summary & Exploration
 
 ####1. Provide a basic summary of the data set and identify where in your code the summary was done. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
 
-The code for this step is contained in the second code cell of the IPython notebook.  
+The code for this step is contained in cell **In [2]** of the Jupyter notebook.  
 
-I used the pandas library to calculate summary statistics of the traffic
+I used the _numpy_ library to calculate summary statistics of the traffic
 signs data set:
+I also used a [routine](http://stackoverflow.com/a/850962/5411817) to read the number of output classes directly from the signnames.csv file.
 
 * The size of training set is ?
 * The size of test set is ?
 * The shape of a traffic sign image is ?
 * The number of unique classes/labels in the data set is ?
 
+Here are the results I calculated:
+```
+Number of training examples   = 34799  
+Number of validation examples = 4410  
+Number of testing examples    = 12630  
+Image data shape = (32, 32, 3)  
+Number of classes = 43  
+```
+
 ####2. Include an exploratory visualization of the dataset and identify where the code is in your code file.
 
-The code for this step is contained in the third code cell of the IPython notebook.  
+The code for this step is contained in the third code cell **In [3]** of the IPython notebook.  
 
-Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
+Here is an exploratory visualization of the data set.  
+It is a bar chart showing distribution of the data in the Training, Validation, and Test sets.  
 
 ![alt text][image1]
+
+As you can see, the distribution of each type of image is similar across the three datasets.  
+This is Good.  
+
+It can also be seen that some image classes are highly favored, while others have relatively few examples.  
+- Was this favortism well chosen ?   
+- Were the "most important" signs the ones with the greatest representation ?    
+  -- and how do we define "most important" :  
+  -- most common?  
+  -- signs that entail the greatest danger?  
+  -- signs that have the greatest consequences if misread? )  
+  -- How about the signs most likely to be misread? (and how could we know the answer to this question _before_ training?)  
+
+
 
 ###Design and Test a Model Architecture
 
