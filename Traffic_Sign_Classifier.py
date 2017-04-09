@@ -159,7 +159,7 @@ fig1.savefig("data_plotted_image_distribution_amongst_classes.png", dpi=25)  # r
 print("figure saved as: 'data_plotted_image_distribution_amongst_classes.png'")
 
 
-# In[77]:
+# In[80]:
 
 # diplay list of sample images from training data set
 def display_images(images):
@@ -167,7 +167,7 @@ def display_images(images):
     #print("shape 1st image", images[0].shape)
     num_images = len(images)
     #print(num_images, "num_images, num_channels:", num_channels)
-    plt.figure(1)
+    fig = plt.figure(1)
     rows = 1
     cols = int(num_images/rows)
     for i in range(num_images):
@@ -181,14 +181,15 @@ def display_images(images):
             # it has simple shape of (num_examples, 32, 32) as opposed to (num_examples, 32, 32, num_channels==3)
             plt.imshow(images[i], cmap = plt.get_cmap('gray'))
     plt.show()
+    return fig
 
 print("Sample images from training data set")
 sample_images = [X_train_ORIG[50], X_train_ORIG[500], X_train_ORIG[1000]]
-display_images(sample_images)
+fig2 = display_images(sample_images)
 
 
 # save figure to file
-fig1.savefig("sample_traffic_signs_from_training_set.png", dpi=25)  # results in 160x120 px image
+fig2.savefig("sample_traffic_signs_from_training_set.png", dpi=25)  # results in 160x120 px image
 print("figure saved as: 'sample_traffic_signs_from_training_set.png'")
 
 # consider showing histogram of individual sample images

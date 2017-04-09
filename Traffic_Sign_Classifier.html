@@ -12516,7 +12516,7 @@ ZmZWSU5QZmZWSU5QZmZWSU5QZmZWSf8P+/61wQQ4ZoUAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[77]:</div>
+<div class="prompt input_prompt">In&nbsp;[80]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># diplay list of sample images from training data set</span>
@@ -12525,7 +12525,7 @@ ZmZWSU5QZmZWSU5QZmZWSU5QZmZWSf8P+/61wQQ4ZoUAAAAASUVORK5CYII=
     <span class="c1">#print(&quot;shape 1st image&quot;, images[0].shape)</span>
     <span class="n">num_images</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
     <span class="c1">#print(num_images, &quot;num_images, num_channels:&quot;, num_channels)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">rows</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">cols</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_images</span><span class="o">/</span><span class="n">rows</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_images</span><span class="p">):</span>
@@ -12539,14 +12539,15 @@ ZmZWSU5QZmZWSU5QZmZWSU5QZmZWSf8P+/61wQQ4ZoUAAAAASUVORK5CYII=
             <span class="c1"># it has simple shape of (num_examples, 32, 32) as opposed to (num_examples, 32, 32, num_channels==3)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">images</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;gray&#39;</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sample images from training data set&quot;</span><span class="p">)</span>
 <span class="n">sample_images</span> <span class="o">=</span> <span class="p">[</span><span class="n">X_train_ORIG</span><span class="p">[</span><span class="mi">50</span><span class="p">],</span> <span class="n">X_train_ORIG</span><span class="p">[</span><span class="mi">500</span><span class="p">],</span> <span class="n">X_train_ORIG</span><span class="p">[</span><span class="mi">1000</span><span class="p">]]</span>
-<span class="n">display_images</span><span class="p">(</span><span class="n">sample_images</span><span class="p">)</span>
+<span class="n">fig2</span> <span class="o">=</span> <span class="n">display_images</span><span class="p">(</span><span class="n">sample_images</span><span class="p">)</span>
 
 
 <span class="c1"># save figure to file</span>
-<span class="n">fig1</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;sample_traffic_signs_from_training_set.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>  <span class="c1"># results in 160x120 px image</span>
+<span class="n">fig2</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;sample_traffic_signs_from_training_set.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>  <span class="c1"># results in 160x120 px image</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;figure saved as: &#39;sample_traffic_signs_from_training_set.png&#39;&quot;</span><span class="p">)</span>
 
 <span class="c1"># consider showing histogram of individual sample images</span>
