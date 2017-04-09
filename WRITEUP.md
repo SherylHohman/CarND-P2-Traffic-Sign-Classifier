@@ -47,7 +47,7 @@ You're reading it! and here is a link to my [project code](https://github.com/Sh
 
 ####1. Provide a basic summary of the data set 
 
-**In [2]** uses _numpy_ library togather basic statistics about the dataset 
+**In [106]** uses _numpy_ library togather basic statistics about the dataset 
 
 I also used a [routine](http://stackoverflow.com/a/850962/5411817) to read the number of output classes directly from the signnames.csv file.
 
@@ -102,6 +102,7 @@ Seeing these images was a good insight for me.
 Cells **In [5]**, **In [6]**, **In [7]**, **In [8]**, **In [9]**, **In [73]** contain various routines for pre-processing images.   Mostly they focus on grayscaling, and mean-centering the distribution of pixel values.  
 
 ####**Grayscaling** 
+#####..what did NOT work
 Grayscaling images did not prove useful for me in my training.
 In order for my LeNet architecture to work on grayscale images, they had to be represented as color images (3-channel grayscale images).  
 Turning images into a single channel grayscale seemed to improve the exposure/contrast on the couple sample images I looked at. 
@@ -134,7 +135,7 @@ In retrospect, I believe the use case for that technique is for comparing, say f
 In our case, the images are taken from many different exposures, lighting conditions, color casts, etc. They are taken in different physical locations. So in this way, there would not be a uniformity across all images in the training set that we should try to normalize on.  Instead, the images are zoomed in, and while they may contain shadows cutting across an image that could "confuse" the network, generally they are fairly uniform within an image. And shadows, etc are features that we want to train on anyway, as they are going to occur "in the wild".  We want our network to recognize a sign whether it has a shadow cutting across it or not.  
 This is my reasoning why the per channel, and per training set normalization techniques did not work.  
 
-####..And why my per-image normalization technique DID work.  
+####..And why my per-image Normalization technique DID work.  
 
 **In [9]** `get_per_image_mean_centered_datasets()`  
 This the normalization / preprocessing function I used to train my network.
@@ -165,23 +166,73 @@ Hence the arrays representing my images'pixel values are no longer in the 0-255 
 Perhaps there is a library function that can display such values as an image. I did not see one.  And decided it unnecessary to try viewing the resulting transformation visually. ;-)  
 
 
-
 ####2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
 
 The code for splitting the data into training and validation sets is contained in the fifth code cell of the IPython notebook.  
 
-To cross validate my model, I randomly split the training data into a training set and validation set. I did this by ...
+**In [1]** Reads in the image data.  The data was pre-separated into Training, Validation, and Testing sets.  
+```
+Number of classes = 43  
+Number of Training examples   = 34799 : 67.1% of total  
+Number of Validation examples =  4410 :  8.5% of total  
+Number of Testing examples    = 12630 : 24.4% of total  
+```  
+I might have designed the Validation and Testing sets to be of about equal size, at about  a  
+70/15/15 or a 60/20/20 split, based on reading a few references to those being good generic splits.   
+We are using Validation as part of the training, perhaps that matters.  
+I was Very happy with the distribution across sets.!!  
+I also figure the Ya'all knew what you were doing when you handed us pre-split data !! :-)  
+![alt text][image3]  
 
-My final training set had X number of images. My validation set and test set had Y and Z number of images.
+**In [3]** shows that the distribution of images for each class was relatively uniformly distributed across the three sets.  This looked like a great split to me.  
 
-The sixth code cell of the IPython notebook contains the code for augmenting the data set. I decided to generate additional data because ... To add more data to the the data set, I used the following techniques because ... 
+**In []** Shuffles the Training and Validation image sets.  No reason to shuffle the Test set.  (The training images are reshuffled prior to each batch) **(TODO: Verify)**) And the Verification images are shuffled prior to evaluation at the end of each Epoch.  
 
-Here is an example of an original image and an augmented image:
+**In [76]** Chooses a Preprocessing alogrithm to use on the data.  
+I obtained good results from the **In [9]** `get_per_image_mean_centered_datasets()` alogrithm.  
+It also sets the `learning_rate`, `sigma`
 
-![alt text][image3]
+**In [10]** Sets some "Constants" for my training alogrithm.  
+```   
+EPOCHS = 100  
+BATCH_SIZE = 128
 
-The difference between the original data set and the augmented data set is the following ... 
+padding = "VALID"  
+stride = 1  
+strides = [1, stride, stride, 1]  
+pool_stride = 2  
+pool_strides = [1, pool_stride, pool_stride, 1]  
+ksize = pool_strides  
+```   
+I also defined functions to calculate/return:  
+`filter_size(in_size, out_size, stride)`  , and  
+`output_size(in_size, filter_size, stride)`  
+for my convolution layers using 'VALID' padding
 
+##### Data Augmentation **TODO: FIX**  
+Although I would really like to add a function for augmenting my data, I did not get that far (yet).  
+I would probably begin by rotating all images in a batch by some randomly chosen constant value. Perhaps in the range of +- 15 or 20 degrees.  
+Zoom might be another method.  Adding a color cast, lightening or darkening all pixels, or turning an entire batch into grayscale images (randomly choose some percentage of batches to be converted).  
+Any of these methods would simulate having additional training data to feed through my network.  The network would take longer to train, and would be even less prone to overfitting.  It would also likely be more accurate.
+
+##### Dropout  **TODO: FIX**  
+I chose to use Dropouts to address the overfitting issue I ran into with my first Good training Model.  With the use of dropouts, I do not need Data Augmentation to address overfitting: dropouts handled this rather well.  
+Dropout decreased the Loss in my validation set.
+
+It also took longer to train, and increased the frequency of oscillation, though it decreased the Magnitued of oscillation <loss and accuracy>.  I prefer this steadier average value.  
+
+However Data Augmentation would likely improve classification accuracy (and decrease loss).
+
+##### Overfitting  **TODO: FIX**  
+I chose to use Dropouts to address the overfitting issue I ran into with my first Good training Model.  With the use of dropouts, I do not need Data Augmentation to address overfitting: dropouts handled this rather well.  
+Dropout decreased the Loss in my validation set.
+
+It also took longer to train, and increased the frequency of oscillation, though it decreased the Magnitued of oscillation <loss and accuracy>.  I prefer this steadier average value.  
+
+However Data Augmentation would likely improve classification accuracy (and decrease loss).
+In the images I tested my trained network on, I included grayscale images, signs that were taken at an angle, and images that had poor croppings.  For this reason, I believe an augmented dataset would improve Classification, and Confidence results on the found images I supplied.
+
+#### Architecture  
 
 ####3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
 
