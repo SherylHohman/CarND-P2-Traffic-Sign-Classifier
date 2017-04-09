@@ -102,6 +102,47 @@ Seeing these images was a good insight for me.
 
 The code for this step is contained in the fourth code cell of the IPython notebook.
 
+Cells **In [5]**, **In [6]**, **In [7]**, **In [8]**, **In [9]**, **In [73]** contain various routines for pre-processing images.   Mostly they focus on grayscaling, and mean-centering the distribution of pixel values.  
+
+**Grayscaling** images did not prove useful for me in my training.
+In order for my LeNet architecture to work on grayscale images, they had to be represented as color images (3-channel grayscale images).  
+Turning images into a single channel grayscale seemed to improve the exposure/contrast on the couple sample images I looked at. 
+However once I converted it to a 3-channel rgb grayscale, the clarity returned to muddiness.  I tried various methods of scaling the pixel values across the 3 channels in attempt of retaining the visual gains I'd acheived during my single-channel grayscale conversion, but was not successful. 
+Some of the attempts I made are noted in the notebook. 
+When I trained on rgb grayscale images, the results were nil. 
+
+**In [5]** `get_grayscale_datasets_1channel()` and  
+**In [6]** `get_grayscale_datasets()`  
+show one channel grayscale images
+
+**In [7]** `transform_grayscale_into_3D_grayscale()`  
+shows the result of transforming a 1D grayscale image into a 3-channel grayscale image
+
+Here is an example of a traffic sign image before and after grayscaling.
+
+![alt text][image2]
+
+
+**In [8]** `get_per_channel_mean_zero_centered_datasets()` 
+I tried normalizing the pixel values across the entire training dataset, and I also tried normalizing per channel.  Both methods were unsuccessful.  Although I these were the most common normalization techniques I read about, when I trained on these preprocessing techniques, the results were miserable - looking about the same as an untrained network.  
+Perhaps I implemented them incorrectly.  
+In retrospect, I believe the use case for that technique is for comparing, say frames from a security camera.  In that case the exposure for images is the same from frame to frame (changes with time of day).  What is different is brightness/contrast etc in different parts of the image.  
+In our case, the images are taken from many different exposures, lighting conditions, color casts, etc. They are taken in different physical locations. So in this way, there would not be a uniformity across all images in the training set that we should try to normalize on.  Instead, the images are zoomed in, and while they may contain shadows cutting across an image that could "confuse" the network, generally they are fairly uniform within an image. And shadows, etc are features that we want to train on anyway, as they are going to occur "in the wild".  We want our network to recognize a sign whether it has a shadow cutting across it or not.  
+This is my reasoning why the per channel, and per training set normalization techniques did not work.  
+
+..And why my per image normalization technique DID work.  
+**In [9]** `get_per_image_mean_centered_datasets()`  
+This the normalization technique that I wound up using for training my network.
+
+In normalizing my data, "pixel values" were turned into values between -1 and 1.  
+Though it seems more common to use 0 to 1 for images, I liked the idea of centering the image's mean at zero, which seems to be the most common method for non-image data.  
+Point is, though, the arrays representing my images no longer hold values 0-255, hence cannot be displayed. Perhaps there is a library function that can display such an image. I did not see one. And I did not find it necessary to try viewing the resulting data visually.  
+ie: no images to display here ;-)  
+
+
+
+
+
 As a first step, I decided to convert the images to grayscale because ...
 
 Here is an example of a traffic sign image before and after grayscaling.
