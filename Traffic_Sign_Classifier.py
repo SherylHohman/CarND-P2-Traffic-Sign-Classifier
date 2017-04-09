@@ -159,7 +159,7 @@ fig1.savefig("data_plotted_image_distribution_amongst_classes.png", dpi=25)  # r
 print("figure saved as: 'data_plotted_image_distribution_amongst_classes.png'")
 
 
-# In[4]:
+# In[77]:
 
 # diplay list of sample images from training data set
 def display_images(images):
@@ -185,6 +185,11 @@ def display_images(images):
 print("Sample images from training data set")
 sample_images = [X_train_ORIG[50], X_train_ORIG[500], X_train_ORIG[1000]]
 display_images(sample_images)
+
+
+# save figure to file
+fig1.savefig("sample_traffic_signs_from_training_set.png", dpi=25)  # results in 160x120 px image
+print("figure saved as: 'sample_traffic_signs_from_training_set.png'")
 
 # consider showing histogram of individual sample images
 # consider showing average histogram of all images

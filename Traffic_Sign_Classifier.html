@@ -12516,7 +12516,7 @@ ZmZWSU5QZmZWSU5QZmZWSU5QZmZWSf8P+/61wQQ4ZoUAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[77]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># diplay list of sample images from training data set</span>
@@ -12543,6 +12543,11 @@ ZmZWSU5QZmZWSU5QZmZWSU5QZmZWSf8P+/61wQQ4ZoUAAAAASUVORK5CYII=
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sample images from training data set&quot;</span><span class="p">)</span>
 <span class="n">sample_images</span> <span class="o">=</span> <span class="p">[</span><span class="n">X_train_ORIG</span><span class="p">[</span><span class="mi">50</span><span class="p">],</span> <span class="n">X_train_ORIG</span><span class="p">[</span><span class="mi">500</span><span class="p">],</span> <span class="n">X_train_ORIG</span><span class="p">[</span><span class="mi">1000</span><span class="p">]]</span>
 <span class="n">display_images</span><span class="p">(</span><span class="n">sample_images</span><span class="p">)</span>
+
+
+<span class="c1"># save figure to file</span>
+<span class="n">fig1</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;sample_traffic_signs_from_training_set.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>  <span class="c1"># results in 160x120 px image</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;figure saved as: &#39;sample_traffic_signs_from_training_set.png&#39;&quot;</span><span class="p">)</span>
 
 <span class="c1"># consider showing histogram of individual sample images</span>
 <span class="c1"># consider showing average histogram of all images</span>
@@ -12803,6 +12808,13 @@ BoPBMCawG7rBYDCMCeyGbjAYDGMCu6EbDAbDmOD/A9SiMPwcjieVAAAAAElFTkSuQmCC
 >
 </div>
 
+</div>
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>figure saved as: &#39;sample_traffic_signs_from_training_set.png&#39;
+</pre>
+</div>
 </div>
 
 </div>

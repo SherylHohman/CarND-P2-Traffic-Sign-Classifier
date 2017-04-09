@@ -19,7 +19,9 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./data_plotted_image_distribution_amongst_classes.png "Visualization"
+[image1]: ./data_plotted_image_distribution_amongst_classes.png "Visualization Distribution of Images between classes, and across Training, Validation, and Test Sets"
+[image11]: ./sample_traffic_signs_from_training_set.png "Visualize Sample Images from the Training Set"
+[image10]: ./sample_traffic_signs_from_training_set.png "Visualization 2"
 [image2]: ./examples/grayscale.jpg "Grayscaling"
 [image3]: ./examples/random_noise.jpg "Random Noise"
 [image4]: ./examples/placeholder.png "Traffic Sign 1"
@@ -64,10 +66,10 @@ Number of classes = 43
 
 ####2. Include an exploratory visualization of the dataset and identify where the code is in your code file.
 
-The code for this step is contained in the third code cell **In [3]** of the IPython notebook.  
+The code for this step is contained in the third code cell **In [3]**  and **In [4]** of the IPython notebook.  
 
 Here is an exploratory visualization of the data set.  
-It is a bar chart showing distribution of the data in the Training, Validation, and Test sets.  
+Cell **In [3]** displays a bar chart showing distribution of the data in the Training, Validation, and Test sets.  
 
 ![alt text][image1]
 
@@ -83,11 +85,15 @@ It can also be seen that some image classes are highly favored, while others hav
   -- signs that have the greatest consequences if misread? )  
   -- How about the signs most likely to be misread? (and how could we know the answer to this question _before_ training?)  
 
+Cell **In [4]** displays some sample images from the Training set.  
 
+TODO: WHY IS THE WRONG IMAGE DISPLAYING HERE
+
+![alt text][image11]
 
 ###Design and Test a Model Architecture
 
-####1. Describe how, and identify where in your code, you preprocessed the image data. What tecniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
+####1. Describe how, and identify where in your code, you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
 
 The code for this step is contained in the fourth code cell of the IPython notebook.
 
