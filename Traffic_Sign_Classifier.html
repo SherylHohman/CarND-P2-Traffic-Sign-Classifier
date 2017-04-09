@@ -12861,34 +12861,46 @@ BoPBMCawG7rBYDCMCeyGbjAYDGMCu6EbDAbDmOD/A9SiMPwcjieVAAAAAElFTkSuQmCC
 
 </div>
 </div>
-</div>def test_reshaping_3D_into_4D():
-    # grayscale images have no depth dimension
-    # we need them to have a depth dimension of 1
-    gr = np.zeros([3,2,2])
-    print(gr)
-    gr = gr.reshape(3,2,2,1)
-    print(gr)
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[61]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">test_reshaping_3D_into_4D</span><span class="p">():</span>
+    <span class="c1"># grayscale images have no depth dimension</span>
+    <span class="c1"># we need them to have a depth dimension of 1</span>
+    <span class="n">gr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">gr</span><span class="p">)</span>
+    <span class="n">gr</span> <span class="o">=</span> <span class="n">gr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">gr</span><span class="p">)</span>
 
-    gr = np.zeros((3,2,2))
-    print(gr)
-    gr = np.reshape(gr, (3,2,2,1))
-    print(gr)
+    <span class="n">gr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">gr</span><span class="p">)</span>
+    <span class="n">gr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">gr</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">gr</span><span class="p">)</span>
 
-    gr = np.zeros([3,2,2])
-    gr = [[["x11","x12"],["y11","y12"]],[["x21","x22"],["y21","y22"]],[["x31","x32"],["y31","y32"]]]
-    print(gr)
-    gr = np.reshape(gr,(3,2,2,1))
-    print(gr)
+    <span class="n">gr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">gr</span> <span class="o">=</span> <span class="p">[[[</span><span class="s2">&quot;x11&quot;</span><span class="p">,</span><span class="s2">&quot;x12&quot;</span><span class="p">],[</span><span class="s2">&quot;y11&quot;</span><span class="p">,</span><span class="s2">&quot;y12&quot;</span><span class="p">]],[[</span><span class="s2">&quot;x21&quot;</span><span class="p">,</span><span class="s2">&quot;x22&quot;</span><span class="p">],[</span><span class="s2">&quot;y21&quot;</span><span class="p">,</span><span class="s2">&quot;y22&quot;</span><span class="p">]],[[</span><span class="s2">&quot;x31&quot;</span><span class="p">,</span><span class="s2">&quot;x32&quot;</span><span class="p">],[</span><span class="s2">&quot;y31&quot;</span><span class="p">,</span><span class="s2">&quot;y32&quot;</span><span class="p">]]]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">gr</span><span class="p">)</span>
+    <span class="n">gr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">gr</span><span class="p">,(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">gr</span><span class="p">)</span>
     
-    print("old shape", X_train_gray.shape)
-    #X_train_gray.reshape(len(X_train_gray), 32, 32, 1)
-    np.reshape(X_train_gray, (len(X_train_gray), 32, 32, 1) )
-    print("new shape", X_train_gray.shape)
-    print("WHY DOES THIS VERSION _NOT_ WORK ?, WHEN THE OTHERS DO ?")
-    assert(False == True)
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;old shape&quot;</span><span class="p">,</span> <span class="n">X_train_gray</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="c1">#X_train_gray.reshape(len(X_train_gray), 32, 32, 1)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">X_train_gray</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train_gray</span><span class="p">),</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;new shape&quot;</span><span class="p">,</span> <span class="n">X_train_gray</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WHY DOES THIS VERSION _NOT_ WORK ?, WHEN THE OTHERS DO ?&quot;</span><span class="p">)</span>
+    <span class="k">assert</span><span class="p">(</span><span class="kc">False</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span>
 
-#test_reshaping_3D_into_4D()
-;
+<span class="c1">#test_reshaping_3D_into_4D()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
@@ -13647,44 +13659,73 @@ B0EQ9IR4oAdBEPSE/wfe73rx05B8ZwAAAABJRU5ErkJggg==
 </div>
 </div>
 
-</div>from sklearn.preprocessing import normalize
-from skimage import color
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[73]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">normalize</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="k">import</span> <span class="n">color</span>
 
-''' 
-# normalization
-print("normalizing")
-#for i in range(len(X_train))
-#X_train=[(i, tf.image.per_image_standardization(X_train[i])) for i in range(len(X_train))] 
-#list(map(lambda x: x**2, range(10)))
-#tf.image.per_image_standardization(X_valid)
-#tf.image.per_image_standardization(X_test)
-##X_valid=[(i, tf.image.per_image_standardization(X_valid[i])) for i in range(len(X_valid))] 
-#X_test=[(i, tf.image.per_image_standardization(X_test[i]))  for i in range(len(X_test))]
-#X_valid = N_valid
+<span class="sd">&#39;&#39;&#39; </span>
+<span class="sd"># normalization</span>
+<span class="sd">print(&quot;normalizing&quot;)</span>
+<span class="sd">#for i in range(len(X_train))</span>
+<span class="sd">#X_train=[(i, tf.image.per_image_standardization(X_train[i])) for i in range(len(X_train))] </span>
+<span class="sd">#list(map(lambda x: x**2, range(10)))</span>
+<span class="sd">#tf.image.per_image_standardization(X_valid)</span>
+<span class="sd">#tf.image.per_image_standardization(X_test)</span>
+<span class="sd">##X_valid=[(i, tf.image.per_image_standardization(X_valid[i])) for i in range(len(X_valid))] </span>
+<span class="sd">#X_test=[(i, tf.image.per_image_standardization(X_test[i]))  for i in range(len(X_test))]</span>
+<span class="sd">#X_valid = N_valid</span>
 
-X_train_preprocessed = normalized(X_train)
-X_valid_preprocessed = normalized(X_valid)
-X_test_preprocessed  = normalized(X_test)
+<span class="sd">X_train_preprocessed = normalized(X_train)</span>
+<span class="sd">X_valid_preprocessed = normalized(X_valid)</span>
+<span class="sd">X_test_preprocessed  = normalized(X_test)</span>
 
-print("normalized image:")
-x_1000_normalized = normalize(X_train_preprocessed[1000])
-imgplot = plt.imshow(x_1000_normalized)
+<span class="sd">print(&quot;normalized image:&quot;)</span>
+<span class="sd">x_1000_normalized = normalize(X_train_preprocessed[1000])</span>
+<span class="sd">imgplot = plt.imshow(x_1000_normalized)</span>
 
-# to grayscale
-#Gray Scale you could use cvtcolor from OpenCV:
-#gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+<span class="sd"># to grayscale</span>
+<span class="sd">#Gray Scale you could use cvtcolor from OpenCV:</span>
+<span class="sd">#gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)</span>
 
-print("to grayscale")
-X_train_preprocessed = color.rgb2gray(X_train_preprocessed)
-X_valid_preprocessed = color.rgb2gray(X_valid_preprocessed)
-X_test_preprocessed  = color.rgb2gray(X_test_preprocessed)
-print("grayscale done")
-#imgplot = plt.imshow(X_train[1000], cmap="gray")
-image_shape = X_train_preprocessed.get_shape().as_list()[1:]
-print(image_shape)
-assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
-'''
+<span class="sd">print(&quot;to grayscale&quot;)</span>
+<span class="sd">X_train_preprocessed = color.rgb2gray(X_train_preprocessed)</span>
+<span class="sd">X_valid_preprocessed = color.rgb2gray(X_valid_preprocessed)</span>
+<span class="sd">X_test_preprocessed  = color.rgb2gray(X_test_preprocessed)</span>
+<span class="sd">print(&quot;grayscale done&quot;)</span>
+<span class="sd">#imgplot = plt.imshow(X_train[1000], cmap=&quot;gray&quot;)</span>
+<span class="sd">image_shape = X_train_preprocessed.get_shape().as_list()[1:]</span>
+<span class="sd">print(image_shape)</span>
+<span class="sd">assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="p">;</span>
+</pre></div>
 
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[73]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
@@ -13726,12 +13767,24 @@ assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
 <h3 id="Model-Architecture">Model Architecture<a class="anchor-link" href="#Model-Architecture">&#182;</a></h3>
 </div>
 </div>
-</div>### Define your architecture here.
-### Feel free to use as many code cells as needed.
-
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Define your architecture here.</span>
+<span class="c1">### Feel free to use as many code cells as needed.</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[63]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -13782,7 +13835,7 @@ assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[11]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[63]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -13868,7 +13921,7 @@ assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[75]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">tensorflow.contrib.layers</span> <span class="k">import</span> <span class="n">flatten</span>
@@ -13896,9 +13949,7 @@ assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
     
     <span class="n">logits</span> <span class="o">=</span> <span class="n">get_fcc_layer</span><span class="p">(</span><span class="n">layer4</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">)</span>
     <span class="k">assert</span><span class="p">(</span> <span class="p">[</span><span class="n">logits</span><span class="o">.</span><span class="n">get_shape</span><span class="p">()</span><span class="o">.</span><span class="n">as_list</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="n">num_classes</span><span class="p">])</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span>
-
-    
+        
     <span class="k">return</span> <span class="n">logits</span>
 </pre></div>
 
@@ -13971,7 +14022,7 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[76]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## initialize</span>
@@ -14046,20 +14097,6 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Tensor(&#34;Add_2:0&#34;, shape=(?, 43), dtype=float32)
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -14106,34 +14143,66 @@ sets imply underfitting. A high accuracy on the training set but low accuracy on
 
 </div>
 </div>
-</div># TEMP TRUNCATE DATA FOR Alpha TESTING the code
-"""  
-# truncate the training set to be just a bit larger than the BATCH_SIZE (so run at least 2 batches per epoch)
-tr = int(BATCH_SIZE * 1.2)
-# truncate validation (and training??) set to each be about 15% of the training set size
-va = te = int(tr * 0.2)
-
-print(tr, va, te, "total:", (tr+va+te), "percent training: ", tr/(tr+va+te))
-X_train = X_train[0:tr]
-y_train = y_train[0:tr]
-X_valid = X_valid[0:va]
-y_valid = y_valid[0:va]
-X_test  = X_test[0:te]
-y_test  = y_test[0:te]
-print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
-"""  
-
-# EPOCHS = 4
-# print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
-
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[66]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TEMP TRUNCATE DATA FOR Alpha TESTING the code</span>
+<span class="sd">&quot;&quot;&quot;  </span>
+<span class="sd"># truncate the training set to be just a bit larger than the BATCH_SIZE (so run at least 2 batches per epoch)</span>
+<span class="sd">tr = int(BATCH_SIZE * 1.2)</span>
+<span class="sd"># truncate validation (and training??) set to each be about 15% of the training set size</span>
+<span class="sd">va = te = int(tr * 0.2)</span>
+
+<span class="sd">print(tr, va, te, &quot;total:&quot;, (tr+va+te), &quot;percent training: &quot;, tr/(tr+va+te))</span>
+<span class="sd">X_train = X_train[0:tr]</span>
+<span class="sd">y_train = y_train[0:tr]</span>
+<span class="sd">X_valid = X_valid[0:va]</span>
+<span class="sd">y_valid = y_valid[0:va]</span>
+<span class="sd">X_test  = X_test[0:te]</span>
+<span class="sd">y_test  = y_test[0:te]</span>
+<span class="sd">print(&#39;DATA TRUNCATED TO:&#39;, len(X_train), &quot;SAMPLES for preliminary testing&quot;)</span>
+<span class="sd">&quot;&quot;&quot;</span>  
+
+<span class="c1"># EPOCHS = 4</span>
+<span class="c1"># print(&#39;EPOCHS TRUNCATED TO:&#39;, EPOCHS, &quot;EPOCHS for preliminary testing&quot;)</span>
+<span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[66]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[71]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 
-<span class="k">assert</span><span class="p">(</span><span class="s2">&quot;no&quot;</span> <span class="o">==</span><span class="s2">&quot;Don&#39;t Retrain Model !&quot;</span><span class="p">)</span>
+<span class="k">assert</span><span class="p">(</span><span class="s2">&quot;no, Don&#39;t Retrain Model !&quot;</span>  <span class="o">==</span>  
+       <span class="s2">&quot;Re-Running cells for later sections of the notebook. AND Want To Use The already TRAINED NETWORK&quot;</span>
+      <span class="p">)</span>
+
 <span class="c1"># train our model</span>
 <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
     <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
@@ -14198,8 +14267,6 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;overfitting  if: high accuracy on training but low accuracy on validation sets.&quot;</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">()</span>
-
-    
 </pre></div>
 
 </div>
@@ -14215,12 +14282,12 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 <pre>
 <span class="ansi-red-fg">---------------------------------------------------------------------------</span>
 <span class="ansi-red-fg">AssertionError</span>                            Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-19-acf6c0f044b4&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-intense-fg ansi-bold">import</span> time
+<span class="ansi-green-fg">&lt;ipython-input-71-dadad28e34c4&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
 <span class="ansi-green-intense-fg ansi-bold">      2</span> 
-<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg"> </span><span class="ansi-green-intense-fg ansi-bold">assert</span><span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#34;no&#34;</span> <span class="ansi-yellow-intense-fg ansi-bold">==</span><span class="ansi-blue-intense-fg ansi-bold">&#34;Don&#39;t Retrain Model !&#34;</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      4</span> <span class="ansi-red-intense-fg ansi-bold"># train our model</span>
-<span class="ansi-green-intense-fg ansi-bold">      5</span> <span class="ansi-green-intense-fg ansi-bold">with</span> tf<span class="ansi-yellow-intense-fg ansi-bold">.</span>Session<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">)</span> <span class="ansi-green-intense-fg ansi-bold">as</span> sess<span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> assert(&#34;no, Don&#39;t Retrain Model !&#34;  ==  
+<span class="ansi-green-fg">----&gt; 4</span><span class="ansi-red-fg">        </span><span class="ansi-blue-intense-fg ansi-bold">&#34;Re-Running cells for later sections of the notebook. AND Want To Use The already TRAINED NETWORK&#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">      5</span>       )
+<span class="ansi-green-intense-fg ansi-bold">      6</span> 
 
 <span class="ansi-red-fg">AssertionError</span>: </pre>
 </div>
@@ -14232,13 +14299,14 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[72]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span><span class="p">(</span><span class="s2">&quot;no&quot;</span> <span class="o">==</span> <span class="s2">&quot;no need to display empty plot&quot;</span><span class="p">)</span>
-<span class="c1"># TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">assert</span><span class="p">(</span><span class="s2">&quot;no need to display empty plot&quot;</span> <span class="o">==</span> 
+       <span class="s2">&quot;not retraining right now - just resetting the kernal (and running all except training and plotting cells)&quot;</span>
+      <span class="p">)</span>
 
-<span class="c1"># to display legend</span>
+<span class="c1"># for displaying a legend</span>
 <span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
 
 <span class="c1"># Read the array from disk</span>
@@ -14307,12 +14375,12 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 <pre>
 <span class="ansi-red-fg">---------------------------------------------------------------------------</span>
 <span class="ansi-red-fg">AssertionError</span>                            Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-20-0c85117aa03f&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span><span class="ansi-green-intense-fg ansi-bold">assert</span><span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#34;no&#34;</span> <span class="ansi-yellow-intense-fg ansi-bold">==</span> <span class="ansi-blue-intense-fg ansi-bold">&#34;no need to display empty plot&#34;</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
-<span class="ansi-green-intense-fg ansi-bold">      2</span> <span class="ansi-red-intense-fg ansi-bold"># TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets</span>
-<span class="ansi-green-intense-fg ansi-bold">      3</span> 
-<span class="ansi-green-intense-fg ansi-bold">      4</span> <span class="ansi-red-intense-fg ansi-bold"># to display legend</span>
-<span class="ansi-green-intense-fg ansi-bold">      5</span> <span class="ansi-green-intense-fg ansi-bold">import</span> matplotlib<span class="ansi-yellow-intense-fg ansi-bold">.</span>patches <span class="ansi-green-intense-fg ansi-bold">as</span> mpatches
+<span class="ansi-green-fg">&lt;ipython-input-72-736819182ba8&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> assert(&#34;no need to display empty plot&#34; == 
+<span class="ansi-green-fg">----&gt; 2</span><span class="ansi-red-fg">        </span><span class="ansi-blue-intense-fg ansi-bold">&#34;not retraining right now - just resetting the kernal (and running all except training and plotting cells)&#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span>       )
+<span class="ansi-green-intense-fg ansi-bold">      4</span> 
+<span class="ansi-green-intense-fg ansi-bold">      5</span> <span class="ansi-red-intense-fg ansi-bold"># for displaying a legend</span>
 
 <span class="ansi-red-fg">AssertionError</span>: </pre>
 </div>
@@ -14539,7 +14607,7 @@ Test Accuracy = 0.940
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[54]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -14552,7 +14620,7 @@ Test Accuracy = 0.940
         <span class="p">]</span>
 <span class="n">dataset_descriptions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Set 1: Straightforward: </span><span class="se">\n</span><span class="s1">        Expect Good Matches.&#39;</span><span class="p">,</span> 
                         <span class="s1">&#39;Set 2: These signs are Not part of the signnames.csv, but are Similar to Signs that were. </span><span class="se">\n</span><span class="s1">        Curious if it picks signs that I think look similar&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;set 3: These signs are NOT in signnames, and are not similar to any signs that are. </span><span class="se">\n</span><span class="s1">        Ignore This Set. Not Useful, or Interesting. </span><span class="se">\n</span><span class="s1">        As a Hack, I need to keep 3 datasets, so it stays&#39;</span>
+                        <span class="s1">&#39;set 3: These signs are NOT in signnames, and are NOT similar to any signs that are. </span><span class="se">\n</span><span class="s1">        Mostly this set will generate rubish. </span><span class="se">\n</span><span class="s1">        They may or may not provide interesting insights on the nn.</span><span class="se">\n</span><span class="s1">&#39;</span>
                        <span class="p">]</span>
 
 <span class="n">num_datasets</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
@@ -15469,9 +15537,10 @@ AAAAAElFTkSuQmCC
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>(7, 32, 32, 3)
 
- set 3: These signs are NOT in signnames, and are not similar to any signs that are. 
-        Ignore This Set. Not Useful, or Interesting. 
-        As a Hack, I need to keep 3 datasets, so it stays
+ set 3: These signs are NOT in signnames, and are NOT similar to any signs that are. 
+        Mostly this set will generate rubish. 
+        They may or may not provide interesting insights on the nn.
+
 </pre>
 </div>
 </div>
@@ -15898,33 +15967,25 @@ Importing done... 3 sets of traffic sign images from the web
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[56]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># pre-process images</span>
 
-<span class="c1"># hack: web_datasets_ORIG MUST have 3 datasets:</span>
-<span class="c1">#       get_per_image_mean_centered_datasets expects a list of 3 datasets </span>
-<span class="c1">#       dunno how to init np.none[[],[],[]] without hardcoding number of arrays, so the Hack stays.</span>
+<span class="k">assert</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">web_datasets_ORIG</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span>
 
+<span class="c1"># Would be better If I did not hard code 3 storage sets.</span>
+<span class="c1"># (ie X_sets = get...) and change subsequent code to reference:</span>
+<span class="c1"># X_sets[0], X_sets[1], X_sets[2], ..</span>
+<span class="c1"># ... it is requiring me to supply exactly 3 sets of data in the above cell :-/</span>
 
 <span class="n">X_set1</span><span class="p">,</span> <span class="n">X_set2</span><span class="p">,</span> <span class="n">X_set3</span> <span class="o">=</span> <span class="n">get_per_image_mean_centered_datasets</span><span class="p">(</span><span class="n">web_datasets_ORIG</span><span class="p">)</span>
-<span class="c1">#X_set1, X_set2 = get_per_image_mean_centered_datasets([web_datasets_ORIG[0], web_datasets_ORIG[1]])</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Output-Top-5-Softmax-Probabilities-For-Each-Image-Found-on-the-Web">Output Top 5 Softmax Probabilities For Each Image Found on the Web<a class="anchor-link" href="#Output-Top-5-Softmax-Probabilities-For-Each-Image-Found-on-the-Web">&#182;</a></h3>
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
@@ -16883,35 +16944,45 @@ Keep right
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Analyze-Performance">Analyze Performance<a class="anchor-link" href="#Analyze-Performance">&#182;</a></h3><p>My classifier performed terrible on the images I expected good results on.
-Signs 1, 6: To be fair, I could have cropped these better.
-Sign 6: I expect should get a correct answer with closer cropping.<br>
-    Then again, I was overly optimistic that it would do well even given the bad crop I handed it. 
-    I can imagine that the crop I gave it lent a partial figure-8 shape to confuse it, though at the wrong scale??
-Sign 2: Was in black an white, so it is missing color information, which may have otherwise helped nudge it to the correct answer.<br>
-    Additionally, the sign was skewed at an angle, and placed against another sign, 
-    so it's overall shape could be difficult to discern.
-    Unfortunately, the misinterpretation is Grave:<br>
-        'No Entry' sign became an "End All Speed and Passing Limits"</p>
-
-<pre><code>    - the exact Opposite of the intended !
-</code></pre>
-<p>Sign 3:  No Idea what happened there! Perhaps the edges of the triangle resembled a 5, though at the wrong scale??
-    If so this is similar to what I "imagine" threw it off for image 6. Or I just have an imagination.
-Sign 4 and 5, Fortunately, It got these Correct !!</p>
-<p>So this classifier was correct on 2/6 images, or 33% correct. 
+<h3 id="Analyze-Performance">Analyze Performance<a class="anchor-link" href="#Analyze-Performance">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="TODO:">TODO:<a class="anchor-link" href="#TODO:">&#182;</a></h4><h5 id="NOTE:-I-added-additional-crops-of-problem-images-to-see-how-they-would-compare.">NOTE: I added additional crops of problem images to see how they would compare.<a class="anchor-link" href="#NOTE:-I-added-additional-crops-of-problem-images-to-see-how-they-would-compare.">&#182;</a></h5><h5 id="I-also-deleted-an-image-that-was-a-useless-poor-image-choice-to-begin-with">I also deleted an image that was a useless poor image choice to begin with<a class="anchor-link" href="#I-also-deleted-an-image-that-was-a-useless-poor-image-choice-to-begin-with">&#182;</a></h5><h5 id="I-did-NOT-Update-My-Analysis-or-Accuracy-reporting-to-reflect-the-changes-in-this-dataset.">I did NOT Update My Analysis or Accuracy reporting to reflect the changes in this dataset.<a class="anchor-link" href="#I-did-NOT-Update-My-Analysis-or-Accuracy-reporting-to-reflect-the-changes-in-this-dataset.">&#182;</a></h5><h4 id="Set_1-My-classifier-performed-terrible-on-the-images-I-expected-good-results-on.">Set_1 My classifier performed terrible on the images I expected good results on.<a class="anchor-link" href="#Set_1-My-classifier-performed-terrible-on-the-images-I-expected-good-results-on.">&#182;</a></h4><p>Signs 1, 6: To be fair, I could have cropped these better.</p>
+<p>Sign 6: I expect should get a correct answer with closer cropping.<br>
+    Then again, I was overly optimistic that it would do well even given the bad crop I handed it.<br>
+    I can imagine that the crop I gave it lent a partial figure-8 shape to confuse it, though at the wrong scale??</p>
+<p>Sign 2: Was in black an white, so it is missing color information, which may have otherwise helped nudge it to the correct answer.</p>
+<ul>
+<li>Additionally, the sign was skewed at an angle, and placed against another sign,  </li>
+<li>so it's overall shape could be difficult to discern.  </li>
+<li>Unfortunately, the misinterpretation is Grave:   <ul>
+<li>'No Entry' sign became an "End All Speed and Passing Limits"  </li>
+<li>the exact Opposite of the intended !  </li>
+</ul>
+</li>
+</ul>
+<p>Sign 3:  No Idea what happened there! Perhaps the edges of the triangle resembled a 5, though at the wrong scale??<br>
+    If so this is similar to what I "imagine" threw it off for image 6. Or I just have an imagination.</p>
+<p>Sign 4 and 5, Fortunately, It got these Correct !!</p>
+<p>So this classifier was correct on 2/6 images, or 33% correct.<br>
 That's Far lower than the test, and validation sets!!  It's downright Terrible.</p>
-<p>The second dataset consisted of street signs that were not part of the street_sign names our classifier was trained on.
-    Indeed, the correct sign names do not even exist in the csv signnames file, 
-    so it was impossible for our classifier to get any of these correct.
-    I was simply curious how it would interpret them: would see the same type similarities <strong>I</strong> see when looking at them?
-    would it make the same choices I would ?
-Sign 2: Surprisingly, it got almost about as close a guess as possible. Must be beginner's luck
-Sign 5: Was also surprisingly good guess.
-Signs 3, 6, 7: These three signs I Expected the classifier to, no-brainer, return specific predictions. 
+<h4 id="Set_2-consisted-of-street-signs-that-were-not-part-of-the-street_sign-names-our-classifier-was-trained-on.--It-was-impossible-for-my-classifier-to-get-any-of-these-correct.">Set_2 consisted of street signs that were not part of the street_sign names our classifier was trained on.  It was impossible for my classifier to get any of these correct.<a class="anchor-link" href="#Set_2-consisted-of-street-signs-that-were-not-part-of-the-street_sign-names-our-classifier-was-trained-on.--It-was-impossible-for-my-classifier-to-get-any-of-these-correct.">&#182;</a></h4><ul>
+<li>Indeed, the correct sign names do not even exist in the csv signnames file,   </li>
+<li>I was simply curious how it would interpret them: would see the same type similarities <strong>I</strong> see when looking at them?  </li>
+<li>Would it make the same choices I did (not knowing German signs) ?  </li>
+</ul>
+<p>Sign 2: Surprisingly, it got almost about as close a guess as possible.   Must be beginner's luck.</p>
+<p>Sign 5: Was also surprisingly good guess.</p>
+<p>Signs 3, 6, 7: These three signs I Expected the classifier to, no-brainer, return specific predictions.<br>
     Nope. It passed over images which I think they look Very similar to, 
-    in favor of images that I think look not at all similar to these signs. I'm clueless what it was "thinking"
-Signs 1, 4: I expected rubbish responses to these rubbish images. Never-the-less, I see no resemblence to what it <em>did</em> choose. 
+    in favor of images that I think look not at all similar to these signs.   What was its "thinking" process ??</p>
+<p>Signs 1, 4: I expected rubbish responses to these rubbish images. Never-the-less, I see no resemblence to what it <em>did</em> choose.<br>
     I guess NaN was not an option?</p>
 
 </div>
@@ -16919,11 +16990,17 @@ Signs 1, 4: I expected rubbish responses to these rubbish images. Never-the-less
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[58]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Calculate the accuracy for these 5 new images. </span>
 <span class="c1">### For example, if the model predicted 1 out of 5 signs correctly, it&#39;s 20% accurate on these new images.</span>
+
+<span class="c1">## TODO:</span>
+<span class="c1">#  NOTE: I added additional crops of problem images to see how they would compare.</span>
+<span class="c1">#  I also deleted an image that was a useless poor image choice to begin with</span>
+<span class="c1">#  I did NOT Update My Analysis or Accuracy reporting to reflect the changes in this dataset.</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Classifier was &quot;</span><span class="p">,</span> <span class="mi">100</span><span class="o">*</span><span class="mi">2</span><span class="o">//</span><span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;% accurate on the new images, getting 2 of 6 correct&quot;</span><span class="p">)</span>
 </pre></div>
 
@@ -16945,6 +17022,15 @@ Signs 1, 4: I expected rubbish responses to these rubbish images. Never-the-less
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Output-Top-5-Softmax-Probabilities-For-Each-Image-Found-on-the-Web">Output Top 5 Softmax Probabilities For Each Image Found on the Web<a class="anchor-link" href="#Output-Top-5-Softmax-Probabilities-For-Each-Image-Found-on-the-Web">&#182;</a></h3>
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
@@ -18691,13 +18777,28 @@ xEzjw2cAAAAASUVORK5CYII=
 </div>
 </div>
 
-</div>"""
-Interesting how cropping changed the predictions.   
-Good Cropping really matters. (Giving my trained model, anyhow)  
-I'm surprised that the 100km/h speed limit did not even make the list, even with good cropping.  
-How did the second to last image have 2 predictions at less than 0 % ??  
-Is this a red-flag that something is wrong (with alogrithm) ??  Or that rounding hit an overflow ??  
-"""
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">- Interesting how cropping changed the predictions.   </span>
+<span class="sd"> -- Good Cropping matters. (Giving my trained model, anyhow)</span>
+<span class="sd"> -- Stop Sign: better crop (tho not great), stop was rated 3rd on the list, but confidence was lower. worse crop, was &gt; 10 x more confident in &quot;stop&quot; as a choice, though it was now 5th. Of course, this is also reflected in that the worse crop lowered it&#39;s confidence in anything overall. Better crop gave it a 99% certainty in a wrong answer, vs a 55% top certainty in the close cropped version. </span>
+<span class="sd">- I&#39;m surprised that the 100km/h speed limit did not even make the list, even with good cropping.  </span>
+<span class="sd">- How did the second to last image have 2 predictions at less than 0 % ??  </span>
+<span class="sd"> --Is this a red-flag that something is wrong (with alogrithm) ??  Or that rounding hit an overflow ??  </span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[38]:</div>
@@ -19807,18 +19908,32 @@ FAW/EImi4BciURT8QiSKgl+IRPk/clH2VXRkPbgAAAAASUVORK5CYII=
 </div>
 </div>
 
-</div>"""
-Interesting results on this dataset,  
-  so I'll leave the cell intact
-Remember none of these images were in the training set; the correct answer is not in the list of labels provided.  
-So it was impossible for our classifier to get these correct (except, sort of, on the first image..)  
-- It's interesting to me that on the 1st image, it did manage to locate the "sub-sign" within it, as 5th prob'  
-- The 2nd image also chose what I consider the closest two answers as it's top two  
--- though the difference in confidence is vastly different, and perhaps swapped from what might be expected.  
-- The 3rd, 5th,6th images do NOT focus on the Number depicted, which is what *I* do when interpolating their meaning.
---  It surprises me that it does not choose 
-- The 4th image, however, does seem to consider the number, and the "not / end-of" in it's top two choices
-"""
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Interesting results on this dataset,  </span>
+<span class="sd">  so I&#39;ll leave the cell intact</span>
+<span class="sd">Remember none of these images were in the training set; the correct answer is not in the list of labels provided.  </span>
+<span class="sd">So it was impossible for our classifier to get these correct (except, sort of, on the first image..)  </span>
+<span class="sd">- It&#39;s interesting to me that on the 1st image, it did manage to locate the &quot;sub-sign&quot; within it, as 5th prob&#39;  </span>
+<span class="sd">- The 2nd image also chose what I consider the closest two answers as it&#39;s top two  </span>
+<span class="sd">-- though the difference in confidence is vastly different, and perhaps swapped from what might be expected.  </span>
+<span class="sd">- The 3rd, 5th,6th images do NOT focus on the Number depicted, which is what *I* do when interpolating their meaning.</span>
+<span class="sd">--  It surprises me that it does not choose </span>
+<span class="sd">- The 4th image, however, does seem to consider the number, and the &quot;not / end-of&quot; in it&#39;s top two choices</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -19842,7 +19957,7 @@ So it was impossible for our classifier to get these correct (except, sort of, o
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[40]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Visualize your network&#39;s feature maps here.</span>
@@ -19858,7 +19973,7 @@ So it was impossible for our classifier to get these correct (except, sort of, o
     <span class="c1"># with size, normalization, ect if needed</span>
     <span class="c1"># image_input =</span>
     <span class="c1"># Note: x should be the same name as your network&#39;s tensorflow data placeholder variable</span>
-    <span class="c1"># If you get an error tf_activation is not defined it maybe having trouble accessing the variable from inside a function</span>
+    <span class="c1"># If you get an error tf_activation is not defined it may be having trouble accessing the variable from inside a function</span>
     <span class="n">activation</span> <span class="o">=</span> <span class="n">tf_activation</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">sess</span><span class="p">,</span><span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span> <span class="p">:</span> <span class="n">image_input</span><span class="p">})</span>
     <span class="n">featuremaps</span> <span class="o">=</span> <span class="n">activation</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">plt_num</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">))</span>
@@ -19879,6 +19994,54 @@ So it was impossible for our classifier to get these correct (except, sort of, o
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## images of interest:</span>
+<span class="c1"># set_1, image2:  _17-no-entry-1-bw.jpg  </span>
+<span class="c1">#                RE:  the meaning of the Real Image is Directly Opposite </span>
+<span class="c1">#                      in meaning of the Predicted Image !! Dire Consequences ensue !!</span>
+<span class="c1"># set_1, image10  </span>
+<span class="c1">#                RE:  ?? How did it NOT get this one Correct??  </span>
+<span class="c1">#                     Were there enough 100km/h in the dataset ??</span>
+<span class="c1"># set_2: image 2</span>
+<span class="c1">#                RE:  why 30km/h was Highly Favored over 20km/h</span>
+<span class="c1"># set_2: image 3, 6, or 7</span>
+<span class="c1">#                RE:  why it did not focus on the Number, like my eyes do</span>
+<span class="c1"># set_1; image 3 vs image 4 or 5</span>
+<span class="c1">#                RE:   crop made a dramatic difference in results</span>
+
+
+<span class="c1"># with tf.Session() as sess:</span>
+    
+<span class="c1">#     image = X_set1[1]   </span>
+<span class="c1">#     #layer = layer4</span>
+
+<span class="c1">#     outputFeatureMap(image, fcc_layer)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Hmm.. Unfortunately, I don't think I can use the function above to gain insight on training features.
+Not only are my tensorflow training variables are encapsulated inside a LeNet(x) function.
+So the tensor I need to pass into the outputFeatureMap function are not global variables. 
+I have no access or handle to them from here, or anywhere outside that function.</p>
+<p>If it is indeed possible to access the required variable, I would be interested in gaining insight, for about 4 images.
+That is not going to happpen at this time, however.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">

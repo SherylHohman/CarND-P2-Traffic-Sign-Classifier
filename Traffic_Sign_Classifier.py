@@ -217,6 +217,9 @@ display_images(sample_images)
 # ### Pre-process the Data Set (normalization, grayscale, etc.)
 
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
+
+# In[61]:
+
 def test_reshaping_3D_into_4D():
     # grayscale images have no depth dimension
     # we need them to have a depth dimension of 1
@@ -244,7 +247,8 @@ def test_reshaping_3D_into_4D():
     assert(False == True)
 
 #test_reshaping_3D_into_4D()
-;
+
+
 # In[5]:
 
 from skimage import color
@@ -453,6 +457,9 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
 
     return X_output_datasets
 
+
+# In[73]:
+
 from sklearn.preprocessing import normalize
 from skimage import color
 
@@ -490,6 +497,8 @@ image_shape = X_train_preprocessed.get_shape().as_list()[1:]
 print(image_shape)
 assert (image_shape == [32, 32, 1])  #32px x 32px, 1 color channel: grayscale
 '''
+("")
+
 
 # In[10]:
 
@@ -517,10 +526,14 @@ ksize = pool_strides
 
 
 # ### Model Architecture
+
+# In[ ]:
+
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
 
-# In[11]:
+
+# In[63]:
 
 """
 # This was for an attempt at running LeNet on 1-channel grayscale images. 
@@ -617,7 +630,7 @@ def get_fcc_layer(prev_layer, output_length):
     return fcc_layer
 
 
-# In[14]:
+# In[75]:
 
 from tensorflow.contrib.layers import flatten
 
@@ -644,9 +657,7 @@ def LeNet(x):
     
     logits = get_fcc_layer(layer4, num_classes)
     assert( [logits.get_shape().as_list()[1] ] == [num_classes])
-    print(logits)
-
-    
+        
     return logits
 
 
@@ -681,7 +692,7 @@ X_valid_SHUFFLED, y_valid_SHUFFLED = shuffle(X_valid_ORIG, y_valid_ORIG)
     # don't need to shuffle test data
 
 
-# In[17]:
+# In[76]:
 
 ## initialize
 
@@ -781,6 +792,9 @@ def evaluate_data(X_data, y_data):
 
 
 # 
+
+# In[66]:
+
 # TEMP TRUNCATE DATA FOR Alpha TESTING the code
 """  
 # truncate the training set to be just a bit larger than the BATCH_SIZE (so run at least 2 batches per epoch)
@@ -800,12 +814,17 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 
 # EPOCHS = 4
 # print('EPOCHS TRUNCATED TO:', EPOCHS, "EPOCHS for preliminary testing")
+("")
 
-# In[19]:
+
+# In[71]:
 
 import time
 
-assert("no" =="Don't Retrain Model !")
+assert("no, Don't Retrain Model !"  ==  
+       "Re-Running cells for later sections of the notebook. AND Want To Use The already TRAINED NETWORK"
+      )
+
 # train our model
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
@@ -871,15 +890,14 @@ with tf.Session() as sess:
 
     print()
 
-    
 
+# In[72]:
 
-# In[20]:
+assert("no need to display empty plot" == 
+       "not retraining right now - just resetting the kernal (and running all except training and plotting cells)"
+      )
 
-assert("no" == "no need to display empty plot")
-# TODO plot chart of training stats: plot changing loss and validation rates for both training and validation sets
-
-# to display legend
+# for displaying a legend
 import matplotlib.patches as mpatches
 
 # Read the array from disk
@@ -1061,7 +1079,7 @@ with tf.Session() as sess:
 
 
 
-# In[27]:
+# In[54]:
 
 import numpy as np
 import glob
@@ -1073,7 +1091,7 @@ paths = ['traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/*.jpg',
         ]
 dataset_descriptions = ['Set 1: Straightforward: \n        Expect Good Matches.', 
                         'Set 2: These signs are Not part of the signnames.csv, but are Similar to Signs that were. \n        Curious if it picks signs that I think look similar',
-                        'set 3: These signs are NOT in signnames, and are not similar to any signs that are. \n        Ignore This Set. Not Useful, or Interesting. \n        As a Hack, I need to keep 3 datasets, so it stays'
+                        'set 3: These signs are NOT in signnames, and are NOT similar to any signs that are. \n        Mostly this set will generate rubish. \n        They may or may not provide interesting insights on the nn.\n'
                        ]
 
 num_datasets = len(paths)
@@ -1096,21 +1114,20 @@ print('\nImporting done...', len(web_datasets_ORIG), "sets of traffic sign image
 
 # 
 
-# In[28]:
+# In[56]:
 
 # pre-process images
 
-# hack: web_datasets_ORIG MUST have 3 datasets:
-#       get_per_image_mean_centered_datasets expects a list of 3 datasets 
-#       dunno how to init np.none[[],[],[]] without hardcoding number of arrays, so the Hack stays.
+assert (len(web_datasets_ORIG) == 3)
 
+# Would be better If I did not hard code 3 storage sets.
+# (ie X_sets = get...) and change subsequent code to reference:
+# X_sets[0], X_sets[1], X_sets[2], ..
+# ... it is requiring me to supply exactly 3 sets of data in the above cell :-/
 
 X_set1, X_set2, X_set3 = get_per_image_mean_centered_datasets(web_datasets_ORIG)
-#X_set1, X_set2 = get_per_image_mean_centered_datasets([web_datasets_ORIG[0], web_datasets_ORIG[1]])
 
 
-
-# ### Output Top 5 Softmax Probabilities For Each Image Found on the Web
 
 # ### Predict the Sign Type for Each Image
 
@@ -1146,43 +1163,65 @@ for set in [signs_set1, signs_set2]:
 
 
 # ### Analyze Performance
-# My classifier performed terrible on the images I expected good results on.
-# Signs 1, 6: To be fair, I could have cropped these better.
-# Sign 6: I expect should get a correct answer with closer cropping.  
-#     Then again, I was overly optimistic that it would do well even given the bad crop I handed it. 
-#     I can imagine that the crop I gave it lent a partial figure-8 shape to confuse it, though at the wrong scale??
-# Sign 2: Was in black an white, so it is missing color information, which may have otherwise helped nudge it to the correct answer.  
-#     Additionally, the sign was skewed at an angle, and placed against another sign, 
-#     so it's overall shape could be difficult to discern.
-#     Unfortunately, the misinterpretation is Grave:  
-#         'No Entry' sign became an "End All Speed and Passing Limits" 
-#         - the exact Opposite of the intended !
-# Sign 3:  No Idea what happened there! Perhaps the edges of the triangle resembled a 5, though at the wrong scale??
-#     If so this is similar to what I "imagine" threw it off for image 6. Or I just have an imagination.
-# Sign 4 and 5, Fortunately, It got these Correct !!
 # 
-# So this classifier was correct on 2/6 images, or 33% correct. 
-# That's Far lower than the test, and validation sets!!  It's downright Terrible.
-# 
-# The second dataset consisted of street signs that were not part of the street_sign names our classifier was trained on.
-#     Indeed, the correct sign names do not even exist in the csv signnames file, 
-#     so it was impossible for our classifier to get any of these correct.
-#     I was simply curious how it would interpret them: would see the same type similarities **I** see when looking at them?
-#     would it make the same choices I would ?
-# Sign 2: Surprisingly, it got almost about as close a guess as possible. Must be beginner's luck
-# Sign 5: Was also surprisingly good guess.
-# Signs 3, 6, 7: These three signs I Expected the classifier to, no-brainer, return specific predictions. 
-#     Nope. It passed over images which I think they look Very similar to, 
-#     in favor of images that I think look not at all similar to these signs. I'm clueless what it was "thinking"
-# Signs 1, 4: I expected rubbish responses to these rubbish images. Never-the-less, I see no resemblence to what it _did_ choose. 
-#     I guess NaN was not an option?
 
-# In[30]:
+# #### TODO:
+# #####  NOTE: I added additional crops of problem images to see how they would compare.
+# #####  I also deleted an image that was a useless poor image choice to begin with
+# #####  I did NOT Update My Analysis or Accuracy reporting to reflect the changes in this dataset.
+# 
+# #### Set_1 My classifier performed terrible on the images I expected good results on.  
+# Signs 1, 6: To be fair, I could have cropped these better. 
+# 
+# Sign 6: I expect should get a correct answer with closer cropping.  
+#     Then again, I was overly optimistic that it would do well even given the bad crop I handed it.  
+#     I can imagine that the crop I gave it lent a partial figure-8 shape to confuse it, though at the wrong scale??  
+#     
+# Sign 2: Was in black an white, so it is missing color information, which may have otherwise helped nudge it to the correct answer.  
+# - Additionally, the sign was skewed at an angle, and placed against another sign,  
+# - so it's overall shape could be difficult to discern.  
+# - Unfortunately, the misinterpretation is Grave:   
+#   - 'No Entry' sign became an "End All Speed and Passing Limits"  
+#   - the exact Opposite of the intended !  
+#         
+# Sign 3:  No Idea what happened there! Perhaps the edges of the triangle resembled a 5, though at the wrong scale??  
+#     If so this is similar to what I "imagine" threw it off for image 6. Or I just have an imagination.  
+#     
+# Sign 4 and 5, Fortunately, It got these Correct !!  
+# 
+# So this classifier was correct on 2/6 images, or 33% correct.  
+# That's Far lower than the test, and validation sets!!  It's downright Terrible.   
+# 
+# #### Set_2 consisted of street signs that were not part of the street_sign names our classifier was trained on.  It was impossible for my classifier to get any of these correct.
+# - Indeed, the correct sign names do not even exist in the csv signnames file,   
+# - I was simply curious how it would interpret them: would see the same type similarities **I** see when looking at them?  
+# - Would it make the same choices I did (not knowing German signs) ?  
+#     
+# Sign 2: Surprisingly, it got almost about as close a guess as possible.   Must be beginner's luck.
+# 
+# Sign 5: Was also surprisingly good guess. 
+# 
+# Signs 3, 6, 7: These three signs I Expected the classifier to, no-brainer, return specific predictions.  
+#     Nope. It passed over images which I think they look Very similar to, 
+#     in favor of images that I think look not at all similar to these signs.   What was its "thinking" process ??  
+#     
+# Signs 1, 4: I expected rubbish responses to these rubbish images. Never-the-less, I see no resemblence to what it _did_ choose.  
+#     I guess NaN was not an option?  
+
+# In[58]:
 
 ### Calculate the accuracy for these 5 new images. 
 ### For example, if the model predicted 1 out of 5 signs correctly, it's 20% accurate on these new images.
+
+## TODO:
+#  NOTE: I added additional crops of problem images to see how they would compare.
+#  I also deleted an image that was a useless poor image choice to begin with
+#  I did NOT Update My Analysis or Accuracy reporting to reflect the changes in this dataset.
+
 print("Classifier was ", 100*2//6, "% accurate on the new images, getting 2 of 6 correct")
 
+
+# ### Output Top 5 Softmax Probabilities For Each Image Found on the Web
 
 # For each of the new images, print out the model's softmax probabilities to show the **certainty** of the model's predictions (limit the output to the top 5 probabilities for each image). [`tf.nn.top_k`](https://www.tensorflow.org/versions/r0.12/api_docs/python/nn.html#top_k) could prove helpful here. 
 # 
@@ -1250,13 +1289,20 @@ for i in range(num_images):
 
  
 
+
+# In[ ]:
+
 """
-Interesting how cropping changed the predictions.   
-Good Cropping really matters. (Giving my trained model, anyhow)  
-I'm surprised that the 100km/h speed limit did not even make the list, even with good cropping.  
-How did the second to last image have 2 predictions at less than 0 % ??  
-Is this a red-flag that something is wrong (with alogrithm) ??  Or that rounding hit an overflow ??  
+- Interesting how cropping changed the predictions.   
+ -- Good Cropping matters. (Giving my trained model, anyhow)
+ -- Stop Sign: better crop (tho not great), stop was rated 3rd on the list, but confidence was lower. worse crop, was > 10 x more confident in "stop" as a choice, though it was now 5th. Of course, this is also reflected in that the worse crop lowered it's confidence in anything overall. Better crop gave it a 99% certainty in a wrong answer, vs a 55% top certainty in the close cropped version. 
+- I'm surprised that the 100km/h speed limit did not even make the list, even with good cropping.  
+- How did the second to last image have 2 predictions at less than 0 % ??  
+ --Is this a red-flag that something is wrong (with alogrithm) ??  Or that rounding hit an overflow ??  
 """
+("")
+
+
 # In[38]:
 
 # This is total duplication of above cell. (Not DRY)
@@ -1287,6 +1333,9 @@ for i in range(num_images):
 
  
 
+
+# In[ ]:
+
 """
 Interesting results on this dataset,  
   so I'll leave the cell intact
@@ -1299,6 +1348,9 @@ So it was impossible for our classifier to get these correct (except, sort of, o
 --  It surprises me that it does not choose 
 - The 4th image, however, does seem to consider the number, and the "not / end-of" in it's top two choices
 """
+("")
+
+
 # ---
 # 
 # ## Step 4: Visualize the Neural Network's State with Test Images
@@ -1319,7 +1371,7 @@ So it was impossible for our classifier to get these correct (except, sort of, o
 #  <p></p> 
 # 
 
-# In[ ]:
+# In[40]:
 
 ### Visualize your network's feature maps here.
 ### Feel free to use as many code cells as needed.
@@ -1334,7 +1386,7 @@ def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_m
     # with size, normalization, ect if needed
     # image_input =
     # Note: x should be the same name as your network's tensorflow data placeholder variable
-    # If you get an error tf_activation is not defined it maybe having trouble accessing the variable from inside a function
+    # If you get an error tf_activation is not defined it may be having trouble accessing the variable from inside a function
     activation = tf_activation.eval(session=sess,feed_dict={x : image_input})
     featuremaps = activation.shape[3]
     plt.figure(plt_num, figsize=(15,15))
@@ -1350,6 +1402,39 @@ def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_m
         else:
             plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", cmap="gray")
 
+
+# In[47]:
+
+## images of interest:
+# set_1, image2:  _17-no-entry-1-bw.jpg  
+#                RE:  the meaning of the Real Image is Directly Opposite 
+#                      in meaning of the Predicted Image !! Dire Consequences ensue !!
+# set_1, image10  
+#                RE:  ?? How did it NOT get this one Correct??  
+#                     Were there enough 100km/h in the dataset ??
+# set_2: image 2
+#                RE:  why 30km/h was Highly Favored over 20km/h
+# set_2: image 3, 6, or 7
+#                RE:  why it did not focus on the Number, like my eyes do
+# set_1; image 3 vs image 4 or 5
+#                RE:   crop made a dramatic difference in results
+
+
+# with tf.Session() as sess:
+    
+#     image = X_set1[1]   
+#     #layer = layer4
+
+#     outputFeatureMap(image, fcc_layer)
+
+
+# Hmm.. Unfortunately, I don't think I can use the function above to gain insight on training features.
+# Not only are my tensorflow training variables are encapsulated inside a LeNet(x) function.
+# So the tensor I need to pass into the outputFeatureMap function are not global variables. 
+# I have no access or handle to them from here, or anywhere outside that function.
+# 
+# If it is indeed possible to access the required variable, I would be interested in gaining insight, for about 4 images.
+# That is not going to happpen at this time, however.  
 
 # ### Question 9
 # 
