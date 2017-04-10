@@ -91,9 +91,6 @@ Set 2, cell 38: `traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames`
 [image3803]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/N_1-30km_Minimum.jpg
 "N/A 1, Minimum Speed 30km, Traffic Signs from the Web, Set 2: image 3"  
 
-[image3804]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/N_29-bike_lane-2-partial.jpg
-"N/A 29, Bike Lane, Traffic Signs from the Web, Set 2: image 4"
-
 [image3805]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/N_3_6_32-end-of-speed-limit-60km-1.jpg
 "N/A 3 or 6 or 32, End of 60km Speed Limit, Traffic Signs from the Web, Set 2: image 5"
 
@@ -109,7 +106,6 @@ Set 2, cell 38: `traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames`
 B_42_7-100kmspeedLimit_AND_no_overtaking-by-lorries-2.jpg
 N_0_2-speed_limit_25kmh-1.jpg
 N_1-30km_Minimum.jpg
-N_29-bike_lane-2-partial.jpg
 N_3_6_32-end-of-speed-limit-60km-1.jpg
 N_5-recommended-speed-80-obsolete-1.jpg
 N_6_5_32-end-of-80km-speed-obsolete-1.jpg
@@ -628,15 +624,6 @@ For the second image ...
    2.19% Go straight or right
    1.97% End of all speed and passing limits
    1.42% Turn left ahead
-
-
-
-![alt text][image3804]  
-  96.36% End of speed limit (80km/h)
-   3.10% Speed limit (60km/h)
-   0.22% Speed limit (50km/h)
-   0.13% Road work
-   0.13% Keep right
 
 
 

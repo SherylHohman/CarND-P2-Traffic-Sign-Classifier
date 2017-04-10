@@ -64,7 +64,7 @@ assert(len(X_test_ORIG)  == len(y_test_ORIG))
 
 # ### Provide a Basic Summary of the Data Set Using Python, Numpy and/or Pandas
 
-# In[106]:
+# In[2]:
 
 ### Replace each question mark with the appropriate value. 
 ### Use python, pandas or numpy methods rather than hard coding the results
@@ -156,11 +156,11 @@ plt.tight_layout()
 plt.show()
 
 # save figure to file
-fig1.savefig("data_plotted_image_distribution_amongst_classes.png", dpi=25)  # results in 160x120 px image
+#fig1.savefig("data_plotted_image_distribution_amongst_classes.png")  # results in 160x120 px image
 print("figure saved as: 'data_plotted_image_distribution_amongst_classes.png'")
 
 
-# In[80]:
+# In[4]:
 
 # diplay list of sample images from training data set
 def display_images(images):
@@ -190,7 +190,7 @@ fig2 = display_images(sample_images)
 
 
 # save figure to file
-fig2.savefig("sample_traffic_signs_from_training_set.png", dpi=25)  # results in 160x120 px image
+#fig2.savefig("sample_traffic_signs_from_training_set.png", dpi=25)  # results in 160x120 px image
 print("figure saved as: 'sample_traffic_signs_from_training_set.png'")
 
 # consider showing histogram of individual sample images
@@ -225,7 +225,7 @@ print("figure saved as: 'sample_traffic_signs_from_training_set.png'")
 
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
 
-# In[61]:
+# In[5]:
 
 def test_reshaping_3D_into_4D():
     # grayscale images have no depth dimension
@@ -256,7 +256,7 @@ def test_reshaping_3D_into_4D():
 #test_reshaping_3D_into_4D()
 
 
-# In[81]:
+# In[6]:
 
 from skimage import color
 
@@ -298,11 +298,11 @@ gray_train, gray_valid, gray_test = get_grayscale_datasets_1channel([X_train_ORI
 
 fig = display_images([gray_train[1000]])
 
-fig.savefig("sample_grayscale-1channel_conversion.png", dpi=25)
+#fig.savefig("sample_grayscale-1channel_conversion.png")
 print("figure saved as 'sample_grayscale-1channel_conversion.png'")
 
 
-# In[82]:
+# In[7]:
 
 # turn color data into grayscale image data
 from skimage import color
@@ -327,11 +327,11 @@ X_train_gray, X_valid_gray, X_test_gray = get_grayscale_datasets([X_train_ORIG, 
 # display sample grayscale images from dataset
 fig = display_images([X_train_gray[50], X_train_gray[500], X_train_gray[1000]])
 
-fig.savefig("sample_grayscale_conversions_single_channel.png", dpi=25)
+#fig.savefig("sample_grayscale_conversions_single_channel.png")
 print("figure saved as 'sample_grayscale_conversions_single_channel.png'")
 
 
-# In[86]:
+# In[8]:
 
 # turn grayscale into 3channel rgb grayscale
 # (not ideal paramater-wise = duplicated data, but for shipping through my LeNet, it should remove shaping problems)
@@ -366,13 +366,13 @@ X_train_gray3D_2, X_valid_gray3D_2, X_test_gray3D_2 = transform_grayscale_into_3
 
 fig = display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3D_2[1000]])
 
-fig.savefig("sample_grayscale_1D_to_3D_conversion.png", dpi=25)
+#fig.savefig("sample_grayscale_1D_to_3D_conversion.png")
 print("saved figure as 'sample_grayscale_1D_to_3D_conversion.png'")
 
 print("\nresulting images are darker and lighter than the single channel grayscale, with every ratio I've tried \n some ratios I've tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) \n Not sure how to create a 3-channel grayscale that looks visually identical to the 1-channel grayscale")
 
 
-# In[8]:
+# In[9]:
 
 # Try per channel zero centering. Find mean for each channel, where the mean for that channel is across all training images
 # !! TERRIBLE RESULTS. tried a few learning_rates. NIX This technique !
@@ -426,7 +426,7 @@ def get_per_channel_mean_zero_centered_datasets(input_datasets):
 
 
 
-# In[9]:
+# In[10]:
 
 # Try per image zero centering. Find mean for each image, apply that mean to each channel in said image
 
@@ -477,7 +477,7 @@ def get_per_image_mean_centered_datasets(X_input_datasets):
     return X_output_datasets
 
 
-# In[84]:
+# In[11]:
 
 from sklearn.preprocessing import normalize
 from skimage import color
@@ -509,7 +509,7 @@ def get_normalized_images(image_sets):
     imgplot = plt.imshow(x_1000_normalized)
 
     # to grayscale
-    #Gray Scale you could use cvtcolor from OpenCV:
+    #Gray Scale could use cvtcolor from OpenCV:
     #gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     print("to grayscale")
@@ -525,7 +525,7 @@ def get_normalized_images(image_sets):
     return [X_train_preprocessed, X_valid_preprocessed, X_test_preprocessed]
 
 
-# In[10]:
+# In[12]:
 
 # define training variables, constants
 
@@ -552,13 +552,13 @@ ksize = pool_strides
 
 # ### Model Architecture
 
-# In[ ]:
+# In[13]:
 
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
 
 
-# In[63]:
+# In[14]:
 
 """
 # This was for an attempt at running LeNet on 1-channel grayscale images. 
@@ -600,7 +600,7 @@ def get_conv_layer_given_filter_shape(x, filter_shape):
 ("")
 
 
-# In[12]:
+# In[15]:
 
 def get_conv_layer(x, conv_output_shape, pool_output_shape):
     input_height,  input_width,  input_depth  = x.get_shape().as_list()[1:]
@@ -638,7 +638,7 @@ def get_conv_layer(x, conv_output_shape, pool_output_shape):
     return conv_layer
 
 
-# In[13]:
+# In[16]:
 
 def get_fcc_layer(prev_layer, output_length):
     input_length  = prev_layer.get_shape().as_list()[1]
@@ -655,7 +655,7 @@ def get_fcc_layer(prev_layer, output_length):
     return fcc_layer
 
 
-# In[75]:
+# In[17]:
 
 from tensorflow.contrib.layers import flatten
 
@@ -691,7 +691,7 @@ def LeNet(x):
 # A validation set can be used to assess how well the model is performing. A low accuracy on the training and validation
 # sets imply underfitting. A high accuracy on the training set but low accuracy on the validation set implies overfitting.
 
-# In[15]:
+# In[18]:
 
 ### Train your model here.
 ### Calculate and report the accuracy on the training and validation set.
@@ -700,7 +700,7 @@ def LeNet(x):
 ### Feel free to use as many code cells as needed.
 
 
-# In[16]:
+# In[19]:
 
 ### Preprocess the data here. Preprocessing steps could include normalization, converting to grayscale, etc.
 ### Feel free to use as many code cells as needed.
@@ -717,7 +717,7 @@ X_valid_SHUFFLED, y_valid_SHUFFLED = shuffle(X_valid_ORIG, y_valid_ORIG)
     # don't need to shuffle test data
 
 
-# In[76]:
+# In[20]:
 
 ## initialize
 
@@ -770,7 +770,7 @@ logits = LeNet(x)
 
 # loss
 #   tf.nn.sparse_softmax_cross_entropy_with_logits combines:
-#   1) softmax with 2) cross_entropy and 3)(sparce version) performs one-hot encoding to the labels, y
+#   1) softmax with 2) cross_entropy and 3)(sparse version) performs one-hot encoding to the labels, y
 cross_entropy  = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, y)  #labels
 loss_operation = tf.reduce_mean(cross_entropy)
 
@@ -787,7 +787,7 @@ accuracy_calculation  = tf.reduce_mean(tf.cast(prediction_is_correct, tf.float32
 training_stats = []
 
 
-# In[18]:
+# In[21]:
 
 # evaluation routine
 def evaluate_data(X_data, y_data):
@@ -818,7 +818,7 @@ def evaluate_data(X_data, y_data):
 
 # 
 
-# In[66]:
+# In[22]:
 
 # TEMP TRUNCATE DATA FOR Alpha TESTING the code
 """  
@@ -842,7 +842,7 @@ print('DATA TRUNCATED TO:', len(X_train), "SAMPLES for preliminary testing")
 ("")
 
 
-# In[71]:
+# In[23]:
 
 import time
 
@@ -916,7 +916,7 @@ with tf.Session() as sess:
     print()
 
 
-# In[72]:
+# In[26]:
 
 assert("no need to display empty plot" == 
        "not retraining right now - just resetting the kernal (and running all except training and plotting cells)"
@@ -925,10 +925,23 @@ assert("no need to display empty plot" ==
 # for displaying a legend
 import matplotlib.patches as mpatches
 
-# Read the array from disk
-#training_stats_read_from_disk = np.loadtxt('training_stats.txt')
-# IF read a model from disk, must also set model_timestamp associated with the filename !! else will run into error saving the figure
-#print training_stats_read_from.shape
+def read_training_stats_from_file():
+    # IF read a model from disk, MUST set model_timestamp associated with the filename !! 
+    # else will run into error when saving the figure
+    
+    assert("did you update" == "model_timestamp??")
+    # Update model_timestamp to Read the training_stats from disk
+    model_timestamp = '170406_2032'
+    
+    training_stats_filename = './training_stats/training_stats_' + model_timestamp + '.txt'
+    training_stats_read_from_disk = np.loadtxt(training_stats_filename)
+    print(' read training_stats from ', training_stats_filename)
+    
+    return [model_timestamp, training_stats_read_from_disk]
+
+# Uncomment, and update "model_timestamp" Inside the function, to Read the training_stats from disk
+model_timestamp, training_stats = read_training_stats_from_file()
+
 
 num_epochs = len(training_stats)
 vloss, tloss, vaccu, taccu = [[],[],[],[]]
@@ -968,17 +981,15 @@ plt.ylim((.9000, 1.0100))
 plt.tight_layout()
 plt.show()
 
-    
-# model_timestamp = time.strftime("%y%m%d_%H%M")
-# model_timestamp for figure should match the timestamp from the model's file, not the current timestamp (see prev cell and top of this cell)
-#filename = 'training_stats_plotted-' + model_timestamp + '.png'
-filename = 'training_stats_' + model_timestamp + '_plotted.png'
 
-fig.savefig(filename, dpi=25)  # results in 160x120 px image
+# model_timestamp for figure should match the timestamp from the model's file, not the current timestamp (see prev cell and top of this cell)
+filename = './training_stats/training_stats_' + model_timestamp + '.png'
+
+fig.savefig(filename)  # results in 175x175 px image
 print("Figure saved as " + filename + "\n")
 
 
-# In[21]:
+# In[ ]:
 
 ## Compare Models
 # load figure training_stats_plotted-170327_1518.png
@@ -1039,7 +1050,7 @@ print("Figure saved as " + filename + "\n")
 # 
 
 
-# In[23]:
+# In[ ]:
 
 ## STOP !! Do NOT Proceed Until Model is FINISHED and has Validation >= 93%
 
@@ -1050,7 +1061,7 @@ assert (validation_accuracy >= 0.9300)
 #assert ('yes' == 'no')
 
 
-# In[24]:
+# In[27]:
 
 # test the trained model
 with tf.Session() as sess:
@@ -1075,13 +1086,13 @@ with tf.Session() as sess:
 
 # ### Load and Output the Images
 
-# In[25]:
+# In[28]:
 
 #import numpy as np
 #import tensorflow as ts
 
 
-# In[26]:
+# In[29]:
 
 ### Load the images and plot them here.
 ### Feel free to use as many code cells as needed.
@@ -1104,7 +1115,7 @@ with tf.Session() as sess:
 
 
 
-# In[54]:
+# In[30]:
 
 import numpy as np
 import glob
@@ -1115,7 +1126,7 @@ paths = ['traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/*.jpg',
          'traffic_signs_from_web/32x32x3/3_difficult_NOT_in_signnames/*.jpg',
         ]
 dataset_descriptions = ['Set 1: Straightforward: \n        Expect Good Matches.', 
-                        'Set 2: These signs are Not part of the signnames.csv, but are Similar to Signs that were. \n        Curious if it picks signs that I think look similar',
+                        'Set 2: These signs are Not part of the signnames.csv, but look Similar to Signs that are. \n        Curious if it picks signs that I would choose',
                         'set 3: These signs are NOT in signnames, and are NOT similar to any signs that are. \n        Mostly this set will generate rubish. \n        They may or may not provide interesting insights on the nn.\n'
                        ]
 
@@ -1129,8 +1140,12 @@ for s in range(num_datasets):
     new_dataset = np.asarray(new_dataset)
        
     print("\n", dataset_descriptions[s])
-    display_images(new_dataset)
-    print(new_dataset.shape)
+    print('      ', new_dataset.shape)
+    fig = display_images(new_dataset)
+    
+    filename = './sample_signs_from_web_Set_' + str(s) + '.png'
+    #fig.savefig(filename)
+    print('   figure saved as', filename, '\n')
     
     web_datasets_ORIG.append(new_dataset)
     
@@ -1139,7 +1154,7 @@ print('\nImporting done...', len(web_datasets_ORIG), "sets of traffic sign image
 
 # 
 
-# In[56]:
+# In[31]:
 
 # pre-process images
 
@@ -1156,7 +1171,7 @@ X_set1, X_set2, X_set3 = get_per_image_mean_centered_datasets(web_datasets_ORIG)
 
 # ### Predict the Sign Type for Each Image
 
-# In[29]:
+# In[33]:
 
 ### Run the predictions here and use the model to output the prediction for each image.
 ### Make sure to pre-process the images with the same pre-processing pipeline used earlier.
@@ -1233,7 +1248,7 @@ for set in [signs_set1, signs_set2]:
 # Signs 1, 4: I expected rubbish responses to these rubbish images. Never-the-less, I see no resemblence to what it _did_ choose.  
 #     I guess NaN was not an option?  
 
-# In[58]:
+# In[34]:
 
 ### Calculate the accuracy for these 5 new images. 
 ### For example, if the model predicted 1 out of 5 signs correctly, it's 20% accurate on these new images.
@@ -1286,7 +1301,7 @@ print("Classifier was ", 100*2//6, "% accurate on the new images, getting 2 of 6
 # 
 # Looking just at the first row we get `[ 0.34763842,  0.24879643,  0.12789202]`, you can confirm these are the 3 largest probabilities in `a`. You'll also notice `[3, 0, 5]` are the corresponding indices.
 
-# In[39]:
+# In[35]:
 
 ### Print out the top five softmax probabilities for the predictions on the German traffic sign images found on the web. 
 ### Feel free to use as many code cells as needed.
@@ -1315,7 +1330,7 @@ for i in range(num_images):
  
 
 
-# In[ ]:
+# In[36]:
 
 """
 - Interesting how cropping changed the predictions.   
@@ -1328,7 +1343,7 @@ for i in range(num_images):
 ("")
 
 
-# In[38]:
+# In[37]:
 
 # This is total duplication of above cell. (Not DRY)
 # EXCEPT: runing it on _X_set2, set_index==1 instead
@@ -1359,8 +1374,9 @@ for i in range(num_images):
  
 
 
-# In[ ]:
+# In[38]:
 
+# Second set of Images
 """
 Interesting results on this dataset,  
   so I'll leave the cell intact
@@ -1396,7 +1412,7 @@ So it was impossible for our classifier to get these correct (except, sort of, o
 #  <p></p> 
 # 
 
-# In[40]:
+# In[ ]:
 
 ### Visualize your network's feature maps here.
 ### Feel free to use as many code cells as needed.
@@ -1428,7 +1444,7 @@ def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_m
             plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", cmap="gray")
 
 
-# In[47]:
+# In[ ]:
 
 ## images of interest:
 # set_1, image2:  _17-no-entry-1-bw.jpg  
