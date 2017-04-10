@@ -507,83 +507,103 @@ For the second image ...
 
 
 ![alt text][image3901]  
-  99.17% Road work  
-   0.34% Speed limit (30km/h)  
-   0.26% Stop  
-   0.20% Yield  
-   0.00% No entry  
+```  
+  99.17  Road work  
+   0.34  Speed limit (30km/h)  
+   0.26  Stop  
+   0.20  Yield  
+   0.00  No entry  
+```  
 
 
 ![alt text][image3902]  
-  54.89% Speed limit (50km/h)  
-  21.63% Speed limit (70km/h)  
-  10.41% Speed limit (30km/h)  
-   9.42% Speed limit (80km/h)  
-   3.58% Stop  
+```  
+  54.89  Speed limit (50km/h)  
+  21.63  Speed limit (70km/h)  
+  10.41  Speed limit (30km/h)  
+   9.42  Speed limit (80km/h)  
+   3.58  Stop  
+```  
 
 
 ![alt text][image3903]  
-  83.94% End of all speed and passing limits  
-   7.62% End of no passing  
-   4.50% Ahead only  
-   1.26% Go straight or right  
-   0.93% End of speed limit (80km/h)  
+```  
+  83.94  End of all speed and passing limits  
+   7.62  End of no passing  
+   4.50  Ahead only  
+   1.26  Go straight or right  
+   0.93  End of speed limit (80km/h)  
+```  
 
 
 ![alt text][image3904]  
-  62.78% Speed limit (50km/h)  
-  36.94% Speed limit (30km/h)  
-   0.18% Wild animals crossing  
-   0.08% Double curve  
-   0.00% Dangerous curve to the left  
+```  
+  62.78  Speed limit (50km/h)  
+  36.94  Speed limit (30km/h)  
+   0.18  Wild animals crossing  
+   0.08  Double curve  
+   0.00  Dangerous curve to the left  
+```  
 
 
 ![alt text][image3905]  
-  99.99% General caution  
-   0.00% Traffic signals  
-   0.00% Road work  
-   0.00% Bumpy road  
-   0.00% Road narrows on the right  
+```  
+  99.99  General caution  
+   0.00  Traffic signals  
+   0.00  Road work  
+   0.00  Bumpy road  
+   0.00  Road narrows on the right  
+```  
 
 
 ![alt text][image3906]  
-  99.93% General caution  
-   0.06% Traffic signals  
-   0.00% Road narrows on the right  
-   0.00% Road work  
-   0.00% Beware of ice/snow  
+```  
+  99.93  General caution  
+   0.06  Traffic signals  
+   0.00  Road narrows on the right  
+   0.00  Road work  
+   0.00  Beware of ice/snow  
+```  
 
 
 ![alt text][image3907]  
- 100.00% Turn left ahead 
-   0.00% Yield  
-   0.00% Go straight or right  
-   0.00% End of all speed and passing limits  
-   0.00% Ahead only  
+```  
+ 100.00  Turn left ahead 
+   0.00  Yield  
+   0.00  Go straight or right  
+   0.00  End of all speed and passing limits  
+   0.00  Ahead only  
+```  
 
 
 ![alt text][image3908]  
- 100.00% No passing for vehicles over 3.5 metric tons  
-   0.00% Priority road  
-   0.00% End of no passing by vehicles over 3.5 metric tons  
-  -0.00% Speed limit (20km/h)  
-  -0.00% Speed limit (30km/h)  
+```  
+ 100.00  No passing for vehicles over 3.5 metric tons  
+   0.00  Priority road  
+   0.00  End of no passing by vehicles over 3.5 metric tons  
+  -0.00  Speed limit (20km/h)  
+  -0.00  Speed limit (30km/h)  
+```  
 
 
 ![alt text][image3909]  
-  76.27% Speed limit (80km/h)  
-  11.34% Speed limit (60km/h)  
-  10.05% Speed limit (50km/h)  
-   1.51% Stop  
-   0.73% No vehicles  
+```  
+  76.27  Speed limit (80km/h)  
+  11.34  Speed limit (60km/h)  
+  10.05  Speed limit (50km/h)  
+   1.51  Stop  
+   0.73  No vehicles  
+```  
 
 
 ![alt text][image3910]  
-  99.52% Speed limit (60km/h)  
-   0.47% Speed limit (80km/h)  
-   0.00% No passing for vehicles over 3.5 metric tons  
-   0.00% No passing  
-   0.00% Turn left ahead  
+```  
+  99.52  Speed limit (60km/h)  
+   0.47  Speed limit (80km/h)  
+   0.00  No passing for vehicles over 3.5 metric tons  
+   0.00  No passing  
+   0.00  Turn left ahead  
+```  
 
 ---   
 
@@ -601,57 +621,68 @@ For the second image ...
 
 
 ![alt text][image3801]    
-  52.34% Right-of-way at the next intersection  
-  34.86% Dangerous curve to the right  
-   4.78% Beware of ice/snow  
-   4.51% Priority road  
-   1.76% End of no passing by vehicles over 3.5 metric tons  
+```  
+  52.34  Right-of-way at the next intersection  
+  34.86  Dangerous curve to the right  
+   4.78  Beware of ice/snow  
+   4.51  Priority road  
+   1.76  End of no passing by vehicles over 3.5 metric tons  
+```  
   
   
   
 ![alt text][image3802]    
-  99.63% Speed limit (30km/h)  
-   0.35% Speed limit (20km/h)  
-   0.00% No passing for vehicles over 3.5 metric tons  
-   0.00% Right-of-way at the next intersection  
-   0.00% Roundabout mandatory  
+```  
+  99.63  Speed limit (30km/h)  
+   0.35  Speed limit (20km/h)  
+   0.00  No passing for vehicles over 3.5 metric tons  
+   0.00  Right-of-way at the next intersection  
+   0.00  Roundabout mandatory  
+```  
   
   
   
 ![alt text][image3803]    
-  58.45% Keep right  
-  34.81% Yield  
-   2.19% Go straight or right  
-   1.97% End of all speed and passing limits  
-   1.42% Turn left ahead  
+```  
+  58.45  Keep right  
+  34.81  Yield  
+   2.19  Go straight or right  
+   1.97  End of all speed and passing limits  
+   1.42  Turn left ahead  
+```  
   
   
   
 ![alt text][image3805]    
-  96.62% End of speed limit (80km/h)  
-   2.61% End of no passing by vehicles over 3.5 metric tons  
-   0.74% Roundabout mandatory  
-   0.01% Priority road  
-   0.00% Right-of-way at the next intersection  
+```  
+  96.62  End of speed limit (80km/h)  
+   2.61  End of no passing by vehicles over 3.5 metric tons  
+   0.74  Roundabout mandatory  
+   0.01  Priority road  
+   0.00  Right-of-way at the next intersection  
+```  
   
   
   
 ![alt text][image3806]    
-  99.97% Keep right  
-   0.01% Turn left ahead  
-   0.00% Go straight or right  
-   0.00% Roundabout mandatory  
-   0.00% End of all speed and passing limits  
+```  
+  99.97  Keep right  
+   0.01  Turn left ahead  
+   0.00  Go straight or right  
+   0.00  Roundabout mandatory  
+   0.00  End of all speed and passing limits  
+```  
   
   
   
 ![alt text][image3807]    
-  97.23% Keep right  
-   2.60% Traffic signals  
-   0.10% End of all speed and passing limits  
-   0.04% Go straight or right  
-   0.00% Turn left ahead  
-  
+```  
+  97.23  Keep right  
+   2.60  Traffic signals  
+   0.10  End of all speed and passing limits  
+   0.04  Go straight or right  
+   0.00  Turn left ahead  
+```  
   
 # Second set of Images
 Interesting results on this dataset,  
