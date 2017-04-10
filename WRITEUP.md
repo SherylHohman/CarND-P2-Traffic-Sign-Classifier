@@ -37,34 +37,34 @@ The goals / steps of this project are the following:
 Set 1, cell 39 `traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames`  
 
 [image3901]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_14-3.5-stop-1.jpg 
-"14: Stop, Traffic Signs from the Web, Set 1: image 1"  
+"14: Stop, Set1_image_1"  
 
 [image3902]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_14-3.5-stop-2.jpg 
-"14: Stop, Traffic Signs from the Web, Set 1: image 2"  
+"14: Stop, Set1_image_2"  
 
 [image3903]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_17-no-entry-1-bw.jpg 
-"17: No Entry, Traffic Signs from the Web, Set 1: image 3"  
+"17: No Entry, Set1_image_3"  
 
 [image3904]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_18-general-caution-1.jpg 
-"18: General Caution, Traffic Signs from the Web, Set 1: image 4"
+"18: General Caution, Set1_image_4"
 
 [image3905]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_18-general-caution-2.jpg 
-"18: General Caution, Traffic Signs from the Web, Set 1: image 5"
+"18: General Caution, Set1_image_5"
 
 [image3906]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_18-general-caution-3.jpg 
-"18: General Caution, Traffic Signs from the Web, Set 1: image 6"  
+"18: General Caution, Set1_image_6"  
 
 [image3907]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_34-left-turn-ahead-1.jpg 
-"34: Left Turn Ahead, Traffic Signs from the Web, Set 1: image 7"  
+"34: Left Turn Ahead, Set1_image_7"  
 
 [image3908]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_42_no_overtaking-by-lorries-1.jpg 
-"42: No Overtaking Lorries, Traffic Signs from the Web, Set 1:  image 8"  
+"42: No Overtaking Lorries, Set1_image_8"  
 
 [image3909]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_7-speed_limit_100km-1.jpg 
-"7: Speed Limit 100km, Traffic Signs from the Web, Set 1: image 9"  
+"7: Speed Limit 100km, Set1_image_9"  
 
 [image3910]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_7-speed_limit_100km-2.jpg 
-"7: Speed Limit 100km, Traffic Signs from the Web, Set 1: image 10"  
+"7: Speed Limit 100km, Set1_image_10"  
 
 Set 1, cell 39 `traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames`
 _14-3.5-stop-1.jpg
@@ -82,23 +82,23 @@ _7-speed_limit_100km-2.jpg
 
 Set 2, cell 38: `traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames`  
 
-[image3801]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/B_42_7-100kmspeedLimit_AND_no_overtaking-by-lorries-2.jpg
-"Both 42, 7: 100km Speed Limit, and No Overtaking by Lorries, Traffic Signs from the Web, Set 2: image 1"  
+[image3801]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/B_42_7-100kmspeedLimit_AND_no_overtaking-by-lorries-2.jpg
+"Both 42, 7: 100km Speed Limit, and No Overtaking by Lorries, Set2_image_1"  
 
-[image3802]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/N_0_2-speed_limit_25kmh-1.jpg
-"N/A 0 or 2, Speed Limit 25km, Traffic Signs from the Web, Set 2: image 2"  
+[image3802]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_0_2-speed_limit_25kmh-1.jpg
+"N/A 0 or 2, Speed Limit 25km, Set2_image_2"  
 
-[image3803]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/N_1-30km_Minimum.jpg
-"N/A 1, Minimum Speed 30km, Traffic Signs from the Web, Set 2: image 3"  
+[image3803]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_1-30km_Minimum.jpg
+"N/A 1, Minimum Speed 30km, Set2_image_3"  
 
-[image3805]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/N_3_6_32-end-of-speed-limit-60km-1.jpg
-"N/A 3 or 6 or 32, End of 60km Speed Limit, Traffic Signs from the Web, Set 2: image 5"
+[image3805]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_3_6_32-end-of-speed-limit-60km-1.jpg
+"N/A 3 or 6 or 32, End of 60km Speed Limit, Set2_image_5"
 
-[image3806]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/N_5-recommended-speed-80-obsolete-1.jpg
-"N/A 5, Recommended Speed 80 (obsolete), Traffic Signs from the Web, Set 2: image 6"  
+[image3806]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_5-recommended-speed-80-obsolete-1.jpg
+"N/A 5, Recommended Speed 80 (obsolete), Set2_image_6"  
 
-[image3807]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/N_6_5_32-end-of-80km-speed-obsolete-1.jpg
-"N/A 6 or 5 or 32, End of 80km Speed Limit, Traffic Signs from the Web, Set 2: image 7"  
+[image3807]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_6_5_32-end-of-80km-speed-obsolete-1.jpg
+"N/A 6 or 5 or 32, End of 80km Speed Limit, Set2_image_7"  
 
 
 
