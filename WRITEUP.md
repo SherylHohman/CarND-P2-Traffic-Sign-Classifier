@@ -121,7 +121,7 @@ In retrospect, I believe the use case for that technique is for comparing, say f
 In our case, the images are taken from many different exposures, lighting conditions, color casts, etc. They are taken in different physical locations. So in this way, there would not be a uniformity across all images in the training set that we should try to normalize on.  Instead, the images are zoomed in, and while they may contain shadows cutting across an image that could "confuse" the network, generally they are fairly uniform within an image. And shadows, etc are features that we want to train on anyway, as they are going to occur "in the wild".  We want our network to recognize a sign whether it has a shadow cutting across it or not.  
 This is my reasoning why the per channel, and per training set normalization techniques did not work.  
 
-####**..And why my per-image Normalization technique DID work.**   
+####**..and Why Per-Image Normalization DID work.**   
 
 **In [9]** `get_per_image_mean_centered_datasets()`   
 This the normalization / preprocessing function I used to train my network.  
@@ -313,13 +313,24 @@ If an iterative approach was chosen:
 * What were some problems with the initial architecture?  
 * How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to over fitting or under fitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.  
 (**TODO**)
-* Which parameters were tuned? How were they adjusted and why?  
-version 1 (descent, bordeline passing 93%)  
-![alt text][img]  
+* Which parameters were tuned? How were they adjusted and why? 
+Training Dataset statistics, and charts are located in the ./training_stats directory  
+ The first two models that I saved data on, I will not discuss here.  They are saved under the names "training_stats_170325" (png and txt), and "training_stats_170326-02_perchannel_mean" (png and txt) in the training_stats directory.  
+
+Here I will compare three versions of my network that all used the 'get_per_image_mean_centered_training_sets' function for pre-processings the images.  
+
+**Version 1** (aka Model 3) achieved 93% validation accuracy, though it oscillated above and below this number.  
+
+**Version 2** (aka Model 4) achieved 95% validation accuracy, just by changing the learning rate, (and sigma also??). I was unhappy with climbing Validation Loss alongside the Perfect Training Loss and Accuracy. Validation accuracy was either improving or unchanging on average, though it made big drops occassionally before climbing back.  
+
+**Version 3** (aka Model 5) added dropout layers, and also achieved 95% validation accuracy. this time the validation accuracy remained clearly above the 93% minimu, was steadier overall, had much better Validation Loss, and was not overfitting terribly.
+
+#####version 3 (descent, bordeline passing 93%)  
+![alt text][image263]  
 From this chart, I decided to adjust the learning rate (?and sigma) ..
 
-version 2 (good, passes kinda 95%)  
-![alt text][img]  
+####version 4 (good, passes kinda 95%)  
+![alt text][image264]  
 Clearly, this model responded well to the new learning rate (and sigma)
 Seing.. I'm curious if It might be helpful to adjust learning rate after Epoch..  
 Or to increase learning rate for the initial ??n Epochs, in order to reduce the amount of time spent training.
@@ -334,8 +345,8 @@ And it's best to implement a single technique at a time, to see how the network 
 
 I decided add dropout.
 
-version 3 (dropout: clearly 95%)   
-![alt text][img]  version 3 (dropout: clearly 95%)  
+####version 3 (dropout: clearly 95%)   
+![alt text][image265]
 I added dropout to the first two fully connected layers: layer3 and layer4.  
 layers 3 and 4 now consisted of fcc_layer, relu_activation, and finally, dropout.
 The keep probability I used for each was 0.5.  This appeared to be a standard starting value to use, and it seemed to work well for me.  Other options could have been to use dropout on just one of the two layers, or to vary one or both keep_probabilities, perhaps trying 0.25 for one of them.  I was happy with improved results obtained with 0.5 keep at layer3 and 0.5 keep at layer 4.  
@@ -399,6 +410,7 @@ The code for making predictions on my final model is located in the tenth cell o
 
 Here are the results of the prediction:  
 
+![alt text][image301]  
 ```  
 Actual Sign                 Predicted Sign                                Correct?
 Stop Sign                   Road work                                     no
@@ -412,7 +424,6 @@ No Overtaking by Lorries    No passing for vehicles over 3.5 metric tons  YES
 Speed Limit 100km/h         Speed limit (80km/h)                          no           
 Speed Limit 100km/h         Speed limit (60km/h)                          no     
 ```        
-![alt text][image301]  
 
 The model incorrectly guessed 6/10  and correctly guessed 4/10.  
 That is an Accuracy of only 40 %  
@@ -715,6 +726,8 @@ So it was impossible for our classifier to get these correct (the first image is
 """
 
 
+
+
 ################################################################################
 
 [//]: # (Image References)
@@ -732,6 +745,14 @@ So it was impossible for our classifier to get these correct (the first image is
 [image14]: ./examples/placeholder.png "Traffic Sign 3"  
 [image1]: ./examples/placeholder.png "Traffic Sign 4"  
 [image8]: ./examples/placeholder.png "Traffic Sign 5"  
+
+cell 26: cell Training Stats
+
+[image265]: ./training_stats/training_stats_170406_2032.png "Training Stats Model 5: with dropout"
+[image264]: ./training_stats/training_stats_170327_1518.png "Training Stats Model 4:""  
+[image263]: ./training_stats/training_stats_170327_0305.png "Training Stats Model 3:""  
+[image262]: ./training_stats/training_stats_170326-02_perchannel_mean.png "Training Stats Model 2:""  
+[image261]: ./training_stats/training_stats_170325.png "Training Stats Model 1:""  
 
 cell 30 Sample Traffic Signs from the Web: Set 1, and Set 2
 
