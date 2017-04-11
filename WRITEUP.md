@@ -35,8 +35,8 @@ The goals / steps of this project are the following:
 
 cell 30 Sample Traffic Signs from the Web: Set 1, and Set 2
 
-[image301]: ./sample_signs_from_web_Set_1.png "Set 1: Sample Traffic Signs from the Web"
-[image302]: ./sample_signs_from_web_Set_2.png "Set 2: Sample Traffic Signs from the Web"
+[image301]: ./sample_signs_from_web_Set_0.png "Set 1: Sample Traffic Signs from the Web"
+[image302]: ./sample_signs_from_web_Set_1.png "Set 2: Sample Traffic Signs from the Web"
 
 Set 1, cell 39 `traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames`  
 
@@ -503,14 +503,7 @@ The code for making predictions on my final model is located in the tenth cell o
 
 Here are the results of the prediction:  
 
-| Image			        |     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
-
+```  
 Actual Sign                 Predicted Sign                                Correct?
 Stop Sign                   Road work                                     no
 Stop Sign                   Speed limit (50km/h)                          no            
@@ -521,7 +514,8 @@ General Caution             General caution                               YES
 Left Turn Ahead             Turn left ahead                               YES        
 No Overtaking by Lorries    No passing for vehicles over 3.5 metric tons  YES            
 Speed Limit 100km/h         Speed limit (80km/h)                          no           
-Speed Limit 100km/h         Speed limit (60km/h)                          no           
+Speed Limit 100km/h         Speed limit (60km/h)                          no     
+```        
 ![alt text][image301]  
 
 The model incorrectly guessed 6/10  and correctly guessed 4/10.  
@@ -567,24 +561,22 @@ That's Far lower than the test, and validation sets!!  It's downright Terrible.
 
 
 ![alt text][image302]  
- Right-of-way at the next intersection
-Speed limit (30km/h)
-Keep right
-End of speed limit (80km/h)
-Keep right
-Keep right
-  
-Sign 2: Surprisingly, it got almost about as close a guess as possible.   Must be beginner's luck.
+```
+Right-of-way at the next intersection  
+Speed limit (30km/h)  
+Keep right  
+End of speed limit (80km/h)  
+Keep right  
+Keep right  
+```    
+Sign 2: Surprisingly, it got almost about as close a guess as possible.   Must be beginner's luck.  
 
 Sign 5: Was also surprisingly good guess. 
 
 Signs 3, 6, 7: These three signs I Expected the classifier to, no-brainer, return specific predictions.  
     Nope. It passed over images which I think they look Very similar to, 
-    in favor of images that I think look not at all similar to these signs.   What was its "thinking" process ??  
+    in favor of images that I think look not at all similar to these signs.   What was its "thinking" process ??  dI immediately see numbers, and would associate these signs with speed limit signs, or end of speed limit signs.  Something that had a number front and center.  
     
-Signs 1, 4: I expected rubbish responses to these rubbish images. Never-the-less, I see no resemblence to what it _did_ choose.  
-    I guess NaN was not an option?  
-
 ---------------------------------------------------
 
 
@@ -719,7 +711,30 @@ The poor cropping made the less confident of any particular selection overall, t
  --Is this a red-flag that something is wrong (with alogrithm) ??  Or that rounding hit an overflow ??  
 
 
+**TODO** probably won't, but these would be interesting charts to add:
+Training data: signs with number of example images:
+above 1250
+ 750-1250
+ 300ish-750
+ under 250 or 300
+ 
+ count signs:
+ create list of signs falling in said count range
+ print the lists
+ 
+  read all signs in top 5 predictions
+  display their representation in the dataset
+     (it total number of images, or % of dataset that was that sign,
+      or where it is in the standard deviation of images
+      or which count range it was in
+      
+  using the 6 signs I gave it,
+      display their representation in the dataset
+      ( total number of images, or % of dataset that was that sign,
+      or std
+      or which count range it was in
 
+Perhaps display a chart comparing this info
 --------------------------------------------------------------------------------
 **In [38]**  **Second set of images**
 
@@ -794,7 +809,7 @@ Interesting results on this dataset,
 (**TOODO Finish**)
 
 Remember none of these images were in the training set; the correct answer is not in the list of labels provided.  
-So it was impossible for our classifier to get these correct (except, sort of, on the first image..)  
+So it was impossible for our classifier to get these correct (the first image is a minor exception, sort of..)  
 - It's interesting to me that on the 1st image, it did manage to locate the "sub-sign" within it, as 5th prob'  
 - The 2nd image also chose what I consider the closest two answers as it's top two  
 -- though the difference in confidence is vastly different, and perhaps swapped from what might be expected.  
