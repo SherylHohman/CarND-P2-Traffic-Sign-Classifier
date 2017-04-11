@@ -33,6 +33,10 @@ The goals / steps of this project are the following:
 [image1]: ./examples/placeholder.png "Traffic Sign 4"  
 [image8]: ./examples/placeholder.png "Traffic Sign 5"  
 
+cell 30 Sample Traffic Signs from the Web: Set 1, and Set 2
+
+[image301]: ./sample_signs_from_web_Set_1.png "Set 1: Sample Traffic Signs from the Web"
+[image302]: ./sample_signs_from_web_Set_2.png "Set 2: Sample Traffic Signs from the Web"
 
 Set 1, cell 39 `traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames`  
 
@@ -324,7 +328,6 @@ In the images I tested my trained network on, I included grayscale images, signs
 
 ####3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.  
 
-12, 13, 75
 
 #### LeNet Architecture
 **In [75]** is LeNet architecture  
@@ -336,32 +339,40 @@ Layer                     In-Shape      Out-Shape   Description / Settings    Fu
 Input Layer                           (32, 32, 3)  RBG Image, Preprocessed  
 
 Layer 1:  
-convolution             (32, 32, 3)   (28, 28, 6)   filter = ?  stride = 1    tf.nn.conv2d()  
+convolution             (32, 32, 3)   (28, 28, 6)  filter=?,?  stride=1,1     tf.nn.conv2d()  
 activation   RELU       (28, 28, 6)   (28, 28, 6)                             tf.nn.relu()  
-pooling      Max Pool   (28, 28, 6)   (14, 14, 6)   ksize  = 2  stride = 2    tf.nn.max_pool  
+pooling      Max Pool   (28, 28, 6)   (14, 14, 6)   ksize=2,2  stride=2,2     tf.nn.max_pool  
 
 Layer 2:  
-convolution             (14, 14,  6)  (10, 10, 16)  filter = ?  stride = 1    tf.nn.conv2d()  
+convolution             (14, 14,  6)  (10, 10, 16) filter=?,?  stride=1,1     tf.nn.conv2d()  
 activation   RELU       (10, 10, 16)  (10, 10, 16)                            tf.nn.relu()  
-pooling      Max Pool   (10, 10, 16)  ( 5,  5, 16)  ksize  = 2  stride = 2    tf.nn.max_pool()  
+pooling      Max Pool   (10, 10, 16)  ( 5,  5, 16)  ksize=2,2  stride=2,2     tf.nn.max_pool()  
 
-Flatten:                ( 5,  5, 16)  (          )  
+Flatten:                ( 5,  5, 16)         (400)  
 
 Layer 3:  
-fully connected                (120)         (120)                            prev * weights + bias  
+fully connected                (400)         (120)                            prev * weights + bias  
 activation    RELU             (120)         (120)                            tf.nn.relu()  
-dropout                        (120)         (120)  keep_probability = 0.5    tf.nn.dropout()  
+dropout                        (120)         (120)  keep_probability=0.5      tf.nn.dropout()  
  
 Layer 4:  
 fully connected                (120)          (84)                            prev * weights + bias  
 activation    RELU              (84)          (84)                            tf.nn.relu()  
-dropout                         (84)          (84)  keep_probability = 0.5    tf.nn.dropout()  
+dropout                         (84)          (84)  keep_probability=0.5      tf.nn.dropout()  
 
 Layer 5:  
 fully connected                 (84)          (43)                            prev * weights + bias  
 logits  
+
+either: 
+sparce_softmax..      
+softmax                     
+
 ```  
 sparce_softmax_.... (**TODO**)
+
+**In []**  Evaluation, backprob=p.. **(TODO)**
+
 
  Each Layer begins with all bias elements initialized to 0 
  and weights randomly distributed along a normal distribution ??centered??(mean) at zero, and standard deviation of 0.1 ?? aka in the range of +- 0.1 ?? (**TODO**)  
@@ -383,10 +394,18 @@ The code for calculating the accuracy of the model is located in the ninth cell 
 (**TODO**) 
 
 My final model results were:  
-* training set accuracy of ?  
-* validation set accuracy of ?   
-* test set accuracy of ?  
+* **In[26]** **In[23]** training set accuracy of ?  
 
+* **In[26]** **In[23]** validation set accuracy of ?   
+
+* **In [27]** test set accuracy 
+```
+evaluating..  
+0.940063341062  
+Test Loss     = 0.632  
+Test Accuracy = 0.940  
+```   
+![alt text][img]
 (**TODO**)
 If an iterative approach was chosen:  
 * What was the first architecture that was tried and why was it chosen?  
@@ -394,6 +413,52 @@ If an iterative approach was chosen:
 * How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to over fitting or under fitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.  
 (**TODO**)
 * Which parameters were tuned? How were they adjusted and why?  
+version 1 (descent, bordeline passing 93%)  
+![alt text][img]  
+From this chart, I decided to adjust the learning rate (?and sigma) ..
+
+version 2 (good, passes kinda 95%)  
+![alt text][img]  
+Clearly, this model responded well to the new learning rate (and sigma)
+Seing.. I'm curious if It might be helpful to adjust learning rate after Epoch..  
+Or to increase learning rate for the initial ??n Epochs, in order to reduce the amount of time spent training.
+More importantly, however is The steady climb in validation, after it's initial drop.  
+While the training loss continues to decrease (to Zero! - a sure sign that it has overfitted the training data),  
+the loss in the validation set climbs with every Epoch.  Even while validation accuracy continues to get better.
+Indicated to me that my model was over fitting to the test set.
+To address this I considered adding a dropout to ny neural net, and adding data augmentation.  
+I decided to first try dropout, as it was more straigntforward - only 1 paramater to tune.
+Data Augmentation can take many forms. Which techniques to use, how many techniques to apply at a time, etc. It would also take more work to implement each of the augmentation alogrithms.  
+And it's best to implement a single technique at a time, to see how the network responds to each.  
+
+I decided add dropout.
+
+version 3 (dropout: clearly 95%)   
+![alt text][img]  version 3 (dropout: clearly 95%)  
+I added dropout to the first two fully connected layers: layer3 and layer4.  
+layers 3 and 4 now consisted of fcc_layer, relu_activation, and finally, dropout.
+The keep probability I used for each was 0.5.  This appeared to be a standard starting value to use, and it seemed to work well for me.  Other options could have been to use dropout on just one of the two layers, or to vary one or both keep_probabilities, perhaps trying 0.25 for one of them.  I was happy with improved results obtained with 0.5 keep at layer3 and 0.5 keep at layer 4.  
+The network took longer to train, and in fact, from the training_stats chart, it does not appear to have reached it's maximum potential at 100 Epochs.  However, it is fairly flat; ROI in additional Epochs would be low.
+Again, it might be helpful to lower learning rate after Epoch..  
+It also might be helpful to increase learning rate for the first ?nn Epochs.
+As this model takes longer to train, this is the first adjustment I would attempt.  
+After that I would tackle Augmentation.  
+
+Looking at the chart of the training_stats, We immediately see the effects of adding dropout.
+In this new chart, we see that once achieved, the validation accuracy remains above ??%.  
+In contrast, the previous model would routinely drop to about ??93%
+While the magnitude of oscillation is shallower (this is good), the frequency is greater.  This is to be expected, as we are throwing away half of the information it trained on at each step.  
+Result: it takes longer to train, but the overall gains are more steady or stable.  Basically, like an electric circuit, any particular electron may move forward or backward, and only a tiny amount at that, overall there is a steady current.  Likewise, there is a steady climb on average.
+We also see that Validation Loss has decreased overall! And while it still climbs over time, the rate of climb is Much Slower.  Finally, we see that Validation loss is much closer in distance to Training loss, and its slope is closer to Training loss as well.  Training loss does Not reach Zero, Training Accuracy does Not reach 100%.  
+I conclude that dropout was effective in reducing the overfitting problem seen in the previous model.  
+While tuning the dropout_keep rate might gain further improvements, that does not seem to be the best use of effort or time at this point: overfitting is under control with respect to overall accuracy of our model.  
+At this point, Accuracy, or ability of our model to learn particulars of each sign appears to be a reflection of our training data itself.  
+Refering back to our distribution of data, we can see that there is a vast variation in the number of examples provided for each label.  For example, label ??n has around ??n example images, while ??m has around ??n images.  
+Additionally, looking at just 3 of our training images, we see that the quality of images in that sample set varies widely: one is severly under exposed, another is overexposed - I do not even know what traffic sign that one represents.  It seems to me data augmentation would be a great next step to improve our network.  
+In the next section, when I throw new images at it, this becomes even more apparent.  I chose images that were taken at an angle, images with bad cropping, and images that were under represented in the training data.  The network performed rather poorly with these.  My images likely deviated greatly from the type of labeled data it had seen so far.  
+Indeed, the test set achieved 94% accuracy.  My images achieved only ??n% accuracy.  Of course, my sample set was too small to report a reliable accuracy report.
+
+
 * What are some of the important design choices and why were they chosen?  For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?  
 
 If a well known architecture was chosen:  
@@ -412,7 +477,21 @@ If a well known architecture was chosen:
 Here are five German traffic signs that I found on the web:  
 
 ![alt text][image4] ![alt text][image5] ![alt text][image6]  
-![alt text][image7] ![alt text][image8]  
+![alt text][image7] ![alt text][image8] 
+
+Here are two sets of images that I found on the web:
+
+The first set:
+![alt text][image301]  
+These are relatively straight forward - all these signs exist in the training set and map our classifier.  
+However, several are cropped poorly, are taken at an angle (as opposed to straight on), and one lacks color information.  Some of these traffic signs had many examples in the training set, some had few examples to train on.  How well does the network  perform on these images ?  
+
+The second set:  
+![alt text][image302]    
+This set consists entirely of traffic signs that do not exist in our classification data.  
+In other words, it is impossible for our network to obtain the correct answers for these signs.  
+I chose them to get an insight on how it sees and correlates traffic sign images, vs how I see and correlate traffic sign images.  As I am not familiar with German Traffic signs, I also did not know the true meaning of these signs.  Never-the-less, even though none of these signs were in our classifier, if I had to choose one or more of the class ids as a guess, would it match the guess made by the network ??  
+Did it learn to "see" the same "features", and map these to labels in the same way that I did ?  
 
 The first image might be difficult to classify because ...  
 
@@ -432,15 +511,33 @@ Here are the results of the prediction:
 | 100 km/h	      		| Bumpy Road					 				|
 | Slippery Road			| Slippery Road      							|
 
+Actual Sign                 Predicted Sign                                Correct?
+Stop Sign                   Road work                                     no
+Stop Sign                   Speed limit (50km/h)                          no            
+No Entry                    End of all speed and passing limits           no    
+General Caution             Speed limit (50km/h)                          no            
+General Caution             General caution                               YES        
+General Caution             General caution                               YES        
+Left Turn Ahead             Turn left ahead                               YES        
+No Overtaking by Lorries    No passing for vehicles over 3.5 metric tons  YES            
+Speed Limit 100km/h         Speed limit (80km/h)                          no           
+Speed Limit 100km/h         Speed limit (60km/h)                          no           
+![alt text][image301]  
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...  
+The model incorrectly guessed 6/10  and correctly guessed 4/10.  
+That is an Accuracy of only 40 %  
 
-#### TODO:
-#####  NOTE: I added additional crops of problem images to see how they would compare.
-#####  I also deleted an image that was a useless poor image choice to begin with
-#####  I did NOT Update My Analysis or Accuracy reporting to reflect the changes in this dataset.
+If I look at only 1 cropping of signs where I provided multiple crops,  
+I get a top accuracy of : 50%, at 3 wrong, 3 correct = 3/6 = 50%
+A low accuracy of 33% at 4 wrong, 2 correct = 2/6 = 33%
+
+This is Much lower than the accuracy from the test set.  
+Conclusion: The training and test sets are not representative of the images I provided.
+ 
+
 
 #### Set_1 My classifier performed terrible on the images I expected good results on.  
+#### TODO: UPDATE Analysis for changed image numbers.
 Signs 1, 6: To be fair, I could have cropped these better. 
 
 Sign 6: I expect should get a correct answer with closer cropping.  
@@ -467,7 +564,16 @@ That's Far lower than the test, and validation sets!!  It's downright Terrible.
 - Indeed, the correct sign names do not even exist in the csv signnames file,   
 - I was simply curious how it would interpret them: would see the same type similarities **I** see when looking at them?  
 - Would it make the same choices I did (not knowing German signs) ?  
-    
+
+
+![alt text][image302]  
+ Right-of-way at the next intersection
+Speed limit (30km/h)
+Keep right
+End of speed limit (80km/h)
+Keep right
+Keep right
+  
 Sign 2: Surprisingly, it got almost about as close a guess as possible.   Must be beginner's luck.
 
 Sign 5: Was also surprisingly good guess. 
@@ -489,18 +595,8 @@ The code for making predictions on my final model is located in the 11th cell of
 
 (**TODO**)
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were  
-
-| Probability         	|     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
-
-
-For the second image ...  
+For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. 
+...
 
 
 **In [39]**  **First set of images**
@@ -514,6 +610,12 @@ For the second image ...
    0.20  Yield  
    0.00  No entry  
 ```  
+Stop sign was this networks 3rd choice, but at less than 0.3% confidence.  
+It was 99.2% confident this was a Road Work sign.  
+"Stop" is a Very important sign to be correctly identified !!
+The sign I supplied was taken at an angle, which would make the sign more difficult to recognize if it was trained only on images taken head on.  
+Because the image was taken at an angle, the crop also was necissarily bad.  This means that "background" information was not uniform around the image, and would more likely be interpreted as features it should try to interpret.
+**TODO** see how well stop was represented in training data  
 
 
 ![alt text][image3902]  
@@ -524,7 +626,9 @@ For the second image ...
    9.42  Speed limit (80km/h)  
    3.58  Stop  
 ```  
-
+Stop was this networks 5th choice, but this tine it's confidence increased 10-fold to 3.6%  
+It is the same photo taken at an angle, but more closely cropped.  In fact, this cropping cut out some of the sign edges.  It still has much background information on the left of the image.  
+The poor cropping made the less confident of any particular selection overall, thereby increasing it's confidence in it's guess for a Stop sign. While it's highest confidence in _any_ sign dropped to 55%, it is about 96.4% certain that it's a speed limit sign of some sort.  It is interesting to see how much of a difference a small change in a bad crop made on the networks top predictions and uncertaintly levels. I wonder how will it would have performed on a crop that removed all background info, leaving it primarily with a skewed image of the words "Stop" would influence it's predictions.  Even better, I wonder if augmenting the training set with skewed images, rotated images, or traslated images (shifting the image over, cutting part of it off, leaving a line of no data on one side) would affect its performance on this image, and its overall performance for all images.
 
 ![alt text][image3903]  
 ```  
