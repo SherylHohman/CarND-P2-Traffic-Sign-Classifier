@@ -317,7 +317,8 @@ If an iterative approach was chosen:
 Training Dataset statistics, and charts are located in the ./training_stats directory  
  The first two models that I saved data on, I will not discuss here.  They are saved under the names "training_stats_170325" (png and txt), and "training_stats_170326-02_perchannel_mean" (png and txt) in the training_stats directory.  
 
-Here I will compare three versions of my network that all used the 'get_per_image_mean_centered_training_sets' function for pre-processings the images.  
+Here I will compare three "successful" (ie achieved 93%) versions of my network.  
+They all used the same 'get_per_image_mean_centered_training_sets' function for pre-processings the images.  The difference is in architecture, and training parameters values.
 
 **Version 1** (aka Model 3) achieved 93% validation accuracy, though it oscillated above and below this number.  
 
@@ -325,11 +326,11 @@ Here I will compare three versions of my network that all used the 'get_per_imag
 
 **Version 3** (aka Model 5) added dropout layers, and also achieved 95% validation accuracy. this time the validation accuracy remained clearly above the 93% minimu, was steadier overall, had much better Validation Loss, and was not overfitting terribly.
 
-#####version 3 (descent, bordeline passing 93%)  
-![alt text][image263]  
+#####version 3, Model 3 (descent, bordeline passing 93%)  
+![alt text][image263]   
 From this chart, I decided to adjust the learning rate (?and sigma) ..
 
-####version 4 (good, passes kinda 95%)  
+####version 4, Model 4 (good, passes kinda 95%)  
 ![alt text][image264]  
 Clearly, this model responded well to the new learning rate (and sigma)
 Seing.. I'm curious if It might be helpful to adjust learning rate after Epoch..  
@@ -345,8 +346,8 @@ And it's best to implement a single technique at a time, to see how the network 
 
 I decided add dropout.
 
-####version 3 (dropout: clearly 95%)   
-![alt text][image265]
+####version 3, Model 5 (dropout: clearly 95%)   
+![alt text][image265]  
 I added dropout to the first two fully connected layers: layer3 and layer4.  
 layers 3 and 4 now consisted of fcc_layer, relu_activation, and finally, dropout.
 The keep probability I used for each was 0.5.  This appeared to be a standard starting value to use, and it seemed to work well for me.  Other options could have been to use dropout on just one of the two layers, or to vary one or both keep_probabilities, perhaps trying 0.25 for one of them.  I was happy with improved results obtained with 0.5 keep at layer3 and 0.5 keep at layer 4.  
@@ -738,21 +739,15 @@ So it was impossible for our classifier to get these correct (the first image is
 [image6]: ./sample_grayscale_conversions_single_channel.png "sample images converted to 1D grayscale"  
 [image7]: ./sample_grayscale_1D_to_3D_conversion.png "grayscale image converted from 1D to 3D loose tonal benefits gained in the rgb to gray conversion"  
 [image12]: ./sample_traffic_signs_from_training_set.png "Visualization 2"  
-[image10]: ./examples/grayscale.jpg "Grayscaling"  
-[image2]: ./examples/random_noise.jpg "Random Noise"  
-[image9]: ./examples/placeholder.png "Traffic Sign 1"  
-[image13]: ./examples/placeholder.png "Traffic Sign 2"  
-[image14]: ./examples/placeholder.png "Traffic Sign 3"  
 [image1]: ./examples/placeholder.png "Traffic Sign 4"  
-[image8]: ./examples/placeholder.png "Traffic Sign 5"  
 
 cell 26: cell Training Stats
 
-[image265]: ./training_stats/training_stats_170406_2032.png "Training Stats Model 5: with dropout"
-[image264]: ./training_stats/training_stats_170327_1518.png "Training Stats Model 4:""  
-[image263]: ./training_stats/training_stats_170327_0305.png "Training Stats Model 3:""  
-[image262]: ./training_stats/training_stats_170326-02_perchannel_mean.png "Training Stats Model 2:""  
-[image261]: ./training_stats/training_stats_170325.png "Training Stats Model 1:""  
+[image265]: ./training_stats/training_stats_170406_2032.png "Training Stats Model 5: with dropout"  
+[image264]: ./training_stats/training_stats_170327_1518.png "Training Stats Model 4:"   
+[image263]: ./training_stats/training_stats_170325.png "Training Stats Model 3:"  
+[image262]: ./training_stats/training_stats_170327_0305.png "Training Stats Model 3a:"    
+[image261]: ./training_stats/training_stats_170326-02_perchannel_mean.png "Training Stats Model 2:"    
 
 cell 30 Sample Traffic Signs from the Web: Set 1, and Set 2
 
