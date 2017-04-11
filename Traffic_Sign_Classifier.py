@@ -369,7 +369,7 @@ fig = display_images([X_train_gray3D_2[50], X_train_gray3D_2[500], X_train_gray3
 #fig.savefig("sample_grayscale_1D_to_3D_conversion.png")
 print("saved figure as 'sample_grayscale_1D_to_3D_conversion.png'")
 
-print("\nresulting images are darker and lighter than the single channel grayscale, with every ratio I've tried \n some ratios I've tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) \n Not sure how to create a 3-channel grayscale that looks visually identical to the 1-channel grayscale")
+print("\nresulting images are darker and lighter than the single channel grayscale \n some ratios I've tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) \n How do I create a 3-channel grayscale that looks visually identical to the 1-channel grayscale?")
 
 
 # In[9]:
@@ -1143,7 +1143,7 @@ for s in range(num_datasets):
     print('      ', new_dataset.shape)
     fig = display_images(new_dataset)
     
-    filename = './sample_signs_from_web_Set_' + str(s) + '.png'
+    filename = './sample_signs_from_web_Set_' + str(s+1) + '.png'
     #fig.savefig(filename)
     print('   figure saved as', filename, '\n')
     

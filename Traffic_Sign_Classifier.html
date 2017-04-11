@@ -13386,7 +13386,7 @@ BwKBQEcQC3ogEAh0BLGgBwKBQEcQC3ogEAh0BP8Pyfo+JrnQMy4AAAAASUVORK5CYII=
 <span class="c1">#fig.savefig(&quot;sample_grayscale_1D_to_3D_conversion.png&quot;)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;saved figure as &#39;sample_grayscale_1D_to_3D_conversion.png&#39;&quot;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">resulting images are darker and lighter than the single channel grayscale, with every ratio I&#39;ve tried </span><span class="se">\n</span><span class="s2"> some ratios I&#39;ve tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) </span><span class="se">\n</span><span class="s2"> Not sure how to create a 3-channel grayscale that looks visually identical to the 1-channel grayscale&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">resulting images are darker and lighter than the single channel grayscale </span><span class="se">\n</span><span class="s2"> some ratios I&#39;ve tried: 1/np.sqrt(3), 2*np.sqrt(3), (R:2/6 G:3/6 B:1/6) </span><span class="se">\n</span><span class="s2"> How do I create a 3-channel grayscale that looks visually identical to the 1-channel grayscale?&quot;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -15344,7 +15344,7 @@ Test Accuracy = 0.940
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;      &#39;</span><span class="p">,</span> <span class="n">new_dataset</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">display_images</span><span class="p">(</span><span class="n">new_dataset</span><span class="p">)</span>
     
-    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;./sample_signs_from_web_Set_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;./sample_signs_from_web_Set_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span>
     <span class="c1">#fig.savefig(filename)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;   figure saved as&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     
