@@ -1,4 +1,4 @@
-#**Traffic Sign Recognition** 
+# **Traffic Sign Recognition** 
 
 **Build a Traffic Sign Recognition Project**
 
@@ -11,18 +11,18 @@ The goals / steps of this project are the following:
 * Summarize the results with a written report
 
 ## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
+### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
 
 ---
-###Writeup / WRITEUP.md (Readme file for WriteUp)
+### Writeup / WRITEUP.md (Readme file for WriteUp)
 
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
+#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
 
 You're reading it! and here is a link to my [project code](https://github.com/SherylHohman/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
 
-###Data Set Summary & Exploration
+### Data Set Summary & Exploration
 
-####1. Provide a basic summary of the data set 
+#### 1. Provide a basic summary of the data set 
 
 **In [106]** uses _numpy_ library togather basic statistics about the dataset 
 
@@ -36,9 +36,9 @@ Image data shape = (32, 32, 3)
 Number of classes = 43  
 ```
 
-####2. Include an exploratory visualization of the dataset 
+#### 2. Include an exploratory visualization of the dataset 
 
-#####**In [3]** and **In [80]** visualizally explore the data set.  
+##### **In [3]** and **In [80]** visualizally explore the data set.  
 
 **In [3]** displays a bar chart showing distribution of the data  
 - across the Training, Validation, and Test sets, and  
@@ -71,7 +71,7 @@ Seeing these images was a good insight for me.
 
 ### Design and Test a Model Architecture
 
-####1. Identify where in your code, and Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
+#### 1. Identify where in your code, and Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
 
 ### PreProcessing
 
@@ -79,8 +79,8 @@ Seeing these images was a good insight for me.
 Contain various routines for pre-processing images.   Mostly they focus on various   
 ways of grayscaling, and mean-centering the distribution of pixel values.  
 
-####**Grayscaling**  
-#####**..what did NOT work**  
+#### **Grayscaling**  
+##### **..what did NOT work**  
 Grayscaling images did not prove useful for me in my training.
 In order for my LeNet architecture to work on grayscale images, they had to be represented as color images (3-channel grayscale images).  
 Turning images into a single channel grayscale seemed to improve the exposure/contrast on the couple sample images I looked at. 
@@ -103,8 +103,8 @@ Notice: The result of transforming a 1D grayscale image into a 3-channel graysca
 is that the contrast(?) gains from converting color to gray  are lost, even though the scale from normalization has been retained.   
 ![alt text][image80]  
 
-####**Normalizing**  
-#####**..what did NOT work**   
+#### **Normalizing**  
+##### **..what did NOT work**   
 **In  [8]** `get_per_channel_mean_zero_centered_datasets()`   
 **In [84]** `get_normalized_images()`   
 I tried normalizing the pixel values across the entire training dataset, and I also tried normalizing per channel.  Both methods were unsuccessful.  Although I these were the most common normalization techniques I read about, when I trained on these preprocessing techniques, the results were miserable - looking about the same as an untrained network.  
@@ -113,7 +113,7 @@ In retrospect, I believe the use case for that technique is for comparing, say f
 In our case, the images are taken from many different exposures, lighting conditions, color casts, etc. They are taken in different physical locations. So in this way, there would not be a uniformity across all images in the training set that we should try to normalize on.  Instead, the images are zoomed in, and while they may contain shadows cutting across an image that could "confuse" the network, generally they are fairly uniform within an image. And shadows, etc are features that we want to train on anyway, as they are going to occur "in the wild".  We want our network to recognize a sign whether it has a shadow cutting across it or not.  
 This is my reasoning why the per channel, and per training set normalization techniques did not work.  
 
-####**..and why Per-Image Normalization DID work.**   
+#### **..and why Per-Image Normalization DID work.**   
 
 **In [9]** `get_per_image_mean_centered_datasets()`   
 This the normalization / preprocessing function I used to train my network.  
@@ -137,14 +137,14 @@ I don't think (though it might be nice to try a comparison) it would have improv
 
 It was much more interesting to me to focus on my training architecture than to fiddle with a preprocessing technique that worked well :-)  
 
-#####**No images to display here.**  
+##### **No images to display here.**  
 In normalizing my data, "pixel values" were turned into values between -1 and 1.  
   
 Hence the arrays representing my images'pixel values are no longer in the 0-255 range for displaying images.  
 Perhaps there is a library function that can display such values as an image. I did not see one.  And decided it unnecessary to try viewing the resulting transformation visually. ;-)  
 
 
-####2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)  
+#### 2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)  
 
 The code for splitting the data into training and validation sets is contained in the fifth code cell of the IPython notebook.  
 
@@ -229,35 +229,35 @@ I Chose to Implement a LeNet Architecture for my Model
 
 ```  
 Layer                     In-Shape      Out-Shape   Description / Settings    Function Used  
-
+                                                                                             
 Input Layer                           (32, 32, 3)  RBG Image, Preprocessed  
-
+                                                                                             
 Layer 1:  
 convolution             (32, 32, 3)   (28, 28, 6)  filter=?,?  stride=1,1     tf.nn.conv2d()  
 activation   RELU       (28, 28, 6)   (28, 28, 6)                             tf.nn.relu()  
 pooling      Max Pool   (28, 28, 6)   (14, 14, 6)   ksize=2,2  stride=2,2     tf.nn.max_pool  
-
+                                                                                             
 Layer 2:  
 convolution             (14, 14,  6)  (10, 10, 16) filter=?,?  stride=1,1     tf.nn.conv2d()  
 activation   RELU       (10, 10, 16)  (10, 10, 16)                            tf.nn.relu()  
 pooling      Max Pool   (10, 10, 16)  ( 5,  5, 16)  ksize=2,2  stride=2,2     tf.nn.max_pool()  
-
+                                                                                             
 Flatten:                ( 5,  5, 16)         (400)  
-
+                                                                                             
 Layer 3:  
 fully connected                (400)         (120)                            prev * weights + bias  
 activation    RELU             (120)         (120)                            tf.nn.relu()  
 dropout                        (120)         (120)  keep_probability=0.5      tf.nn.dropout()  
- 
+                                                                                             
 Layer 4:  
 fully connected                (120)          (84)                            prev * weights + bias  
 activation    RELU              (84)          (84)                            tf.nn.relu()  
 dropout                         (84)          (84)  keep_probability=0.5      tf.nn.dropout()  
-
+                                                                                             
 Layer 5:  
 fully connected                 (84)          (43)                            prev * weights + bias  
 logits  
-
+                                                                                             
 either: 
 sparce_softmax..      
 softmax                     
@@ -272,14 +272,14 @@ sparce_softmax_.... (**TODO**)
  and weights randomly distributed along a normal distribution ??centered??(mean) at zero, and standard deviation of 0.1 ?? aka in the range of +- 0.1 ?? (**TODO**)  
 
 
-####4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.  
+#### 4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.  
 
 (**TODO**)
 The code for training the model is located in the eigth cell of the ipython notebook.  
 
 To train the model, I used an ....  
 
-####5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.  
+#### 5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.  
 
 The code for calculating the accuracy of the model is located in the ninth cell of the Ipython notebook. 
 (**TODO**) 
@@ -310,11 +310,11 @@ They all used the same 'get_per_image_mean_centered_training_sets' function for 
 
 **Version 3** (aka Model 5) added dropout layers, and also achieved 95% validation accuracy. this time the validation accuracy remained clearly above the 93% minimu, was steadier overall, had much better Validation Loss, and was not overfitting terribly.
 
-#####version 3, Model 3 (descent, bordeline passing 93%)  
+##### version 3, Model 3 (descent, bordeline passing 93%)  
 ![alt text][image263]   
 From this chart, I decided to adjust the learning rate (?and sigma) ..
 
-####version 4, Model 4 (good, passes kinda 95%)  
+#### version 4, Model 4 (good, passes kinda 95%)  
 ![alt text][image264]  
 Clearly, this model responded well to the new learning rate (and sigma)
 Seing.. I'm curious if It might be helpful to adjust learning rate after Epoch..  
@@ -330,7 +330,7 @@ And it's best to implement a single technique at a time, to see how the network 
 
 I decided add dropout.
 
-####version 3, Model 5 (dropout: clearly 95%)   
+#### version 3, Model 5 (dropout: clearly 95%)   
 ![alt text][image265]  
 I added dropout to the first two fully connected layers: layer3 and layer4.  
 layers 3 and 4 now consisted of fcc_layer, relu_activation, and finally, dropout.
@@ -371,10 +371,11 @@ If a well known architecture was chosen:
 
 Here are images that I found on the web, grouped into 2 Sets:
 
-The first set:
+The first set:  
 ![alt text][image301]  
 These are relatively straight forward - all these signs exist in the training set and map our classifier.  
 However, several are cropped poorly, are taken at an angle (as opposed to straight on), and one lacks color information.  Some of these traffic signs had many examples in the training set, some had few examples to train on.  How well does the network  perform on these images ?  
+
 
 The second set:  
 ![alt text][image302]    
@@ -385,7 +386,7 @@ Did it learn to "see" the same "features", and map these to labels in the same w
 
 The first image might be difficult to classify because ...  
 
-####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).  
+#### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).  
 
 The code for making predictions on my final model is located in the tenth cell of the Ipython notebook.  
 
@@ -479,7 +480,7 @@ The code for making predictions on my final model is located in the 11th cell of
 **In [39]**  **First set of images**
 (**TODO: finish**)
 
-![alt text][image3901]  
+![alt text][image3901]  Stop Sign  
 ```  
   99.17  Road work  
    0.34  Speed limit (30km/h)  
@@ -495,7 +496,7 @@ Because the image was taken at an angle, the crop also was necissarily bad.  Thi
 **TODO** see how well stop was represented in training data  
 
 
-![alt text][image3902]  
+![alt text][image3902]  Stop Sign  
 ```  
   54.89  Speed limit (50km/h)  
   21.63  Speed limit (70km/h)  
@@ -507,7 +508,7 @@ Stop was this networks 5th choice, but this tine it's confidence increased 10-fo
 It is the same photo taken at an angle, but more closely cropped.  In fact, this cropping cut out some of the sign edges.  It still has much background information on the left of the image.  
 The poor cropping made the less confident of any particular selection overall, thereby increasing it's confidence in it's guess for a Stop sign. While it's highest confidence in _any_ sign dropped to 55%, it is about 96.4% certain that it's a speed limit sign of some sort.  It is interesting to see how much of a difference a small change in a bad crop made on the networks top predictions and uncertaintly levels. I wonder how will it would have performed on a crop that removed all background info, leaving it primarily with a skewed image of the words "Stop" would influence it's predictions.  Even better, I wonder if augmenting the training set with skewed images, rotated images, or traslated images (shifting the image over, cutting part of it off, leaving a line of no data on one side) would affect its performance on this image, and its overall performance for all images.
 
-![alt text][image3903]  
+![alt text][image3903]  No Entry  
 ```  
   83.94  End of all speed and passing limits  
    7.62  End of no passing  
@@ -517,7 +518,7 @@ The poor cropping made the less confident of any particular selection overall, t
 ```  
 
 
-![alt text][image3904]  
+![alt text][image3904]  General Caution  
 ```  
   62.78  Speed limit (50km/h)  
   36.94  Speed limit (30km/h)  
@@ -527,7 +528,7 @@ The poor cropping made the less confident of any particular selection overall, t
 ```  
 
 
-![alt text][image3905]  
+![alt text][image3905]  General Caution    
 ```  
   99.99  General caution  
    0.00  Traffic signals  
@@ -537,7 +538,7 @@ The poor cropping made the less confident of any particular selection overall, t
 ```  
 
 
-![alt text][image3906]  
+![alt text][image3906]  General Caution    
 ```  
   99.93  General caution  
    0.06  Traffic signals  
@@ -547,7 +548,7 @@ The poor cropping made the less confident of any particular selection overall, t
 ```  
 
 
-![alt text][image3907]  
+![alt text][image3907]  Left Turn Ahead  
 ```  
  100.00  Turn left ahead 
    0.00  Yield  
@@ -557,7 +558,7 @@ The poor cropping made the less confident of any particular selection overall, t
 ```  
 
 
-![alt text][image3908]  
+![alt text][image3908]  End of No Passing by Lorries (vehicles over 3.5 metric tons)
 ```  
  100.00  No passing for vehicles over 3.5 metric tons  
    0.00  Priority road  
@@ -567,7 +568,7 @@ The poor cropping made the less confident of any particular selection overall, t
 ```  
 
 
-![alt text][image3909]  
+![alt text][image3909]  Speed Limit 100km/h  
 ```  
   76.27  Speed limit (80km/h)  
   11.34  Speed limit (60km/h)  
@@ -577,7 +578,7 @@ The poor cropping made the less confident of any particular selection overall, t
 ```  
 
 
-![alt text][image3910]  
+![alt text][image3910]  Speed Limit 100km/h     
 ```  
   99.52  Speed limit (60km/h)  
    0.47  Speed limit (80km/h)  
@@ -624,7 +625,7 @@ Perhaps add display a chart comparing those stats
 
 
 --------------------------------------------------------------------------------
-####**In [38]**  **Second set of images**
+#### **In [38]**  **Second set of images**
 
 ![alt text][image3801]    
 ```  
@@ -691,22 +692,27 @@ So it was impossible for the classifier to get any of these correct (the first i
 - The 3rd, 5th,6th images do NOT focus on the Number depicted, which is what *I* do when interpolating their meaning.
 --  It surprises me that it does not choose 
 - The 4th image, however, does seem to consider the number, and the "not / end-of" in it's top two choices
-"""
+"""  
+
+### (Optional) Visualize the Neural Network's State with Test Images  
+Hmm.. Unfortunately, I don't think I can use the function above to gain insight on training features. Not only are my tensorflow training variables are encapsulated inside a LeNet(x) function. So the tensor I need to pass into the outputFeatureMap function are not global variables. I have no access or handle to them from here, or anywhere outside that function.
+
+If it is indeed possible to access the required variable, I would be interested in gaining insight, for about 4 images. That is not going to happpen at this time, however. 
 
 
 
-
-################################################################################
+------------------------------------------------------------------------------
 
 [//]: # (Image References)
 
-[image3]: ./data_plotted_image_distribution_amongst_classes.png "Visualization_1: Distribution of Images between classes, and across Training, Validation, and Test Sets"  
-[image80]: ./sample_traffic_signs_from_training_set.png "Visualization_2: Sample Images from the Training Set"  
-[image5]: ./sample_grayscale-1channel_conversion.png "sample image converted to 1D grayscale"  
-[image6]: ./sample_grayscale_conversions_single_channel.png "sample images converted to 1D grayscale"  
-[image7]: ./sample_grayscale_1D_to_3D_conversion.png "grayscale image converted from 1D to 3D loose tonal benefits gained in the rgb to gray conversion"  
-[image12]: ./sample_traffic_signs_from_training_set.png "Visualization 2"  
 [image1]: ./examples/placeholder.png "Traffic Sign 4"  
+
+[image3]: ./data_plotted_image_distribution_amongst_classes.png "Visualization_1: Distribution of Images between classes, and across Training, Validation, and Test Sets"  
+[image80]: ./writeup_sample_images_cropped/sample_traffic_signs_from_training_set.png "Visualization_2: Sample Images from the Training Set"  
+[image5]: ./writeup_sample_images_cropped/sample_grayscale-1channel_conversion.png "sample image converted to 1D grayscale"  
+[image6]: ./writeup_sample_images_cropped/sample_grayscale_conversions_single_channel.png "sample images converted to 1D grayscale"  
+[image7]: ./writeup_sample_images_cropped/sample_grayscale_1D_to_3D_conversion.png "grayscale image converted from 1D to 3D loose tonal benefits gained in the rgb to gray conversion"  
+[image12]: ./writeup_sample_images_cropped/sample_traffic_signs_from_training_set.png "Visualization 2"  
 
 cell 26: cell Training Stats
 
@@ -718,8 +724,8 @@ cell 26: cell Training Stats
 
 cell 30 Sample Traffic Signs from the Web: Set 1, and Set 2
 
-[image301]: ./sample_signs_from_web_Set_0.png "Set 1: Sample Traffic Signs from the Web"
-[image302]: ./sample_signs_from_web_Set_1.png "Set 2: Sample Traffic Signs from the Web"
+[image301]: ./writeup_sample_images_cropped/sample_signs_from_web_Set_1.png "Set 1: Sample Traffic Signs from the Web"
+[image302]: ./writeup_sample_images_cropped/sample_signs_from_web_Set_2.png "Set 2: Sample Traffic Signs from the Web"
 
 Set 1, cell 39 `traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames`  
 
