@@ -1,11 +1,5 @@
 #**Traffic Sign Recognition** 
 
-##Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
-
 **Build a Traffic Sign Recognition Project**
 
 The goals / steps of this project are the following:
@@ -16,12 +10,11 @@ The goals / steps of this project are the following:
 * Analyze the softmax probabilities of the new images
 * Summarize the results with a written report
 
-
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
 
 ---
-###Writeup / README
+###Writeup / WRITEUP.md (Readme file for WriteUp)
 
 ####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
 
@@ -45,10 +38,9 @@ Number of classes = 43
 
 ####2. Include an exploratory visualization of the dataset 
 
-**In [3]**  and **In [80]** visualizally explore the data set.  
+#####**In [3]** and **In [80]** visualizally explore the data set.  
 
-  
-Cell **In [3]** displays a bar chart showing distribution of the data  
+**In [3]** displays a bar chart showing distribution of the data  
 - across the Training, Validation, and Test sets, and  
 - across the classes we are training on. 
 
@@ -77,7 +69,7 @@ It appears (from this small selection) that the images are cropped close, and ar
 I also have a better idea of the resolution and size of the images that the network is training with.  
 Seeing these images was a good insight for me.
 
-###Design and Test a Model Architecture
+### Design and Test a Model Architecture
 
 ####1. Identify where in your code, and Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
 
@@ -121,7 +113,7 @@ In retrospect, I believe the use case for that technique is for comparing, say f
 In our case, the images are taken from many different exposures, lighting conditions, color casts, etc. They are taken in different physical locations. So in this way, there would not be a uniformity across all images in the training set that we should try to normalize on.  Instead, the images are zoomed in, and while they may contain shadows cutting across an image that could "confuse" the network, generally they are fairly uniform within an image. And shadows, etc are features that we want to train on anyway, as they are going to occur "in the wild".  We want our network to recognize a sign whether it has a shadow cutting across it or not.  
 This is my reasoning why the per channel, and per training set normalization techniques did not work.  
 
-####**..and Why Per-Image Normalization DID work.**   
+####**..and why Per-Image Normalization DID work.**   
 
 **In [9]** `get_per_image_mean_centered_datasets()`   
 This the normalization / preprocessing function I used to train my network.  
@@ -229,8 +221,7 @@ In the images I tested my trained network on, I included grayscale images, signs
 
 #### Architecture  
 
-####3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.  
-
+I Chose to Implement a LeNet Architecture for my Model
 
 #### LeNet Architecture
 **In [75]** is LeNet architecture  
@@ -291,7 +282,6 @@ To train the model, I used an ....
 ####5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.  
 
 The code for calculating the accuracy of the model is located in the ninth cell of the Ipython notebook. 
-
 (**TODO**) 
 
 My final model results were:  
@@ -307,13 +297,7 @@ Test Loss     = 0.632
 Test Accuracy = 0.940  
 ```   
 ![alt text][img]
-(**TODO**)
-If an iterative approach was chosen:  
-* What was the first architecture that was tried and why was it chosen?  
-* What were some problems with the initial architecture?  
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to over fitting or under fitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.  
-(**TODO**)
-* Which parameters were tuned? How were they adjusted and why? 
+
 Training Dataset statistics, and charts are located in the ./training_stats directory  
  The first two models that I saved data on, I will not discuss here.  They are saved under the names "training_stats_170325" (png and txt), and "training_stats_170326-02_perchannel_mean" (png and txt) in the training_stats directory.  
 
@@ -381,11 +365,9 @@ If a well known architecture was chosen:
 * How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?  
  
 
-###Test a Model on New Images  
+### Test a Model on New Images  
 
-####1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.  
-
-(**TODO**)
+#### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.  
 
 Here are images that I found on the web, grouped into 2 Sets:
 
@@ -436,10 +418,9 @@ A low accuracy of 33% at 4 wrong, 2 correct = 2/6 = 33%
 This is Much lower than the accuracy from the test set.  
 Conclusion: The training and test sets are not representative of the images I provided.
  
+#### Set_1 My classifier gave mixed results.  It performed terrible on several images I expected good results on, though it also got a couple correct.  It performed best on images with a straight on camera angle with a, tight, crop.  
 
-
-#### Set_1 My classifier performed terrible on the images I expected good results on.  
-#### TODO: UPDATE Analysis for changed image numbers.
+**TODO**: UPDATE Analysis for changed image numbers.
 Signs 1, 6: To be fair, I could have cropped these better. 
 
 Sign 6: I expect should get a correct answer with closer cropping.  
@@ -489,18 +470,14 @@ Signs 3, 6, 7: These three signs I Expected the classifier to, no-brainer, retur
 
 
 
-####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)  
+#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)  
 
 The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.  
-
 (**TODO**)
-
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. 
-...
 
 
 **In [39]**  **First set of images**
-
+(**TODO: finish**)
 
 ![alt text][image3901]  
 ```  
@@ -611,6 +588,7 @@ The poor cropping made the less confident of any particular selection overall, t
 
 ---   
 
+(**TODO: finish**)
 - Interesting how cropping changed the predictions.   
  -- Good Cropping matters. (Giving my trained model, anyhow)
  -- Stop Sign: better crop (tho not great), stop was rated 3rd on the list, but confidence was lower. worse crop, was > 10 x more confident in "stop" as a choice, though it was now 5th. Of course, this is also reflected in that the worse crop lowered it's confidence in anything overall. Better crop gave it a 99% certainty in a wrong answer, vs a 55% top certainty in the close cropped version. 
@@ -642,10 +620,11 @@ above 1250
       or std
       or which count range it was in
 
-Perhaps display a chart comparing this info
---------------------------------------------------------------------------------
-**In [38]**  **Second set of images**
+Perhaps add display a chart comparing those stats  
 
+
+--------------------------------------------------------------------------------
+####**In [38]**  **Second set of images**
 
 ![alt text][image3801]    
 ```  
@@ -656,8 +635,6 @@ Perhaps display a chart comparing this info
    1.76  End of no passing by vehicles over 3.5 metric tons  
 ```  
   
-  
-  
 ![alt text][image3802]    
 ```  
   99.63  Speed limit (30km/h)  
@@ -666,8 +643,6 @@ Perhaps display a chart comparing this info
    0.00  Right-of-way at the next intersection  
    0.00  Roundabout mandatory  
 ```  
-  
-  
   
 ![alt text][image3803]    
 ```  
@@ -678,8 +653,6 @@ Perhaps display a chart comparing this info
    1.42  Turn left ahead  
 ```  
   
-  
-  
 ![alt text][image3805]    
 ```  
   96.62  End of speed limit (80km/h)  
@@ -689,8 +662,6 @@ Perhaps display a chart comparing this info
    0.00  Right-of-way at the next intersection  
 ```  
   
-  
-  
 ![alt text][image3806]    
 ```  
   99.97  Keep right  
@@ -699,9 +670,7 @@ Perhaps display a chart comparing this info
    0.00  Roundabout mandatory  
    0.00  End of all speed and passing limits  
 ```  
-  
-  
-  
+
 ![alt text][image3807]    
 ```  
   97.23  Keep right  
@@ -710,14 +679,12 @@ Perhaps display a chart comparing this info
    0.04  Go straight or right  
    0.00  Turn left ahead  
 ```  
-  
-# Second set of Images
+
 Interesting results on this dataset,  
+(**TODO Finish**)
 
-(**TOODO Finish**)
-
-Remember none of these images were in the training set; the correct answer is not in the list of labels provided.  
-So it was impossible for our classifier to get these correct (the first image is a minor exception, sort of..)  
+None of these images were in the training set; the correct answer is not in the list of labels provided.  
+So it was impossible for the classifier to get any of these correct (the first image is a minor exception)  
 - It's interesting to me that on the 1st image, it did manage to locate the "sub-sign" within it, as 5th prob'  
 - The 2nd image also chose what I consider the closest two answers as it's top two  
 -- though the difference in confidence is vastly different, and perhaps swapped from what might be expected.  
@@ -786,7 +753,8 @@ Set 1, cell 39 `traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames`
 [image3910]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_7-speed_limit_100km-2.jpg 
 "7: Speed Limit 100km, Set1_image_10"  
 
-Set 1, cell 39 `traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames`  
+Set 1, cell 39   
+`traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames`  
 _14-3.5-stop-1.jpg  
 _14-3.5-stop-2.jpg  
 _17-no-entry-1-bw.jpg  
@@ -800,7 +768,8 @@ _7-speed_limit_100km-2.jpg
 
 ------------------------------------------------------------------------------
 
-Set 2, cell 38: `traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames`  
+Set 2, cell 38:   
+`traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames`  
 
 [image3801]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/B_42_7-100kmspeedLimit_AND_no_overtaking-by-lorries-2.jpg
 "Both 42, 7: 100km Speed Limit, and No Overtaking by Lorries, Set2_image_1"  
