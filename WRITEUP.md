@@ -17,103 +17,6 @@ The goals / steps of this project are the following:
 * Summarize the results with a written report
 
 
-[//]: # (Image References)
-
-[image3]: ./data_plotted_image_distribution_amongst_classes.png "Visualization_1: Distribution of Images between classes, and across Training, Validation, and Test Sets"  
-[image80]: ./sample_traffic_signs_from_training_set.png "Visualization_2: Sample Images from the Training Set"  
-[image5]: ./sample_grayscale-1channel_conversion.png "sample image converted to 1D grayscale"  
-[image6]: ./sample_grayscale_conversions_single_channel.png "sample images converted to 1D grayscale"  
-[image7]: ./sample_grayscale_1D_to_3D_conversion.png "grayscale image converted from 1D to 3D loose tonal benefits gained in the rgb to gray conversion"  
-[image12]: ./sample_traffic_signs_from_training_set.png "Visualization 2"  
-[image10]: ./examples/grayscale.jpg "Grayscaling"  
-[image2]: ./examples/random_noise.jpg "Random Noise"  
-[image9]: ./examples/placeholder.png "Traffic Sign 1"  
-[image13]: ./examples/placeholder.png "Traffic Sign 2"  
-[image14]: ./examples/placeholder.png "Traffic Sign 3"  
-[image1]: ./examples/placeholder.png "Traffic Sign 4"  
-[image8]: ./examples/placeholder.png "Traffic Sign 5"  
-
-cell 30 Sample Traffic Signs from the Web: Set 1, and Set 2
-
-[image301]: ./sample_signs_from_web_Set_0.png "Set 1: Sample Traffic Signs from the Web"
-[image302]: ./sample_signs_from_web_Set_1.png "Set 2: Sample Traffic Signs from the Web"
-
-Set 1, cell 39 `traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames`  
-
-[image3901]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_14-3.5-stop-1.jpg 
-"14: Stop, Set1_image_1"  
-
-[image3902]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_14-3.5-stop-2.jpg 
-"14: Stop, Set1_image_2"  
-
-[image3903]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_17-no-entry-1-bw.jpg 
-"17: No Entry, Set1_image_3"  
-
-[image3904]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_18-general-caution-1.jpg 
-"18: General Caution, Set1_image_4"
-
-[image3905]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_18-general-caution-2.jpg 
-"18: General Caution, Set1_image_5"
-
-[image3906]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_18-general-caution-3.jpg 
-"18: General Caution, Set1_image_6"  
-
-[image3907]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_34-left-turn-ahead-1.jpg 
-"34: Left Turn Ahead, Set1_image_7"  
-
-[image3908]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_42_no_overtaking-by-lorries-1.jpg 
-"42: No Overtaking Lorries, Set1_image_8"  
-
-[image3909]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_7-speed_limit_100km-1.jpg 
-"7: Speed Limit 100km, Set1_image_9"  
-
-[image3910]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_7-speed_limit_100km-2.jpg 
-"7: Speed Limit 100km, Set1_image_10"  
-
-Set 1, cell 39 `traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames`
-_14-3.5-stop-1.jpg
-_14-3.5-stop-2.jpg
-_17-no-entry-1-bw.jpg
-_18-general-caution-1.jpg
-_18-general-caution-2.jpg
-_18-general-caution-3.jpg
-_34-left-turn-ahead-1.jpg
-_42_no_overtaking-by-lorries-1.jpg
-_7-speed_limit_100km-1.jpg
-_7-speed_limit_100km-2.jpg
-
-------------------------------------------------------------------------------
-
-Set 2, cell 38: `traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames`  
-
-[image3801]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/B_42_7-100kmspeedLimit_AND_no_overtaking-by-lorries-2.jpg
-"Both 42, 7: 100km Speed Limit, and No Overtaking by Lorries, Set2_image_1"  
-
-[image3802]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_0_2-speed_limit_25kmh-1.jpg
-"N/A 0 or 2, Speed Limit 25km, Set2_image_2"  
-
-[image3803]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_1-30km_Minimum.jpg
-"N/A 1, Minimum Speed 30km, Set2_image_3"  
-
-[image3805]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_3_6_32-end-of-speed-limit-60km-1.jpg
-"N/A 3 or 6 or 32, End of 60km Speed Limit, Set2_image_5"
-
-[image3806]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_5-recommended-speed-80-obsolete-1.jpg
-"N/A 5, Recommended Speed 80 (obsolete), Set2_image_6"  
-
-[image3807]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_6_5_32-end-of-80km-speed-obsolete-1.jpg
-"N/A 6 or 5 or 32, End of 80km Speed Limit, Set2_image_7"  
-
-
-
-Set 2, cell 38: `traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames`
-B_42_7-100kmspeedLimit_AND_no_overtaking-by-lorries-2.jpg
-N_0_2-speed_limit_25kmh-1.jpg
-N_1-30km_Minimum.jpg
-N_3_6_32-end-of-speed-limit-60km-1.jpg
-N_5-recommended-speed-80-obsolete-1.jpg
-N_6_5_32-end-of-80km-speed-obsolete-1.jpg
-
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
 
@@ -377,8 +280,6 @@ sparce_softmax_.... (**TODO**)
  Each Layer begins with all bias elements initialized to 0 
  and weights randomly distributed along a normal distribution ??centered??(mean) at zero, and standard deviation of 0.1 ?? aka in the range of +- 0.1 ?? (**TODO**)  
 
- 
-
 
 ####4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.  
 
@@ -474,12 +375,7 @@ If a well known architecture was chosen:
 
 (**TODO**)
 
-Here are five German traffic signs that I found on the web:  
-
-![alt text][image4] ![alt text][image5] ![alt text][image6]  
-![alt text][image7] ![alt text][image8] 
-
-Here are two sets of images that I found on the web:
+Here are images that I found on the web, grouped into 2 Sets:
 
 The first set:
 ![alt text][image301]  
@@ -817,3 +713,101 @@ So it was impossible for our classifier to get these correct (the first image is
 --  It surprises me that it does not choose 
 - The 4th image, however, does seem to consider the number, and the "not / end-of" in it's top two choices
 """
+
+
+################################################################################
+
+[//]: # (Image References)
+
+[image3]: ./data_plotted_image_distribution_amongst_classes.png "Visualization_1: Distribution of Images between classes, and across Training, Validation, and Test Sets"  
+[image80]: ./sample_traffic_signs_from_training_set.png "Visualization_2: Sample Images from the Training Set"  
+[image5]: ./sample_grayscale-1channel_conversion.png "sample image converted to 1D grayscale"  
+[image6]: ./sample_grayscale_conversions_single_channel.png "sample images converted to 1D grayscale"  
+[image7]: ./sample_grayscale_1D_to_3D_conversion.png "grayscale image converted from 1D to 3D loose tonal benefits gained in the rgb to gray conversion"  
+[image12]: ./sample_traffic_signs_from_training_set.png "Visualization 2"  
+[image10]: ./examples/grayscale.jpg "Grayscaling"  
+[image2]: ./examples/random_noise.jpg "Random Noise"  
+[image9]: ./examples/placeholder.png "Traffic Sign 1"  
+[image13]: ./examples/placeholder.png "Traffic Sign 2"  
+[image14]: ./examples/placeholder.png "Traffic Sign 3"  
+[image1]: ./examples/placeholder.png "Traffic Sign 4"  
+[image8]: ./examples/placeholder.png "Traffic Sign 5"  
+
+cell 30 Sample Traffic Signs from the Web: Set 1, and Set 2
+
+[image301]: ./sample_signs_from_web_Set_0.png "Set 1: Sample Traffic Signs from the Web"
+[image302]: ./sample_signs_from_web_Set_1.png "Set 2: Sample Traffic Signs from the Web"
+
+Set 1, cell 39 `traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames`  
+
+[image3901]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_14-3.5-stop-1.jpg 
+"14: Stop, Set1_image_1"  
+
+[image3902]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_14-3.5-stop-2.jpg 
+"14: Stop, Set1_image_2"  
+
+[image3903]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_17-no-entry-1-bw.jpg 
+"17: No Entry, Set1_image_3"  
+
+[image3904]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_18-general-caution-1.jpg 
+"18: General Caution, Set1_image_4"
+
+[image3905]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_18-general-caution-2.jpg 
+"18: General Caution, Set1_image_5"
+
+[image3906]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_18-general-caution-3.jpg 
+"18: General Caution, Set1_image_6"  
+
+[image3907]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_34-left-turn-ahead-1.jpg 
+"34: Left Turn Ahead, Set1_image_7"  
+
+[image3908]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_42_no_overtaking-by-lorries-1.jpg 
+"42: No Overtaking Lorries, Set1_image_8"  
+
+[image3909]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_7-speed_limit_100km-1.jpg 
+"7: Speed Limit 100km, Set1_image_9"  
+
+[image3910]: ./traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames/_7-speed_limit_100km-2.jpg 
+"7: Speed Limit 100km, Set1_image_10"  
+
+Set 1, cell 39 `traffic_signs_from_web/32x32x3/1_straightforward_IN_signnames`  
+_14-3.5-stop-1.jpg  
+_14-3.5-stop-2.jpg  
+_17-no-entry-1-bw.jpg  
+_18-general-caution-1.jpg  
+_18-general-caution-2.jpg  
+_18-general-caution-3.jpg  
+_34-left-turn-ahead-1.jpg  
+_42_no_overtaking-by-lorries-1.jpg  
+_7-speed_limit_100km-1.jpg  
+_7-speed_limit_100km-2.jpg  
+
+------------------------------------------------------------------------------
+
+Set 2, cell 38: `traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames`  
+
+[image3801]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/B_42_7-100kmspeedLimit_AND_no_overtaking-by-lorries-2.jpg
+"Both 42, 7: 100km Speed Limit, and No Overtaking by Lorries, Set2_image_1"  
+
+[image3802]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_0_2-speed_limit_25kmh-1.jpg
+"N/A 0 or 2, Speed Limit 25km, Set2_image_2"  
+
+[image3803]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_1-30km_Minimum.jpg
+"N/A 1, Minimum Speed 30km, Set2_image_3"  
+
+[image3805]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_3_6_32-end-of-speed-limit-60km-1.jpg
+"N/A 3 or 6 or 32, End of 60km Speed Limit, Set2_image_5"
+
+[image3806]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_5-recommended-speed-80-obsolete-1.jpg
+"N/A 5, Recommended Speed 80 (obsolete), Set2_image_6"  
+
+[image3807]: ./traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames/N_6_5_32-end-of-80km-speed-obsolete-1.jpg
+"N/A 6 or 5 or 32, End of 80km Speed Limit, Set2_image_7"  
+
+Set 2, cell 38: `traffic_signs_from_web/32x32x3/2_tricky_and_NOT_in_signnames`  
+B_42_7-100kmspeedLimit_AND_no_overtaking-by-lorries-2.jpg  
+N_0_2-speed_limit_25kmh-1.jpg  
+N_1-30km_Minimum.jpg  
+N_3_6_32-end-of-speed-limit-60km-1.jpg  
+N_5-recommended-speed-80-obsolete-1.jpg  
+N_6_5_32-end-of-80km-speed-obsolete-1.jpg  
