@@ -371,28 +371,26 @@ If a well known architecture was chosen:
 
 Here are images that I found on the web, grouped into 2 Sets:
 
-The first set:  
+##### **The first set**:  
 ![alt text][image301]  
 These are relatively straight forward - all these signs exist in the training set and map our classifier.  
 However, several are cropped poorly, are taken at an angle (as opposed to straight on), and one lacks color information.  Some of these traffic signs had many examples in the training set, some had few examples to train on.  How well does the network  perform on these images ?  
 
 
-The second set:  
+##### The second set:  
 ![alt text][image302]    
 This set consists entirely of traffic signs that do not exist in our classification data.  
 In other words, it is impossible for our network to obtain the correct answers for these signs.  
 I chose them to get an insight on how it sees and correlates traffic sign images, vs how I see and correlate traffic sign images.  As I am not familiar with German Traffic signs, I also did not know the true meaning of these signs.  Never-the-less, even though none of these signs were in our classifier, if I had to choose one or more of the class ids as a guess, would it match the guess made by the network ??  
 Did it learn to "see" the same "features", and map these to labels in the same way that I did ?  
 
-The first image might be difficult to classify because ...  
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).  
 
 The code for making predictions on my final model is located in the tenth cell of the Ipython notebook.  
-
 (**TODO**)
 
-Here are the results of the prediction:  
+#### Here are the results of the prediction:  
 
 ![alt text][image301]  
 ```  
