@@ -387,65 +387,70 @@ Did it learn to "see" the same "features", and map these to labels in the same w
 
 #### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).  
 
-The code for making predictions on my final model is located in the tenth cell of the Ipython notebook.  
-(**TODO**)
 
 #### Here are the results of the prediction:  
+**In [33]**  
 
 ![alt text][image301]  
 ```  
-Actual Sign                 Predicted Sign                                Correct?
-Stop Sign                   Road work                                     no
-Stop Sign                   Speed limit (50km/h)                          no            
-No Entry                    End of all speed and passing limits           no    
-General Caution             Speed limit (50km/h)                          no            
-General Caution             General caution                               YES        
-General Caution             General caution                               YES        
-Left Turn Ahead             Turn left ahead                               YES        
-No Overtaking by Lorries    No passing for vehicles over 3.5 metric tons  YES            
-Speed Limit 100km/h         Speed limit (80km/h)                          no           
-Speed Limit 100km/h         Speed limit (60km/h)                          no     
+ n Actual Sign              Predicted Sign                              Correct?
+   -----------              --------------                              --------
+ 1 Stop Sign                Road work                                     no
+ 2 Stop Sign                Speed limit (50km/h)                          no            
+ 3 No Entry                 End of all speed and passing limits           no    
+ 4 General Caution          Speed limit (50km/h)                          no            
+ 5 General Caution          General caution                               YES        
+ 6 General Caution          General caution                               YES        
+ 7 Left Turn Ahead          Turn left ahead                               YES        
+ 8 No Overtaking by Lorries No passing for vehicles over 3.5 metric tons  YES            
+ 9 Speed Limit 100km/h      Speed limit (80km/h)                          no           
+10 Speed Limit 100km/h      Speed limit (60km/h)                          no     
 ```        
 
 The model incorrectly guessed 6/10  and correctly guessed 4/10.  
 That is an Accuracy of only 40 %  
 
-If I look at only 1 cropping of signs where I provided multiple crops,  
+If choose to look at only 1 of the predictions on signs where I provided multiple crops,  
 I get a top accuracy of : 50%, at 3 wrong, 3 correct = 3/6 = 50%
-A low accuracy of 33% at 4 wrong, 2 correct = 2/6 = 33%
+A low accuracy of ..... : 33%, at 4 wrong, 2 correct = 2/6 = 33%
 
 This is Much lower than the accuracy from the test set.  
-Conclusion: The training and test sets are not representative of the images I provided.
+Conclusion: The training and test sets are not representative of the images I provided.  The model may have preferrred signs that had higher representation in the training set.  Statistics may not be as accurate for such a small sample size.  
  
-#### Set_1 My classifier gave mixed results.  It performed terrible on several images I expected good results on, though it also got a couple correct.  It performed best on images with a straight on camera angle with a, tight, crop.  
+**Set_1**: My classifier gave mixed results.  It performed terrible on several images I expected good results on, though it also got a couple correct.  It performed best on images with a straight on camera angle with a, tight, crop.  
 
-**TODO**: UPDATE Analysis for changed image numbers.
-Signs 1, 6: To be fair, I could have cropped these better. 
+Several of the images I provided were poorly cropped, taken from an angle rather than straight on, and one was even lacking color information, which is something that I trained on.  The (second) speed limit 100km/h was a good crop, so I'm rather surprised at it's mistake on this one.  
 
-Sign 6: I expect should get a correct answer with closer cropping.  
-    Then again, I was overly optimistic that it would do well even given the bad crop I handed it.  
+Signs 1, 2: I expect should get a correct answer with closer cropping.  
+    I was overly optimistic that it would do well even given the bad crop I handed it.  
     I can imagine that the crop I gave it lent a partial figure-8 shape to confuse it, though at the wrong scale??  
     
-Sign 2: Was in black an white, so it is missing color information, which may have otherwise helped nudge it to the correct answer.  
+Sign 3: Was in black an white, so it is missing color information, which may have otherwise helped nudge it toward the correct answer.  
 - Additionally, the sign was skewed at an angle, and placed against another sign,  
 - so it's overall shape could be difficult to discern.  
 - Unfortunately, the misinterpretation is Grave:   
   - 'No Entry' sign became an "End All Speed and Passing Limits"  
-  - the exact Opposite of the intended !  
+  - **Nearly the Direct Opposite in Intention, Meaning, desired driver Behaviour  !**  Very Bad Result, indeed.    
         
-Sign 3:  No Idea what happened there! Perhaps the edges of the triangle resembled a 5, though at the wrong scale??  
-    If so this is similar to what I "imagine" threw it off for image 6. Or I just have an imagination.  
-    
-Sign 4 and 5, Fortunately, It got these Correct !!  
+Sign 4:  No Idea what happened there! Perhaps the edges of the triangle resembled a 5, though at the wrong scale??  
+    If so this is similar to what I "imagine" threw it off for image 6. Or I just have an imagination.      
+Sign 5 and 6: A closer crop, Removing just a portion of the sign underneath made all the difference.  
 
-So this classifier was correct on 2/6 images, or 33% correct.  
+Signs 7, 8: Yea! it got those correct.  
+
+Signs 9, 10: It was correct in that it's a speed limit sign.  Surprised that it mistook 100 for 60 or 80.  Perhaps the poor crop in #9 lended a portion of an "8" shape?  However, that in no way explains why the close crop generated a "60" interpretation.  Perhaps 100km was poorly represented in the training set.  
+
+So this classifier was correct on 40% of images (33% or 50% if look a single image from each class).  
 That's Far lower than the test, and validation sets!!  It's downright Terrible.   
 
-#### Set_2 consisted of street signs that were not part of the street sign names my classifier was trained on.  It was impossible for my classifier to get any of these correct.
 
-- Indeed, the correct sign names do not even exist in the csv signnames file,   
-- I was simply curious how it would interpret them: would see the same type similarities **I** see when looking at them?  
-- Would it make the same choices I did (not knowing German signs) ?  
+
+**Set_2**: consisted of street signs that were not part of the street sign names my classifier was trained on.  It was impossible for my classifier to get any of these correct.
+
+- The correct sign names do not even exist in the csv signnames file,   
+- I chose these out of curiousity about how it trained on features, as compared to how *I* see features.  
+- would see the same type similarities **I** see when looking at them?  
+- Would it make the same guesses I did (not knowing German signs) ?  
 
 
 ![alt text][image302]  
@@ -471,7 +476,7 @@ Signs 3, 6, 7: These three signs I Expected the classifier to, no-brainer, retur
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)  
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.  
+The code for making probability predictions on my final model is located in the 11th cell of the Ipython notebook.  
 (**TODO**)
 
 
