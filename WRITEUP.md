@@ -60,9 +60,9 @@ It can also be seen that some image classes are highly favored, while others hav
 
 __
 
-Cell **In [80]** displays some sample images from the Training set.  
+**In [4]** displays some sample images from the Training set.  
 
-![alt text][image80]
+![alt text][image4]
 
 From this we can see that the exposure of images varies widely.  
 It appears (from this small selection) that the images are cropped close, and are taken straight on.  
@@ -281,8 +281,7 @@ To train the model, I used an ....
 
 #### 5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.  
 
-The code for calculating the accuracy of the model is located in the ninth cell of the Ipython notebook. 
-(**TODO**) 
+**In [21]** `evaluate_data()`, calculates loss and accuracy.  It is called on the validation set at the end of each training epoch from **In [23]** the cell which trains the model.
 
 My final model results were:  
 * **In[26]** **In[23]** training set accuracy of ?  
@@ -296,7 +295,6 @@ evaluating..
 Test Loss     = 0.632  
 Test Accuracy = 0.940  
 ```   
-![alt text][img]
 
 Training Dataset statistics, and charts are located in the ./training_stats directory  
  The first two models that I saved data on, I will not discuss here.  They are saved under the names "training_stats_170325" (png and txt), and "training_stats_170326-02_perchannel_mean" (png and txt) in the training_stats directory.  
@@ -711,7 +709,7 @@ If it is indeed possible to access the required variable, I would be interested 
 [image1]: ./examples/placeholder.png "Traffic Sign 4"  
 
 [image3]: ./data_plotted_image_distribution_amongst_classes.png "Visualization_1: Distribution of Images between classes, and across Training, Validation, and Test Sets"  
-[image80]: ./writeup_sample_images_cropped/sample_traffic_signs_from_training_set.png "Visualization_2: Sample Images from the Training Set"  
+[image4]: ./writeup_sample_images_cropped/sample_traffic_signs_from_training_set.png "Visualization_2: Sample Images from the Training Set"  
 [image5]: ./writeup_sample_images_cropped/sample_grayscale-1channel_conversion.png "sample image converted to 1D grayscale"  
 [image6]: ./writeup_sample_images_cropped/sample_grayscale_conversions_single_channel.png "sample images converted to 1D grayscale"  
 [image7]: ./writeup_sample_images_cropped/sample_grayscale_1D_to_3D_conversion.png "grayscale image converted from 1D to 3D loose tonal benefits gained in the rgb to gray conversion"  
